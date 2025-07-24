@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trending Food</title>
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Swiper CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/swiper@8/swiper-bundle.min.css" />
+    
+    <!-- Custom CSS -->
+    <link rel="stylesheet" type="text/css" href="ppc.css">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.6.0/css/all.min.css" integrity="sha512-Kc323vGBEqzTmouAECnVceyQqyqdsSiqLQISBL29aUW4U/M7pSPA/gEUZQqv1cwx4OnYxTxve5UMg5GT6L4JJg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/redux/5.0.1/redux.legacy-esm.js" integrity="sha512-VCbwlmqXz5fKpvO/4l55lYqYZ4K3fi2xUnXp5pzH4YdFEWOrHwO00sXUFg20gtadJf1lzz/ZZjSNjCEOZWDJjg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+     <link href="https://fonts.googleapis.com/css2?family=Lato:ital,wght@0,100;0,300;0,400;0,700;0,900;1,100;1,300;1,400;1,700;1,900&family=Nova+Script&family=Roboto+Slab:wght@100..900&display=swap" rel="stylesheet">
+</head>
+<body>
+
+	<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+        <a class="navbar-brand" href="#">
+          <img src="iyappaa.png" width="120" height="60">
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                  <a class="nav-link active me-4" aria-current="page" href="#" id="list-items">Overview</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link me-4" href="productpage2.html"  id="list-items">All Products</a>
+                </li>
+                <li class="nav-item dropdown">
+                  <a class="nav-link dropdown-toggle me-4" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false"  id="list-items">
+                    Categories
+                  </a>
+                  <ul class="dropdown-menu"  id="list-items">
+                    <li><a class="dropdown-item" href="productpage2.html">Sweets</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Snacks</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Groceries</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Oil</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Rice</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Candies</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Organic Products</a></li>
+                    <li><a class="dropdown-item" href="productpage2.html">Home Appliances</a></li>                  
+                  </ul>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" href="Aboutus.html"  id="list-items">About us</a>
+                </li>
+            </ul>
+            <form class="d-flex search" role="search">
+              <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+              <button class="btn btn-outline-success" type="submit">Search</button>
+              <button class="btn btn-outline-danger" type="submit" style="margin-left: 10px;">Login/Signup</button>
+            </form>
+        </div>
+    </div>
+</nav><!--navbar-->
+
+<main>
+        <section class="carousel next">
+            <div class="list">
+                <article class="item other_1">
+                    <div class="main-content" 
+                    style="background-color: #f5bfaf;">
+                        <div class="content">
+                            <h2>Potato Chips, a new product</h2>
+                            <p class="price">$ 20</p>
+                            <p class="description">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores labore animi voluptatibus sequi illo, earum molestias explicabo officiis iste neque? Quis quod eligendi fugit, dolore nam itaque modi exercitationem voluptatem corrupti aut aspernatur. Quos non in sed ratione tenetur harum.
+                            </p>
+                            <button class="addToCard">
+                                Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                    <figure class="image">
+                        <img src="chips.png" alt="">
+                        <figcaption>Potato Chips, a new product</figcaption>
+                    </figure>
+                </article>
+                <article class="item active">
+                    <div class="main-content" 
+                    style="background-color: #FFF2D7;">
+                        <div class="content">
+                            <h2>Garlic Murukku, a new product</h2>
+                            <p class="price">$ 20</p>
+                            <p class="description">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores labore animi voluptatibus sequi illo, earum molestias explicabo officiis iste neque? Quis quod eligendi fugit, dolore nam itaque modi exercitationem voluptatem corrupti aut aspernatur. Quos non in sed ratione tenetur harum.
+                            </p>
+                            <button class="addToCard">
+                                Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                    <figure class="image">
+                        <img src="savory.png" alt="">
+                        <figcaption>Garlic Murukku, a new product</figcaption>
+                    </figure>
+                </article>
+                <article class="item other_2">
+                    <div class="main-content" 
+                    style="background-color: #dedfe1;">
+                        <div class="content">
+                            <h2>Cassavva Chips, a new product</h2>
+                            <p class="price">$ 20</p>
+                            <p class="description">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores labore animi voluptatibus sequi illo, earum molestias explicabo officiis iste neque? Quis quod eligendi fugit, dolore nam itaque modi exercitationem voluptatem corrupti aut aspernatur. Quos non in sed ratione tenetur harum.
+                            </p>
+                            <button class="addToCard">
+                                Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                    <figure class="image">
+                        <img src="thinchips.png" alt="">
+                        <figcaption>Cassavva Chips, a new product</figcaption>
+                    </figure>
+                </article>
+                <article class="item">
+                    <div class="main-content" 
+                    style="background-color: #E0FBE2;">
+                        <div class="content">
+                            <h2>Orange Candy, a new product</h2>
+                            <p class="price">$ 20</p>
+                            <p class="description">
+                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Asperiores labore animi voluptatibus sequi illo, earum molestias explicabo officiis iste neque? Quis quod eligendi fugit, dolore nam itaque modi exercitationem voluptatem corrupti aut aspernatur. Quos non in sed ratione tenetur harum.
+                            </p>
+                            <button class="addToCard">
+                                Add To Cart
+                            </button>
+                        </div>
+                    </div>
+                    <figure class="image">
+                        <img src="orangecandy.png" alt="">
+                        <figcaption>Orange Candy, a new product</figcaption>
+                    </figure>
+                </article>
+            </div>
+            <div class="arrows">
+                <button id="prev"><</button>
+                <button id="next">></button>
+            </div>
+        </section>
+    </main><!--carousel-->
+
+
+    <br>
+
+    <p class="offer-title">DELIGHTFUL DISCOUNTS</p>
+
+    <br>
+
+    <div class="container-fluid">
+        <div class="offer-card">
+            <div class="offer-image">
+                <img src="1.jpg" alt="Snack 1">
+                <div class="discount-badge">20% OFF</div>
+            </div>
+            <div class="offer-details">
+                <h2>RICE MURUKKU</h2>
+                <p>Get 20% off! Limited time offer.</p>
+                <div class="countdown" id="countdown1"></div>
+            </div>
+        </div>
+
+        <div class="offer-card">
+            <div class="offer-image">
+                <img src="2.jpg" alt="Snack 2">
+                <div class="discount-badge">30% OFF</div>
+            </div>
+            <div class="offer-details">
+                <h2>POTATO CHIPS</h2>
+                <p>Buy one get one free! Limited time offer.</p>
+                <div class="countdown" id="countdown2"></div>
+            </div>
+        </div>
+
+        <div class="offer-card">
+            <div class="offer-image">
+                <img src="3.jpg" alt="Snack 2">
+                <div class="discount-badge">10% OFF</div>
+            </div>
+            <div class="offer-details">
+                <h2>KAI MURUKKU</h2>
+                <p>Buy one get one free! Limited time offer.</p>
+                <div class="countdown" id="countdown3"></div>
+            </div>
+        </div>
+
+         <div class="offer-card">
+            <div class="offer-image">
+                <img src="4.jpg" alt="Snack 2">
+                <div class="discount-badge">10% OFF</div>
+            </div>
+            <div class="offer-details">
+                <h2>RIBBON MURUKKU</h2>
+                <p>Buy one get one free! Limited time offer.</p>
+                <div class="countdown" id="countdown4"></div>
+            </div>
+        </div>
+    </div><!--offer card-->
+
+    <br><br>
+    <br><br>
+
+    <div class="banner1"></div>
+
+    <div class="banner1-content">
+        <p>Sweeten your day with</p> 
+        <p>our finest Chocolates...</p>
+    </div>
+    <div class="banner1-img">
+        <img src="chocolate-girl.png" class="img-fluid">
+    </div>
+    <br><br>
+    
+ <p class="offer-title">SHOP BY CATEGORIES</p>
+
+    <br>
+    <br>
+
+    <div class="container1">
+        <div class="sweet">
+            <div class="sweet1">
+                <a href="productpage2.html">
+                    <img src="sweet-category.png"  class="sweet-img">
+                </a>
+            </div>
+            <div class="sweet-caption">
+                Sweet
+            </div>
+        </div>
+        <div class="snack">
+            <div class="snack1">
+                <a href="productpage2.html">
+                    <img src="snack-category.png"  class="snack-img">
+                </a>
+            </div>
+            <div class="snack-caption">
+                Snacks
+            </div>
+        </div>
+        <div class="candy">
+            <div class="candy1">
+                <a href="productpage2.html">
+                    <img src="candy-category.png"  class="candy-img">
+                </a>
+            </div>
+            <div class="candy-caption">
+                Candies
+            </div>
+        </div>
+        <div class="grocery">
+            <div class="grocery1">
+                <a href="productpage2.html">
+                    <img src="grocery-category.png"  class="grocery-img">
+                </a>    
+            </div>
+            <div class="grocery-caption">
+                Groceries
+            </div>
+        </div>
+    </div>
+
+    <br>
+
+     <div class="container1">
+        <div class="rice">
+            <div class="rice1">
+                <a href="productpage2.html">
+                   <img src="rice-category.png"  class="rice-img">
+                </a>
+            </div>
+            <div class="rice-caption">
+                Rice
+            </div>
+        </div>
+        <div class="oil">
+            <div class="oil1">
+                <a href="productpage2.html">
+                   <img src="oil-category.png"  class="oil-img">
+               </a>
+            </div>
+            <div class="oil-caption">
+                Oil
+            </div>
+        </div>
+        <div class="herbal">
+            <div class="herbal1">
+                <a href="productpage2.html">
+                    <img src="herbal-category.png"  class="herbal-img">
+                </a>
+            </div>
+            <div class="herbal-caption">
+                Herbal & Organic
+            </div>
+        </div>
+        <div class="homeappliances">
+            <div class="homeappliances1">
+                <a href="productpage2.html">
+                   <img src="homeappliance-category.png"  class="homeappliances-img">
+               </a>
+            </div>
+            <div class="homeappliances-caption">
+                HomeAppliances
+            </div>
+        </div>
+    </div>
+
+    <br>
+    <br>
+
+<section id="trending">
+    <p class="offer-title">POPULAR PRODUCTS</p>
+    <div class="container">
+        <div class="swiper trending-slider">
+            <div class="swiper-wrapper">
+                <!-- Slides - Repeat this block for each slide -->
+                <div class="swiper-slide trending-slide">
+                    <div class="trending-slide-img">
+                        <img src="2.jpg" class="img-fluid" alt="Trending">
+                    </div>
+                    <div class="trending-slide-content">
+                        <h1 class="food-price">$20</h1>
+                        <div class="trending-slide-content-bottom">
+                            <h2 class="food-name">Potato Chips</h2>
+                            <h3 class="food-rating">
+                                <span>4.5</span>
+                                <div class="rating">
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide trending-slide">
+                    <div class="trending-slide-img">
+                        <img src="4.jpg" class="img-fluid" alt="Trending">
+                    </div>
+                    <div class="trending-slide-content">
+                        <h1 class="food-price">$20</h1>
+                        <div class="trending-slide-content-bottom">
+                            <h2 class="food-name">Ribbon Murukku</h2>
+                            <h3 class="food-rating">
+                                <span>4.5</span>
+                                <div class="rating">
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide trending-slide">
+                    <div class="trending-slide-img">
+                        <img src="1.jpg" class="img-fluid" alt="Trending">
+                    </div>
+                    <div class="trending-slide-content">
+                        <h1 class="food-price">$20</h1>
+                        <div class="trending-slide-content-bottom">
+                            <h2 class="food-name">Kai Murukku</h2>
+                            <h3 class="food-rating">
+                                <span>4.5</span>
+                                <div class="rating">
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide trending-slide">
+                    <div class="trending-slide-img">
+                        <img src="7.jpg" class="img-fluid" alt="Trending">
+                    </div>
+                    <div class="trending-slide-content">
+                        <h1 class="food-price">$20</h1>
+                        <div class="trending-slide-content-bottom">
+                            <h2 class="food-name">Garlic Murukku</h2>
+                            <h3 class="food-rating">
+                                <span>4.5</span>
+                                <div class="rating">
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-slide trending-slide">
+                    <div class="trending-slide-img">
+                        <img src="3.jpg" class="img-fluid" alt="Trending">
+                    </div>
+                    <div class="trending-slide-content">
+                        <h1 class="food-price">$20</h1>
+                        <div class="trending-slide-content-bottom">
+                            <h2 class="food-name">Kai Murukku</h2>
+                            <h3 class="food-rating">
+                                <span>4.5</span>
+                                <div class="rating">
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                    <ion-icon name="star"></ion-icon>
+                                </div>
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+                <!-- Slide End -->
+
+            </div>
+            <div class="trending-slider-control">
+                <div class="swiper-button-prev slider-arrow">
+                    <ion-icon name="arrow-back-outline"></ion-icon>
+                </div>
+                <div class="swiper-button-next slider-arrow">
+                    <ion-icon name="arrow-forward-outline"></ion-icon>
+                </div>
+                <div class="swiper-pagination"></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<p class="offer-title">ABOUT US</p>
+<div class="background-1">
+    <div class="glass-container">
+        <p>Founded in 2007, Iyappaa Sweets and Snacks expanded rapidly
+        across Canada,reaching international markets by 2019.It
+        maintained stable prices during the COVID-19 pandemic and
+        expanded to France in 2023 and the UK in 2024. By 2026, it aims
+        to introduce 1,500 new products globally, focusing on
+        sustainability and innovation. <a href="">Read More...</a></p>
+    </div>
+</div>
+
+
+<br><br>
+
+<div class="advantages">
+         <div class="home-made">
+            <img src="home-img.png" class="home-img">
+             <h3 class="head-home">Home made</h3>
+             <p class="para-home">fresh, taste treats made at home with simple ingredients</p>
+         </div>
+         <div class="organic">
+            <img src="organic-img.png" class="organic-img">
+             <h3 class="head-organic">100% Organic</h3>
+             <p class="para-organic">Prioritize purity and natural ingrediants for healthier choices</p>
+         </div>
+         <div class="quality">
+            <img src="quality-img.png" class="quality-img">
+             <h3 class="head-quality">Premium Quality</h3>
+             <p class="para-quality">Highest standards of freshness, taste, and reliability</p>
+         </div>
+     </div>
+
+     <br><br>
+
+
+      <div class="counters">
+        <div>
+            <div class="counter">
+                <i class="fa-solid fa-globe" id="icons"></i>
+                <h1><span data-count="5">0</span>+</h1>
+                <h3>Countries</h3>
+            </div>
+            <div class="counter">
+                <i class="fa-solid fa-ribbon" id="icons"></i>
+                <h1><span data-count="5">0</span>+</h1>
+                <h3>Brands</h3>
+            </div>
+            <div class="counter">
+                <i class="fa-solid fa-boxes-stacked" id="icons"></i>
+                <h1><span data-count="100">0</span>0+</h1>
+                <h3>Products</h3>
+            </div>
+            <div class="counter">
+                <i class="fa-regular fa-handshake" id="icons"></i>
+                <h1><span data-count="25">0</span>+</h1>
+                <h3>Distributors</h3>
+            </div>
+            <div class="counter">
+                <i class="fa-solid fa-users" id="icons"></i>
+                <h1><span data-count="1">0</span>M+</h1>
+                <h3>Customers</h3>
+            </div>
+        </div>
+    </div>
+
+
+    <br>
+
+    <p class="offer-title">OUR TOPBRANDS</p>
+
+    <br>
+
+    <marquee class="brand-img">
+        <img src="iyappaa.jpg" class="image">
+        <img src="amrith.jpg" class="image">
+        <img src="venba.jpg" class="image">
+        <img src="iyappaa.jpg" class="image">
+        <img src="amrith.jpg" class="image">
+        <img src="venba.jpg" class="image">
+    </marquee>
+
+    <br><br>
+
+    <div class="footer">
+        <div class="empty"></div>
+        <div class="address">
+           
+            <div class="iyappaa-address">
+
+                 <b>Head Office</b>
+
+                 <br>
+
+                IYYAPPAA SWEETS & SNACKS INC
+
+                <p>2721, Markham Road, Unit #18,
+                <br>Scaraborough-M1X 1L5, Toronto,
+                Canada</p>
+            </div>
+
+
+            <div class="branches">
+
+                <b>Branches</b>
+
+                <br>
+
+                IYYAPPAA FOOD INDUSTRIES UK LTD
+
+                <p>No 5, Mameulah Court, Newmachar,
+                <br>Aberdeenshire, Ab21OLS,
+                United Kingdom</p>
+            </div>
+
+
+            <b>Available Countries</b>
+
+            <br>
+
+            <div class="countries">
+                <div class="canada">
+                    <p>Canada</p>
+                    <img src="https://img.icons8.com/?size=100&id=Dum84gAXfBP6&format=png&color=000000" class="flag">
+                </div>
+                <div class="canada">
+                    <p>USA</p>
+                     <img src="https://img.icons8.com/?size=100&id=yzSggttkqLf4&format=png&color=000000" class="flag">
+                </div>
+                <div class="canada">
+                    <p>France</p>
+                     <img src="https://img.icons8.com/?size=100&id=5RtaKEr09Jy6&format=png&color=000000" class="flag">
+                </div>
+                 <div class="canada">
+                    <p>Switzerland</p>
+                     <img src="https://img.icons8.com/?size=100&id=nz6Zx2vJbzRG&format=png&color=000000" class="flag">
+                </div>
+                <div class="canada">
+                    <p>Germany</p>
+                     <img src="https://img.icons8.com/?size=100&id=OyqucOGoByl9&format=png&color=000000" class="flag">
+                </div>
+                <div class="canada">
+                    <p>UK</p>
+                     <img src="https://img.icons8.com/?size=100&id=xapj7ZzAUZKI&format=png&color=000000" class="flag">
+                </div>
+            </div>
+        </div>
+        <div class="footer-category">
+            <b>Categories</b>
+            <div class="category-item">
+                <p>Sweets</p>
+                <p>Snacks</p>
+                <p>Candies</p>
+                <p>Groceries</p>
+                <p>Rice</p>
+                <p>Oil</p>
+                <p>Herbal & Organic</p>
+                <p>Home Appliances</p>
+            </div>
+             <b>Popular Brands</b>
+             <div class="brand-name">
+                 <p>Iyappaa</p>
+                 <p>Amirth</p>
+                 <p>Venbaa</p>
+                 <p>Little Krishna</p>
+             </div>
+        </div><br>
+        <div class="faq">
+            <b>FAQ</b>
+            <div class="term-condition">
+                <h2>Terms & Conditions</h2>
+            </div>
+            <b>Website</b>
+            <div class="website">
+                <p>www.iyappaa.com</p>
+            </div>
+             <b>Contact Us</b><br>
+             <input type="" name="" class="contact-input"> @gmail.com
+        </div>
+    </div>
+
+
+
+<!-- Bootstrap JS -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
+
+<!-- Swiper JS -->
+<script src="https://unpkg.com/swiper@8/swiper-bundle.min.js"></script>
+
+<!-- Ionicons -->
+<script type="module" src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.esm.js"></script>
+<script nomodule src="https://unpkg.com/ionicons@5.5.2/dist/ionicons/ionicons.js"></script>
+
+<!-- Custom JS -->
+<script type="text/javascript" src="ppc.js"></script>
+
+</body>
+</html>

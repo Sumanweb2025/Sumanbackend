@@ -1,0 +1,271 @@
+.nav-link{
+    color: black !important;
+}
+.nav-link:hover
+{
+    color: seagreen !important;
+    transition: 0.5s;
+}
+#sidebar {
+            width: 220px;
+            background-color: #343a40;
+            color: white;
+            padding: 20px;
+            height: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+
+        #sidebar .category-icon {
+            display: none;
+        }
+
+        #sidebar .nav-link {
+            color: white;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+        }
+
+        #sidebar .nav-link.active {
+            background-color: #495057;
+        }
+
+        #sidebar .category-icon {
+            margin-right: 10px;
+            font-size: 1.5rem;
+        }
+
+        .category-name {
+            transition: opacity 0.3s ease;
+            flex: 1;
+        }
+
+        .card-img-top {
+            height: 300px;
+            width: 100%;
+            object-fit: cover;
+        }
+
+        .btn-buy-now {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-align: center;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.3s ease;
+        }
+
+        .btn-buy-now:hover {
+            background-color: #218838;
+            transform: scale(1.05);
+        }
+
+        /* Hide the category names on smaller screens but keep icons */
+        @media (max-width: 768px) {
+            #sidebar {
+                width: 200px;
+                overflow: hidden;
+            }
+
+            .category-name {
+                display: none;
+            }
+
+            #sidebar .category-icon {
+                margin-left: -12px;
+                display: block;
+            }
+        }
+
+        /* Main content area */
+        #main-content {
+            padding: 20px;
+            margin-left: 0;
+            transition: margin-left 0.3s ease;
+
+        }
+
+        /* Scrollable Tabs */
+        .nav-tabs {
+            overflow-x: auto;
+            white-space: nowrap;
+            border-bottom: 1px solid #ddd;
+            margin-bottom: 20px;
+        }
+
+        .nav-tabs .nav-item {
+            flex: 0 0 auto;
+        }
+
+        .nav-tabs .nav-link {
+            white-space: nowrap;
+        }
+
+        /* Tooltip styling */
+        .tooltip-inner {
+            background-color: #495057;
+        }
+
+        .tooltip .arrow::before {
+            border-top-color: #495057;
+        }
+
+        #categoryTabs {
+            overflow-y: hidden;
+        }
+        .fa-star{
+            color: #FFD700;
+        }
+        /* Shopping cart icon styling */
+.cart-icon {
+    background-color: green; /* Green background color */
+    color: white; /* White icon color */
+    padding: 8px; /* Space around the icon */
+    border-radius: 50%; /* Round icon */
+    position: absolute; /* Position it absolutely */
+    right: 10px; /* Move it to the right side */
+    bottom: 15px; /* Position it from the bottom */
+    display: flex; /* Center the icon */
+    align-items: center; /* Center vertically */
+    justify-content: center; /* Center horizontally */
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.2); /* Optional shadow */
+    cursor: pointer; /* Cursor change on hover */
+    text-decoration: none;
+    transition: 0.3s;
+}
+.cart-icon:hover
+{
+    color: white;
+    background-color: darkorange;
+}
+/* Make the card container relative to position child elements properly */
+/* Make the card container relative to position child elements properly */
+.card {
+    position: relative;
+}
+
+.cart {
+    position: fixed;
+    top: 0;
+    right: -100%; /* Initially hidden */
+    width: 400px;
+    height: 100vh;
+    z-index: 1001; /* Ensure it is above the main content */
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 20px;
+    background-color: black;
+    color: white;
+
+}
+
+.cart-active {
+    right: 0; /* Show the cart */
+    transition: 0.5s;
+}
+
+/* Adjust main content margin when cart is active */
+.cart-active + #main-content {
+    margin-right: 0; /* Reset margin when cart is active */
+}
+
+.cart-title{
+    text-align: center;
+    font-size: 1.5rem;
+    font-weight: 500;
+    margin-bottom: 1rem;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 20px; 
+}
+
+.cart-box{
+    display: grid;
+    grid-template-columns: 32% 50% 18%;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1rem;
+    border-bottom: 1px solid #fff;
+    padding-bottom: 10px;
+}
+
+.cart-img{
+    width: 75px;
+    height: 75px;
+    object-fit: cover;
+    border: 2px solid #fff;
+    padding: 5px;
+}
+.detail-box
+{
+    display: grid;
+    row-gap: 0.5rem;
+}
+.price-box{
+    display: flex;
+    justify-content: space-between;
+}
+
+.cart-food-title{
+    font-size: 1rem;
+    text-transform: uppercase;
+    font-weight: 500;
+    color: #ff6348;
+}
+
+.cart-price{
+    font-weight: 500;
+}
+
+.cart-quantity
+{
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    outline: none;
+    width: 2.4rem;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.cart-remove
+{
+    font-size: 24px;
+    color: red;
+    cursor: pointer;
+}
+
+.total{
+   display: flex;
+   justify-content: flex-end;
+   margin-top: 1.5rem;
+}
+
+.total-title{
+   font-size: 1rem;
+   font-weight: 600;
+}
+
+.total-price{
+   margin-left: 0.5rem;
+}
+
+.btn-buy{
+   padding: 10px 20px;
+   background-color: white;
+   color: black;
+   border: none;
+   font-size: 1rem;
+   font-weight: 500;
+   cursor: pointer;
+}
+
+#cart-close{
+   position: absolute;
+   top: 1.5rem;
+   right: 0.8rem;
+   font-size: 1.8rem;
+   cursor: pointer;
+}
