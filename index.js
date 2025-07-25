@@ -2,9 +2,9 @@ const express = require('express')
 const cors = require('cors')
 require('dotenv').config();
 const bodyparser = require('body-parser')
-const  connectDatabase  = require('./DB_connection/db_connection');
+const  connectDatabase  = require('./DB_Connection/db_connection');
 const PORT = process.env.PORT || 8000
-const Approuter = require('./routers/router')
+const Approuter = require('./Routers/router')
 const path = require('path');
 
 //Initialize the app

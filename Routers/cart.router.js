@@ -7,7 +7,7 @@ const {
   removeFromCart,
   clearCart,
   getCartTotal
-} = require('../controllers/cart.controller');
+} = require('../Controllers/cart.controller');
 
 // Get cart
 router.get('/', getCart);

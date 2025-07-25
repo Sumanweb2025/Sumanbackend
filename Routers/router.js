@@ -7,6 +7,7 @@ const cartRoutes = require("./cart.router");
 const wishlistRoutes = require("./wishlist.router");
 const orderRoutes = require("./order.router");
 const Reviewrouter = require("./Review.router");
+const GroceriesRouter = require("./groceries.router")
 
 router.use("/api", authRouter);
 router.use("/api", dataRouter);

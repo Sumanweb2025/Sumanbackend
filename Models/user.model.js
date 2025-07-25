@@ -28,4 +28,4 @@ userSchema.pre('save', async function(next) {
   next();
 });
 
-module.exports = mongoose.model('users', userSchema);
+module.exports = mongoose.model('user', userSchema);
