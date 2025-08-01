@@ -1,17 +1,64 @@
 const express = require('express');
+const { body } = require('express-validator');
+const authController = require('../Controllers/auth.controller');
+const authMiddleware = require('../Middleware/auth.middleware');
+
 const router = express.Router();
 
-// 🔐 Import controller functions
-const authController = require('../Controllers/auth.controller');
+// Validation rules
+const signupValidation = [
+  body('name')
+    .trim()
+    .notEmpty()
+    .withMessage('Name is required')
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Name must be between 2 and 50 characters'),
+  
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please enter a valid email'),
+  
+  body('password')
+    .isLength({ min: 6 })
+    .withMessage('Password must be at least 6 characters long')
+    .matches(/^(?=.*[A-Za-z])(?=.*\d)/)
+    .withMessage('Password must contain at least one letter and one number'),
+  
+  body('phone')
+    .optional()
+    .isMobilePhone('en-IN')
+    .withMessage('Please enter a valid Indian phone number')
+];
 
-// 🔒 Import middleware to protect routes
-const { protect } = require('../Middleware/auth.middleware');
+const loginValidation = [
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please enter a valid email'),
+  
+  body('password')
+    .notEmpty()
+    .withMessage('Password is required')
+];
 
-// 📝 Public routes
-router.post('/register', authController.register);
-router.post('/login', authController.login);
+const updateProfileValidation = [
+  body('name')
+    .optional()
+    .trim()
+    .isLength({ min: 2, max: 50 })
+    .withMessage('Name must be between 2 and 50 characters'),
+  
+  body('phone')
+    .optional()
+    .isMobilePhone('en-IN')
+    .withMessage('Please enter a valid Indian phone number')
+];
 
-// 👤 Protected route to get current user info
-router.get('/me', protect, authController.getMe);
+// Routes
+router.post('/signup', signupValidation, authController.signup);
+router.post('/login', loginValidation, authController.login);
+router.get('/profile', authMiddleware, authController.getProfile);
+router.put('/profile', authMiddleware, updateProfileValidation, authController.updateProfile);
 
 module.exports = router;

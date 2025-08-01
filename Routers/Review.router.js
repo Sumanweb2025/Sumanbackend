@@ -1,18 +1,18 @@
-const express = require('express');
-const router = express.Router();
-const reviewController = require('../Controllers/Review.controller');
-const { protect } = require('../Middleware/auth.middleware');
+// const express = require('express');
+// const router = express.Router();
+// const reviewController = require('../Controllers/Review.controller');
+// const { protect } = require('../Middleware/auth.middleware');
 
-router.route('/')
-  .post(protect, reviewController.createReview);
+// router.route('/add')
+//   .post(protect, reviewController.addReview);
 
-router.route('/:id')
-  .delete(protect, reviewController.deleteReview);
+// router.route('/:id')
+//   .delete(protect, reviewController.deleteReview);
 
-router.route('/products/:productId/reviews')
-  .get(reviewController.getProductReviews);
+// router.route('/products/:productId/reviews')
+//   .get(reviewController.getProductReviews);
 
-router.route('/products/:productId/rating')
-  .get(reviewController.getProductRating);
+// router.route('/products/:productId/rating')
+//   .get(reviewController.getProductRating);
 
-module.exports = router;
+// module.exports = router;

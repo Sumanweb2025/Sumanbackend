@@ -6,15 +6,18 @@ const productRoutes = require("./product.router");
 const cartRoutes = require("./cart.router");
 const wishlistRoutes = require("./wishlist.router");
 const orderRoutes = require("./order.router");
-const Reviewrouter = require("./Review.router");
-const GroceriesRouter = require("./groceries.router")
+// const Reviewrouter = require("./Review.router");
+const offerRouter = require("./offer.router");
+//const testimonialRoutes = require("./testimonial.router");
 
-router.use("/api", authRouter);
+router.use("/api/auth", authRouter);
 router.use("/api", dataRouter);
 router.use('/api/products', productRoutes);
 router.use('/api/cart', cartRoutes);
-router.use('/api/Wishlist', wishlistRoutes);
+router.use('/api/wishlist', wishlistRoutes);
 router.use('/api/orders', orderRoutes);
-router.use("/api/review", Reviewrouter);
+// router.use("/api/review", Reviewrouter);
+router.use("/api/offers", offerRouter);
+//router.use("/api/testimonials", testimonialRoutes);
 
 module.exports = router;

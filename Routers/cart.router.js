@@ -6,25 +6,29 @@ const {
   updateCartItem,
   removeFromCart,
   clearCart,
-  getCartTotal
+  getCartCount
 } = require('../Controllers/cart.controller');
+const  authMiddleware  = require('../Middleware/auth.middleware'); // Assuming you have auth middleware
 
-// Get cart
+// All routes require authentication
+router.use(authMiddleware);
+
+// GET /api/cart - Get user's cart
 router.get('/', getCart);
 
-// Add item to cart
-router.post('/add', addToCart);
+// GET /api/cart/count - Get cart items count
+router.get('/count', getCartCount);
 
-// Update cart item quantity
-router.put('/item/:productId', updateCartItem);
+// POST /api/cart - Add product to cart
+router.post('/', addToCart);
 
-// Remove item from cart
-router.delete('/item/:productId', removeFromCart);
+// PUT /api/cart/:productId - Update cart item quantity
+router.put('/:productId', updateCartItem);
 
-// Clear entire cart
-router.delete('/clear', clearCart);
+// DELETE /api/cart/:productId - Remove specific product from cart
+router.delete('/:productId', removeFromCart);
 
-// Get cart total and item count
-router.get('/total', getCartTotal);
+// DELETE /api/cart - Clear entire cart
+router.delete('/', clearCart);
 
 module.exports = router;

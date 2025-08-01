@@ -1,25 +1,27 @@
 const mongoose = require('mongoose');
 
-const wishlistItemSchema = new mongoose.Schema({
-  product_id: {
-    type: String,
+const wishlistSchema = new mongoose.Schema({
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
     required: true
   },
-  added_date: {
-    type: Date,
-    default: Date.now
-  }
-});
-
-const wishlistSchema = new mongoose.Schema({
-  items: [wishlistItemSchema]
+  products: [{
+    productId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Product',
+      required: true
+    },
+    addedAt: {
+      type: Date,
+      default: Date.now
+    }
+  }]
 }, {
   timestamps: true
 });
 
-// Index for faster queries
-wishlistSchema.index({ 'items.product_id': 1 });
+// Compound index to ensure unique product per user
+wishlistSchema.index({ userId: 1, 'products.productId': 1 }, { unique: true });
 
-const Wishlist = mongoose.model('Wishlist', wishlistSchema);
-
-module.exports = Wishlist;
+module.exports = mongoose.model('Wishlist', wishlistSchema);

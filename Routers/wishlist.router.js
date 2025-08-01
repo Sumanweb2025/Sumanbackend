@@ -4,24 +4,23 @@ const {
   getWishlist,
   addToWishlist,
   removeFromWishlist,
-  clearWishlist,
-  checkInWishlist
+  clearWishlist
 } = require('../Controllers/wishlist.controller');
+const authMiddleware  = require('../Middleware/auth.middleware'); // Assuming you have auth middleware
 
-// GET /wishlist - Get all wishlist items
+// All routes require authentication
+router.use(authMiddleware);
+
+// GET /api/wishlist - Get user's wishlist
 router.get('/', getWishlist);
 
-// POST /wishlist - Add item to wishlist
-// Body: { product_id: "string" }
+// POST /api/wishlist - Add product to wishlist
 router.post('/', addToWishlist);
 
-// DELETE /wishlist/:productId - Remove specific item from wishlist
+// DELETE /api/wishlist/:productId - Remove specific product from wishlist
 router.delete('/:productId', removeFromWishlist);
 
-// DELETE /wishlist - Clear entire wishlist
+// DELETE /api/wishlist - Clear entire wishlist
 router.delete('/', clearWishlist);
-
-// GET /wishlist/check/:productId - Check if product is in wishlist
-router.get('/check/:productId', checkInWishlist);
 
 module.exports = router;

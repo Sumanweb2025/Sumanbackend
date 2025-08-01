@@ -1,134 +1,155 @@
-const User = require("../Models/user.model");
-const jwt = require("jsonwebtoken");
-const nodemailer = require('../Middleware/mailer');
-const bcrypt = require('bcrypt');
-const validator = require('validator');
-require("dotenv").config();
-const saltRounds = parseInt(process.env.SALT_ROUNDS || 10);
+const User = require('../Models/user.model');
+const jwt = require('jsonwebtoken');
+const { validationResult } = require('express-validator');
 
-// User Registration
-exports.register = async (req, res) => {
+// Generate JWT Token
+const generateToken = (userId) => {
+  return jwt.sign({ userId }, process.env.JWT_SECRET || 'your_jwt_secret', {
+    expiresIn: '7d'
+  });
+};
+
+// User Signup
+exports.signup = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-
-    // Validate input
-    if (!name || !email || !password) {
-      return res.status(400).json({ 
-        success: false,
-        message: "Please provide name, email and password" 
-      });
-    }
-
-    if (!validator.isEmail(email)) {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
       return res.status(400).json({
         success: false,
-        message: "Please provide a valid email"
+        message: 'Validation failed',
+        errors: errors.array()
       });
     }
 
-    if (password.length < 6) {
-      return res.status(400).json({
-        success: false,
-        message: "Password must be at least 6 characters"
-      });
-    }
+    const { name, email, password, phone, address } = req.body;
 
+    // Check if user already exists
     const existingUser = await User.findOne({ email });
     if (existingUser) {
-      return res.status(400).json({ 
+      return res.status(400).json({
         success: false,
-        message: "Email already registered" 
+        message: 'User already exists with this email'
       });
     }
 
-    const hash = await bcrypt.hash(password, saltRounds);
-    const user = new User({ 
-      name: name.trim(),
-      email: email.toLowerCase().trim(), 
-      password: hash 
+    // Create new user
+    const user = new User({
+      name,
+      email,
+      password,
+      phone,
+      address
     });
-    
+
     await user.save();
 
-    // Optional: Send welcome email
-    try {
-      await nodemailer.sendWelcomeEmail(email, name);
-    } catch (emailError) {
-      console.error('Failed to send welcome email:', emailError);
-    }
+    // Generate token
+    const token = generateToken(user._id);
 
-    res.status(201).json({ 
+    res.status(201).json({
       success: true,
-      message: "Registration successful",
+      message: 'User registered successfully',
       data: {
-        id: user._id,
-        name: user.name,
-        email: user.email
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address,
+          role: user.role
+        },
+        token
       }
     });
 
   } catch (error) {
-    console.error('Registration error:', error);
+    console.error('Signup error:', error);
     res.status(500).json({
       success: false,
-      message: error.message || "Registration failed",
-      error: process.env.NODE_ENV === 'development' ? error : undefined
+      message: 'Server error during registration'
     });
   }
 };
-
-
 
 // User Login
 exports.login = async (req, res) => {
   try {
-    const { email, password } = req.body;
-    const user = await User.findOne({ email });
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
 
+    const { email, password } = req.body;
+
+    // Find user and include password field
+    const user = await User.findOne({ email }).select('+password');
     if (!user) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials"
+        message: 'Invalid email or password'
       });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password);
-    if (!isMatch) {
+    // Check if user is active
+    if (!user.isActive) {
       return res.status(401).json({
         success: false,
-        message: "Invalid credentials"
+        message: 'Account has been deactivated'
       });
     }
 
-    const token = jwt.sign({ id: user._id }, process.env.JWT_SECRET_KEY, {
-      expiresIn: process.env.JWT_EXPIRES || '1d',
-    });
+    // Compare password
+    const isPasswordValid = await user.comparePassword(password);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: 'Invalid email or password'
+      });
+    }
+
+    // Update last login
+    user.lastLogin = new Date();
+    await user.save();
+
+    // Generate token
+    const token = generateToken(user._id);
 
     res.status(200).json({
       success: true,
-      message: "Login successful",
-      token,
+      message: 'Login successful',
       data: {
-        name: user.name,
-        email: user.email
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address,
+          role: user.role,
+          lastLogin: user.lastLogin
+        },
+        token
       }
     });
 
   } catch (error) {
-    console.error(error);
+    console.error('Login error:', error);
     res.status(500).json({
       success: false,
-      message: "Login failed"
+      message: 'Server error during login'
     });
   }
 };
 
-// Get Current User Profile
-exports.getMe = async (req, res) => {
+// Get User Profile
+exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.id)
-      .select('name email createdAt');
-
+    const user = await User.findById(req.user.userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -138,18 +159,81 @@ exports.getMe = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      message: 'Profile retrieved successfully',
       data: {
-        name: user.name,
-        email: user.email,
-        createdAt: user.createdAt
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address,
+          role: user.role,
+          createdAt: user.createdAt,
+          lastLogin: user.lastLogin
+        }
       }
     });
 
   } catch (error) {
-    console.error(error);
+    console.error('Get profile error:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to fetch user data'
+      message: 'Server error while fetching profile'
+    });
+  }
+};
+
+// Update User Profile
+exports.updateProfile = async (req, res) => {
+  try {
+    // Check validation errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: 'Validation failed',
+        errors: errors.array()
+      });
+    }
+
+    const { name, phone, address } = req.body;
+    const userId = req.user.userId;
+
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Update fields
+    if (name) user.name = name;
+    if (phone) user.phone = phone;
+    if (address) user.address = { ...user.address, ...address };
+
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile updated successfully',
+      data: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address,
+          role: user.role
+        }
+      }
+    });
+
+  } catch (error) {
+    console.error('Update profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while updating profile'
     });
   }
 };
