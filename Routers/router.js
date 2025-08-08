@@ -8,6 +8,7 @@ const wishlistRoutes = require("./wishlist.router");
 const orderRoutes = require("./order.router");
 // const Reviewrouter = require("./Review.router");
 const offerRouter = require("./offer.router");
+
 //const testimonialRoutes = require("./testimonial.router");
 
 router.use("/api/auth", authRouter);
@@ -18,6 +19,7 @@ router.use('/api/wishlist', wishlistRoutes);
 router.use('/api/orders', orderRoutes);
 // router.use("/api/review", Reviewrouter);
 router.use("/api/offers", offerRouter);
+
 //router.use("/api/testimonials", testimonialRoutes);
 
 module.exports = router;

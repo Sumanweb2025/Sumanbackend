@@ -7,10 +7,12 @@ const PORT = process.env.PORT || 8000
 const Approuter = require('./Routers/router')
 const path = require('path');
 
+
 //Initialize the app
 const app = express()
 app.use(cors());
 app.use(bodyparser.json());
+
 
 
 app.get('/' , (req,res)=>{
