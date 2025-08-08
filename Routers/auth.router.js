@@ -42,6 +42,12 @@ const loginValidation = [
     .withMessage('Password is required')
 ];
 
+const googleAuthValidation = [
+  body('credential')
+    .notEmpty()
+    .withMessage('Google credential is required')
+];
+
 const updateProfileValidation = [
   body('name')
     .optional()
@@ -58,6 +64,7 @@ const updateProfileValidation = [
 // Routes
 router.post('/signup', signupValidation, authController.signup);
 router.post('/login', loginValidation, authController.login);
+router.post('/google-auth', googleAuthValidation, authController.googleAuth);
 router.get('/profile', authMiddleware, authController.getProfile);
 router.put('/profile', authMiddleware, updateProfileValidation, authController.updateProfile);
 

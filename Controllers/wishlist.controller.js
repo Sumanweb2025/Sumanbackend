@@ -7,6 +7,17 @@ const isValidObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id);
 };
 
+// Helper function to add imageUrl to product
+const addImageUrlToProduct = (product, req) => {
+  if (!product) return product;
+  
+  const productObj = product.toObject ? product.toObject() : product;
+  return {
+    ...productObj,
+    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null
+  };
+};
+
 // Get user's wishlist
 const getWishlist = async (req, res) => {
   try {
@@ -22,7 +33,7 @@ const getWishlist = async (req, res) => {
     const wishlist = await Wishlist.findOne({ userId })
       .populate({
         path: 'products.productId',
-        select: 'name price image description category'
+        select: 'name price image description category brand rating product_id piece'
       });
 
     if (!wishlist) {
@@ -33,9 +44,18 @@ const getWishlist = async (req, res) => {
       });
     }
 
+    // Add imageUrl to each product
+    const wishlistWithImageUrls = {
+      ...wishlist.toObject(),
+      products: wishlist.products.map(item => ({
+        ...item,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
+
     res.status(200).json({
       success: true,
-      data: wishlist,
+      data: wishlistWithImageUrls,
       message: 'Wishlist retrieved successfully'
     });
   } catch (error) {
@@ -120,12 +140,21 @@ const addToWishlist = async (req, res) => {
     await wishlist.save();
     await wishlist.populate({
       path: 'products.productId',
-      select: 'name price image description category'
+      select: 'name price image description category brand rating product_id piece'
     });
+
+    // Add imageUrl to each product in the response
+    const wishlistWithImageUrls = {
+      ...wishlist.toObject(),
+      products: wishlist.products.map(item => ({
+        ...item,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
 
     res.status(200).json({
       success: true,
-      data: wishlist,
+      data: wishlistWithImageUrls,
       message: 'Product added to wishlist successfully'
     });
   } catch (error) {
@@ -185,12 +214,21 @@ const removeFromWishlist = async (req, res) => {
     await wishlist.save();
     await wishlist.populate({
       path: 'products.productId',
-      select: 'name price image description category'
+      select: 'name price image description category brand rating product_id piece'
     });
+
+    // Add imageUrl to each product in the response
+    const wishlistWithImageUrls = {
+      ...wishlist.toObject(),
+      products: wishlist.products.map(item => ({
+        ...item,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
 
     res.status(200).json({
       success: true,
-      data: wishlist,
+      data: wishlistWithImageUrls,
       message: 'Product removed from wishlist successfully'
     });
   } catch (error) {
