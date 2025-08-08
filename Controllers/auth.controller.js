@@ -1,6 +1,13 @@
 const User = require('../Models/user.model');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
+const { OAuth2Client } = require('google-auth-library');
+
+// Initialize Google OAuth client
+const googleClient = new OAuth2Client(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET
+);
 
 // Generate JWT Token
 const generateToken = (userId) => {
@@ -39,7 +46,8 @@ exports.signup = async (req, res) => {
       email,
       password,
       phone,
-      address
+      address,
+      authProvider: 'local'
     });
 
     await user.save();
@@ -57,7 +65,8 @@ exports.signup = async (req, res) => {
           email: user.email,
           phone: user.phone,
           address: user.address,
-          role: user.role
+          role: user.role,
+          authProvider: user.authProvider
         },
         token
       }
@@ -104,6 +113,14 @@ exports.login = async (req, res) => {
       });
     }
 
+    // Check if user signed up with Google
+    if (user.authProvider === 'google') {
+      return res.status(401).json({
+        success: false,
+        message: 'Please sign in with Google'
+      });
+    }
+
     // Compare password
     const isPasswordValid = await user.comparePassword(password);
     if (!isPasswordValid) {
@@ -131,7 +148,8 @@ exports.login = async (req, res) => {
           phone: user.phone,
           address: user.address,
           role: user.role,
-          lastLogin: user.lastLogin
+          lastLogin: user.lastLogin,
+          authProvider: user.authProvider
         },
         token
       }
@@ -142,6 +160,89 @@ exports.login = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error during login'
+    });
+  }
+};
+
+// Google Sign In
+exports.googleAuth = async (req, res) => {
+  try {
+    const { credential } = req.body;
+
+    if (!credential) {
+      return res.status(400).json({
+        success: false,
+        message: 'Google credential is required'
+      });
+    }
+
+    // Verify the Google token
+    const ticket = await googleClient.verifyIdToken({
+      idToken: credential,
+      audience: process.env.GOOGLE_CLIENT_ID
+    });
+
+    const payload = ticket.getPayload();
+    const { sub: googleId, email, name, picture } = payload;
+
+    // Check if user already exists
+    let user = await User.findOne({ 
+      $or: [
+        { email: email },
+        { googleId: googleId }
+      ]
+    });
+
+    if (user) {
+      // Update existing user with Google info if needed
+      if (!user.googleId) {
+        user.googleId = googleId;
+        user.authProvider = 'google';
+        user.profileImage = picture;
+      }
+      user.lastLogin = new Date();
+      await user.save();
+    } else {
+      // Create new user with Google info
+      user = new User({
+        name: name,
+        email: email,
+        googleId: googleId,
+        authProvider: 'google',
+        profileImage: picture,
+        isActive: true,
+        lastLogin: new Date()
+      });
+      await user.save();
+    }
+
+    // Generate JWT token
+    const token = generateToken(user._id);
+
+    res.status(200).json({
+      success: true,
+      message: 'Google authentication successful',
+      data: {
+        user: {
+          id: user._id,
+          name: user.name,
+          email: user.email,
+          phone: user.phone,
+          address: user.address,
+          role: user.role,
+          lastLogin: user.lastLogin,
+          authProvider: user.authProvider,
+          profileImage: user.profileImage
+        },
+        token
+      }
+    });
+
+  } catch (error) {
+    console.error('Google auth error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Google authentication failed'
     });
   }
 };
@@ -169,7 +270,9 @@ exports.getProfile = async (req, res) => {
           address: user.address,
           role: user.role,
           createdAt: user.createdAt,
-          lastLogin: user.lastLogin
+          lastLogin: user.lastLogin,
+          authProvider: user.authProvider,
+          profileImage: user.profileImage
         }
       }
     });
@@ -224,7 +327,9 @@ exports.updateProfile = async (req, res) => {
           email: user.email,
           phone: user.phone,
           address: user.address,
-          role: user.role
+          role: user.role,
+          authProvider: user.authProvider,
+          profileImage: user.profileImage
         }
       }
     });

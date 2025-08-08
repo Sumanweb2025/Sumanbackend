@@ -1,4 +1,3 @@
-
 const express = require('express');
 const router = express.Router();
 const {
@@ -8,7 +7,8 @@ const {
   getOrderById,
   updateOrderStatus,
   applyCoupon,
-  getAvailableCoupons
+  getAvailableCoupons,
+  trackOrder
 } = require('../Controllers/order.controller');
 
 // Middleware to verify JWT token
@@ -34,5 +34,8 @@ router.get('/:orderId', authMiddleware, getOrderById);
 
 // Update order status (admin only - you can add admin middleware)
 router.put('/:orderId/status', authMiddleware, updateOrderStatus);
+
+// Track order by order number and email (public route)
+router.post('/track-order',trackOrder);
 
 module.exports = router;

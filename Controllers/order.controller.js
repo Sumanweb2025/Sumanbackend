@@ -2,13 +2,39 @@ const Order = require('../Models/order.model');
 const Cart = require('../Models/cart.model'); 
 const Coupon = require('../Models/coupon.model'); 
 
+// Helper function to add imageUrl to product and ensure price is a number
+const addImageUrlToProduct = (product, req) => {
+  if (!product) return product;
+  
+  const productObj = product.toObject ? product.toObject() : product;
+  return {
+    ...productObj,
+    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
+    price: parseFloat(productObj.price) || 0 // Ensure price is always a number
+  };
+};
+
+// Helper function to safely parse numbers
+const safeParseFloat = (value) => {
+  const parsed = parseFloat(value);
+  return isNaN(parsed) ? 0 : parsed;
+};
+
+const safeParseInt = (value) => {
+  const parsed = parseInt(value);
+  return isNaN(parsed) ? 0 : parsed;
+};
+
 // Get order data for checkout
 const getCheckoutData = async (req, res) => {
   try {
     const userId = req.user.id;
     
     // Get cart items
-    const cart = await Cart.findOne({ userId }).populate('items.productId');
+    const cart = await Cart.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
     
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
@@ -17,19 +43,28 @@ const getCheckoutData = async (req, res) => {
       });
     }
 
-    // Calculate totals
-    const subtotal = cart.items.reduce((total, item) => {
-      return total + (item.productId.price * item.quantity);
+    // Add imageUrl to each product and ensure proper data types
+    const cartItemsWithImageUrls = cart.items.map(item => ({
+      ...item.toObject(),
+      quantity: safeParseInt(item.quantity),
+      productId: addImageUrlToProduct(item.productId, req)
+    }));
+
+    // Calculate totals with safe parsing
+    const subtotal = cartItemsWithImageUrls.reduce((total, item) => {
+      const price = safeParseFloat(item.productId.price);
+      const quantity = safeParseInt(item.quantity);
+      return total + (price * quantity);
     }, 0);
 
-    const tax = subtotal * 0.18; // 18% GST
-    const shipping = subtotal > 500 ? 0 : 50;
+    const tax = subtotal * 0.13; 
+   const shipping = subtotal > 75 ? 0 : 15; 
     const total = subtotal + tax + shipping;
 
     res.status(200).json({
       success: true,
       data: {
-        items: cart.items,
+        items: cartItemsWithImageUrls,
         summary: {
           subtotal: subtotal.toFixed(2),
           tax: tax.toFixed(2),
@@ -47,7 +82,7 @@ const getCheckoutData = async (req, res) => {
   }
 };
 
-// Apply Coupon Function - NEW
+// Apply Coupon Function - UPDATED
 const applyCoupon = async (req, res) => {
   try {
     const { couponCode } = req.body;
@@ -91,7 +126,11 @@ const applyCoupon = async (req, res) => {
     }
 
     // Get user's cart
-    const cart = await Cart.findOne({ userId }).populate('items.productId');
+    const cart = await Cart.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
+    
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
         success: false,
@@ -99,17 +138,19 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    // Calculate cart total
+    // Calculate cart total with safe parsing
     let subtotal = 0;
     cart.items.forEach(item => {
-      subtotal += item.productId.price * item.quantity;
+      const price = safeParseFloat(item.productId.price);
+      const quantity = safeParseInt(item.quantity);
+      subtotal += price * quantity;
     });
 
     // Check minimum order amount
     if (subtotal < coupon.minimumOrderAmount) {
       return res.status(400).json({
         success: false,
-        message: `Minimum order amount of ₹${coupon.minimumOrderAmount} required for this coupon`
+        message: `Minimum order amount of $${coupon.minimumOrderAmount} required for this coupon`
       });
     }
 
@@ -179,7 +220,10 @@ const createOrder = async (req, res) => {
     }
 
     // Get cart items
-    const cart = await Cart.findOne({ userId }).populate('items.productId');
+    const cart = await Cart.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
     
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
@@ -188,13 +232,15 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // Calculate totals
+    // Calculate totals with safe parsing
     const subtotal = cart.items.reduce((total, item) => {
-      return total + (item.productId.price * item.quantity);
+      const price = safeParseFloat(item.productId.price);
+      const quantity = safeParseInt(item.quantity);
+      return total + (price * quantity);
     }, 0);
 
-    const tax = subtotal * 0.18;
-    const shipping = subtotal > 500 ? 0 : 50;
+    const tax = subtotal * 0.13; 
+    const shipping = subtotal > 75 ? 0 : 15; 
     
     // Apply discount if coupon is provided
     let discount = 0;
@@ -240,16 +286,20 @@ const createOrder = async (req, res) => {
 
     const total = subtotal + tax + shipping - discount;
 
-    // Prepare order items
-    const orderItems = cart.items.map(item => ({
-      productId: item.productId._id,
-      name: item.productId.name,
-      price: item.productId.price,
-      quantity: item.quantity,
-      image: item.productId.image || item.productId.imageUrl,
-      brand: item.productId.brand,
-      category: item.productId.category
-    }));
+    // Prepare order items with image URLs
+    const orderItems = cart.items.map(item => {
+      const productWithImageUrl = addImageUrlToProduct(item.productId, req);
+      return {
+        productId: item.productId._id,
+        name: productWithImageUrl.name,
+        price: safeParseFloat(productWithImageUrl.price),
+        quantity: safeParseInt(item.quantity),
+        image: productWithImageUrl.image,
+        imageUrl: productWithImageUrl.imageUrl,
+        brand: productWithImageUrl.brand,
+        category: productWithImageUrl.category
+      };
+    });
 
     // Generate order number manually
     const timestamp = Date.now().toString();
@@ -301,17 +351,34 @@ const createOrder = async (req, res) => {
   }
 };
 
-// Get user orders
+// Get user orders - UPDATED
 const getUserOrders = async (req, res) => {
   try {
     const userId = req.user.id;
     const orders = await Order.find({ userId })
-      .populate('items.productId')
+      .populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      })
       .sort({ createdAt: -1 });
+
+    // Add imageUrl to products in each order
+    const ordersWithImageUrls = orders.map(order => {
+      const orderObj = order.toObject();
+      return {
+        ...orderObj,
+        items: orderObj.items.map(item => ({
+          ...item,
+          imageUrl: item.imageUrl || (item.image ? `${req.protocol}://${req.get('host')}/images/Products/${item.image}` : null),
+          price: safeParseFloat(item.price),
+          quantity: safeParseInt(item.quantity)
+        }))
+      };
+    });
 
     res.status(200).json({
       success: true,
-      data: orders
+      data: ordersWithImageUrls
     });
   } catch (error) {
     console.error('Error getting user orders:', error);
@@ -322,14 +389,17 @@ const getUserOrders = async (req, res) => {
   }
 };
 
-// Get single order by ID
+// Get single order by ID - UPDATED
 const getOrderById = async (req, res) => {
   try {
     const { orderId } = req.params;
     const userId = req.user.id;
 
     const order = await Order.findOne({ _id: orderId, userId })
-      .populate('items.productId');
+      .populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
 
     if (!order) {
       return res.status(404).json({
@@ -338,9 +408,21 @@ const getOrderById = async (req, res) => {
       });
     }
 
+    // Add imageUrl to products in the order
+    const orderObj = order.toObject();
+    const orderWithImageUrls = {
+      ...orderObj,
+      items: orderObj.items.map(item => ({
+        ...item,
+        imageUrl: item.imageUrl || (item.image ? `${req.protocol}://${req.get('host')}/images/Products/${item.image}` : null),
+        price: safeParseFloat(item.price),
+        quantity: safeParseInt(item.quantity)
+      }))
+    };
+
     res.status(200).json({
       success: true,
-      data: order
+      data: orderWithImageUrls
     });
   } catch (error) {
     console.error('Error getting order:', error);
@@ -385,7 +467,7 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-// Get all available coupons - NEW
+// Get all available coupons
 const getAvailableCoupons = async (req, res) => {
   try {
     const currentDate = new Date();
@@ -413,12 +495,81 @@ const getAvailableCoupons = async (req, res) => {
   }
 };
 
+// Track Order - UPDATED
+const trackOrder = async (req, res) => {
+  try {
+    const { orderId, email } = req.body;
+
+    if (!orderId || !email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Order ID and email are required'
+      });
+    }
+
+    // Find order by orderNumber and email (no authentication required)
+    const order = await Order.findOne({ 
+      orderNumber: orderId.trim(), 
+      'contactInfo.email': email.trim().toLowerCase() 
+    }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found. Please check your Order ID and email.'
+      });
+    }
+
+    // Add imageUrl to products in the order
+    const orderObj = order.toObject();
+    const itemsWithImageUrls = orderObj.items.map(item => ({
+      ...item,
+      imageUrl: item.imageUrl || (item.image ? `${req.protocol}://${req.get('host')}/images/Products/${item.image}` : null),
+      price: safeParseFloat(item.price),
+      quantity: safeParseInt(item.quantity)
+    }));
+
+    // Return order details
+    res.status(200).json({
+      success: true,
+      data: {
+        orderNumber: order.orderNumber,
+        status: order.status,
+        paymentStatus: order.paymentStatus,
+        paymentMethod: order.paymentMethod,
+        total: order.orderSummary.total,
+        subtotal: order.orderSummary.subtotal,
+        tax: order.orderSummary.tax,
+        shipping: order.orderSummary.shipping,
+        discount: order.orderSummary.discount || 0,
+        appliedCoupon: order.appliedCoupon,
+        createdAt: order.createdAt,
+        updatedAt: order.updatedAt,
+        items: itemsWithImageUrls,
+        contactInfo: order.contactInfo,
+        billingAddress: order.billingAddress
+      }
+    });
+
+  } catch (error) {
+    console.error('Error tracking order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while tracking order'
+    });
+  }
+};
+
 module.exports = {
   getCheckoutData,
-  applyCoupon, // NEW
+  applyCoupon,
   createOrder,
   getUserOrders,
   getOrderById,
   updateOrderStatus,
-  getAvailableCoupons // NEW
+  getAvailableCoupons,
+  trackOrder
 };

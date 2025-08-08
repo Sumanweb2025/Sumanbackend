@@ -7,6 +7,40 @@ const isValidObjectId = (id) => {
   return mongoose.Types.ObjectId.isValid(id);
 };
 
+// Helper function to add imageUrl to product and ensure price is a number
+const addImageUrlToProduct = (product, req) => {
+  if (!product) return product;
+  
+  const productObj = product.toObject ? product.toObject() : product;
+  return {
+    ...productObj,
+    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
+    price: parseFloat(productObj.price) || 0 // Ensure price is always a number
+  };
+};
+
+// Helper function to calculate cart totals
+const calculateCartTotals = (cart) => {
+  if (!cart || !cart.items || cart.items.length === 0) {
+    return { ...cart, totalAmount: 0 };
+  }
+
+  const subtotal = cart.items.reduce((total, item) => {
+    const price = parseFloat(item.productId?.price) || 0;
+    const quantity = parseInt(item.quantity) || 0;
+    return total + (price * quantity);
+  }, 0);
+
+  const tax = subtotal * 0.13; // 13% Canadian tax
+  const shipping = subtotal > 75 ? 0 : 15; // $15 CAD shipping
+  const totalAmount = subtotal + tax + shipping;
+
+  return {
+    ...cart,
+    totalAmount: parseFloat(totalAmount.toFixed(2))
+  };
+};
+
 // Get user's cart
 const getCart = async (req, res) => {
   try {
@@ -33,9 +67,22 @@ const getCart = async (req, res) => {
       });
     }
 
+    // Add imageUrl to each product and ensure price is a number
+    const cartWithImageUrls = {
+      ...cart.toObject(),
+      items: cart.items.map(item => ({
+        ...item,
+        quantity: parseInt(item.quantity) || 1,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
+
+    // Calculate and add total amount
+    const cartWithTotals = calculateCartTotals(cartWithImageUrls);
+
     res.status(200).json({
       success: true,
-      data: cart,
+      data: cartWithTotals,
       message: 'Cart retrieved successfully'
     });
   } catch (error) {
@@ -72,6 +119,15 @@ const addToCart = async (req, res) => {
       });
     }
 
+    // Ensure quantity is a valid number
+    const validQuantity = parseInt(quantity) || 1;
+    if (validQuantity < 1) {
+      return res.status(400).json({
+        success: false,
+        message: 'Quantity must be at least 1'
+      });
+    }
+
     let product;
     
     // Check if productId is a valid ObjectId, if not search by custom field
@@ -98,7 +154,7 @@ const addToCart = async (req, res) => {
       // Create new cart
       cart = new Cart({
         userId,
-        items: [{ productId: actualProductId, quantity }]
+        items: [{ productId: actualProductId, quantity: validQuantity }]
       });
     } else {
       // Check if product already in cart
@@ -108,10 +164,10 @@ const addToCart = async (req, res) => {
 
       if (existingItemIndex > -1) {
         // Update quantity
-        cart.items[existingItemIndex].quantity += quantity;
+        cart.items[existingItemIndex].quantity = parseInt(cart.items[existingItemIndex].quantity) + validQuantity;
       } else {
         // Add new item
-        cart.items.push({ productId: actualProductId, quantity });
+        cart.items.push({ productId: actualProductId, quantity: validQuantity });
       }
     }
 
@@ -121,9 +177,22 @@ const addToCart = async (req, res) => {
       select: 'name price image description category'
     });
 
+    // Add imageUrl to each product in the response and ensure proper data types
+    const cartWithImageUrls = {
+      ...cart.toObject(),
+      items: cart.items.map(item => ({
+        ...item,
+        quantity: parseInt(item.quantity) || 1,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
+
+    // Calculate and add total amount
+    const cartWithTotals = calculateCartTotals(cartWithImageUrls);
+
     res.status(200).json({
       success: true,
-      data: cart,
+      data: cartWithTotals,
       message: 'Product added to cart successfully'
     });
   } catch (error) {
@@ -149,7 +218,8 @@ const updateCartItem = async (req, res) => {
       });
     }
 
-    if (quantity < 1) {
+    const validQuantity = parseInt(quantity) || 1;
+    if (validQuantity < 1) {
       return res.status(400).json({
         success: false,
         message: 'Quantity must be at least 1'
@@ -195,16 +265,29 @@ const updateCartItem = async (req, res) => {
       });
     }
 
-    cart.items[itemIndex].quantity = quantity;
+    cart.items[itemIndex].quantity = validQuantity;
     await cart.save();
     await cart.populate({
       path: 'items.productId',
       select: 'name price image description category'
     });
 
+    // Add imageUrl to each product in the response and ensure proper data types
+    const cartWithImageUrls = {
+      ...cart.toObject(),
+      items: cart.items.map(item => ({
+        ...item,
+        quantity: parseInt(item.quantity) || 1,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
+
+    // Calculate and add total amount
+    const cartWithTotals = calculateCartTotals(cartWithImageUrls);
+
     res.status(200).json({
       success: true,
-      data: cart,
+      data: cartWithTotals,
       message: 'Cart updated successfully'
     });
   } catch (error) {
@@ -267,9 +350,22 @@ const removeFromCart = async (req, res) => {
       select: 'name price image description category'
     });
 
+    // Add imageUrl to each product in the response and ensure proper data types
+    const cartWithImageUrls = {
+      ...cart.toObject(),
+      items: cart.items.map(item => ({
+        ...item,
+        quantity: parseInt(item.quantity) || 1,
+        productId: addImageUrlToProduct(item.productId, req)
+      }))
+    };
+
+    // Calculate and add total amount
+    const cartWithTotals = calculateCartTotals(cartWithImageUrls);
+
     res.status(200).json({
       success: true,
-      data: cart,
+      data: cartWithTotals,
       message: 'Product removed from cart successfully'
     });
   } catch (error) {
@@ -301,6 +397,7 @@ const clearCart = async (req, res) => {
 
     res.status(200).json({
       success: true,
+      data: { items: [], totalAmount: 0 },
       message: 'Cart cleared successfully'
     });
   } catch (error) {
@@ -325,7 +422,7 @@ const getCartCount = async (req, res) => {
     }
     
     const cart = await Cart.findOne({ userId });
-    const count = cart ? cart.items.reduce((total, item) => total + item.quantity, 0) : 0;
+    const count = cart ? cart.items.reduce((total, item) => total + (parseInt(item.quantity) || 0), 0) : 0;
 
     res.status(200).json({
       success: true,

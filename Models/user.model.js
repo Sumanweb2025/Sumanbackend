@@ -20,9 +20,11 @@ const userSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: [true, 'Password is required'],
     minlength: [6, 'Password must be at least 6 characters'],
-    select: false
+    select: false,
+    required: function() {
+      return this.authProvider === 'local';
+    }
   },
   phone: {
     type: String,
@@ -61,14 +63,28 @@ const userSchema = new mongoose.Schema({
   },
   lastLogin: {
     type: Date
+  },
+  // Google Authentication fields
+  googleId: {
+    type: String,
+    unique: true,
+    sparse: true // Allows multiple null values
+  },
+  authProvider: {
+    type: String,
+    enum: ['local', 'google'],
+    default: 'local'
+  },
+  profileImage: {
+    type: String // URL to profile image from Google
   }
 }, {
   timestamps: true
 });
 
-// Hash password before saving
+// Hash password before saving (only for local auth)
 userSchema.pre('save', async function(next) {
-  if (!this.isModified('password')) return next();
+  if (!this.isModified('password') || this.authProvider !== 'local') return next();
   
   try {
     const salt = await bcrypt.genSalt(12);
@@ -79,8 +95,11 @@ userSchema.pre('save', async function(next) {
   }
 });
 
-// Compare password method
+// Compare password method (only for local auth)
 userSchema.methods.comparePassword = async function(candidatePassword) {
+  if (this.authProvider !== 'local') {
+    return false;
+  }
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
@@ -88,6 +107,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 userSchema.methods.toJSON = function() {
   const user = this.toObject();
   delete user.password;
+  delete user.googleId; // Don't expose googleId in API responses
   return user;
 };
 

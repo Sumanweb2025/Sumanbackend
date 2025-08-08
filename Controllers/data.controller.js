@@ -2,8 +2,7 @@ const Product = require('../Models/data.model');
 const path = require('path');
 const fs = require('fs').promises;
 
-// 📦 @desc Insert products from a JSON file to MongoDB
-// 🚀 @route POST /api/products/import
+
 exports.importProducts = async (req, res) => {
   try {
     // Resolve the file path safely
@@ -28,8 +27,7 @@ exports.importProducts = async (req, res) => {
   }
 };
 
-// 🍭 @desc Get all products from MongoDB
-// 🌐 @route GET /api/products
+
 exports.getProducts = async (req, res) => {
   try {
     const products = await Product.find();
