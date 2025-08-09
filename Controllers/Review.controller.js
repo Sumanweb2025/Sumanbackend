@@ -1,111 +1,155 @@
-// const Review = require('../Models/Review.model');
-// const asyncHandler = require('express-async-handler');
 
-// const addReview = asyncHandler(async (req, res) => {
-//   const { productId, orderId, rating } = req.body;
+const Review = require('../Models/Review.model');
+const Product = require('../Models/product.model');
 
-//   // 1. Validate required fields
-//   if (!productId || !orderId || !rating) {
-//     res.status(400);
-//     throw new Error('Product ID, Order ID and Rating are required');
-//   }
+// Get all reviews for a product
+const getProductReviews = async (req, res) => {
+  try {
+    const { productId } = req.params;
 
-//   // 2. Verify email exists (from middleware)
-//   if (!req.user?.email) {
-//     res.status(401);
-//     throw new Error('User authentication invalid');
-//   }
+    const reviews = await Review.find({ product_id: productId })
+      .sort({ createdAt: -1 })
+      .populate('user_id', 'name email');
 
-//   // 3. Check for existing review
-//   const existingReview = await Review.findOne({
-//     orderId,
-//     userEmail: req.user.email
-//   });
+    // Calculate average rating
+    const avgRating = await Review.aggregate([
+      { $match: { product_id: productId } },
+      { $group: { _id: null, avgRating: { $avg: '$rating' }, totalReviews: { $sum: 1 } } }
+    ]);
 
-//   if (existingReview) {
-//     res.status(400);
-//     throw new Error('You have already reviewed this order');
-//   }
+    const averageRating = avgRating[0]?.avgRating || 0;
+    const totalReviews = avgRating[0]?.totalReviews || 0;
 
-//   // 4. Create review
-//   const review = await Review.create({
-//     productId,
-//     orderId,
-//     userEmail: req.user.email,
-//     userName: req.user.name || 'Customer',
-//     rating,
-//     reviewText: req.body.reviewText || '',
-//     images: req.body.images || []
-//   });
+    res.status(200).json({
+      success: true,
+      data: {
+        reviews,
+        totalReviews,
+        averageRating
+      }
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching reviews',
+      error: error.message
+    });
+  }
+};
 
-//   res.status(201).json(review);
-// });
-// // @desc    Get reviews for a product
-// // @route   GET /api/products/:productId/reviews
-// // @access  Public
-// const getProductReviews = asyncHandler(async (req, res) => {
-//   const pageSize = 10;
-//   const page = Number(req.query.pageNumber) || 1;
+// Create a new review
+const createReview = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const { rating, comment } = req.body;
+    const userId = req.user.id;
+    const userName = req.user.name;
 
-//   const count = await Review.countDocuments({ productId: req.params.productId });
-//   const reviews = await Review.find({ productId: req.params.productId })
-//     .sort({ createdAt: -1 })
-//     .limit(pageSize)
-//     .skip(pageSize * (page - 1));
+    // Check if user has already reviewed this product
+    const existingReview = await Review.findOne({
+      product_id: productId,
+      user_id: userId
+    });
 
-//   res.json({
-//     reviews,
-//     page,
-//     pages: Math.ceil(count / pageSize),
-//     count
-//   });
-// });
+    if (existingReview) {
+      return res.status(400).json({
+        success: false,
+        message: 'You have already reviewed this product'
+      });
+    }
 
-// // @desc    Get average rating for a product
-// // @route   GET /api/products/:productId/rating
-// // @access  Public
-// const getProductRating = asyncHandler(async (req, res) => {
-//   const result = await Review.aggregate([
-//     { $match: { productId: req.params.productId } }, // Changed for string productId
-//     { 
-//       $group: { 
-//         _id: null, 
-//         averageRating: { $avg: "$rating" }, 
-//         count: { $sum: 1 } 
-//       } 
-//     }
-//   ]);
-  
-//   res.json({
-//     averageRating: result[0]?.averageRating.toFixed(1) || 0,
-//     reviewCount: result[0]?.count || 0
-//   });
-// });
+    // Check if product exists
+    const product = await Product.findOne({ product_id: productId });
+    if (!product) {
+      return res.status(404).json({
+        success: false,
+        message: 'Product not found'
+      });
+    }
 
-// // @desc    Delete a review
-// // @route   DELETE /api/reviews/:id
-// // @access  Private/Admin or Review Owner
-// const deleteReview = asyncHandler(async (req, res) => {
-//   const review = await Review.findById(req.params.id);
+    // Create review
+    const review = new Review({
+      product_id: productId,
+      user_id: userId,
+      user_name: userName,
+      rating,
+      comment
+    });
 
-//   if (!review) {
-//     res.status(404);
-//     throw new Error('Review not found');
-//   }
+    await review.save();
 
-//   // Check if user is admin or review owner (by email)
-//   if (review.userEmail !== req.user.email && !req.user.isAdmin) {
-//     res.status(401);
-//     throw new Error('Not authorized to delete this review');
-//   }
+    // Update product's average rating
+    await updateProductRating(productId);
 
-//   await review.remove();
-//   res.json({ message: 'Review removed' });
-// });
+    res.status(201).json({
+      success: true,
+      message: 'Review submitted successfully',
+      data: review
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: 'Error creating review',
+      error: error.message
+    });
+  }
+};
 
-// module.exports = {
-//   addReview,
-//   getProductReviews,
-//   getProductRating,
-//   deleteReview
-// };
+// Get user's review for a specific product
+const getUserReview = async (req, res) => {
+  try {
+    const { productId } = req.params;
+    const userId = req.user.id;
+
+    const review = await Review.findOne({
+      product_id: productId,
+      user_id: userId
+    });
+
+    res.status(200).json({
+      success: true,
+      data: review
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching user review',
+      error: error.message
+    });
+  }
+};
+
+// Update product rating (helper function)
+const updateProductRating = async (productId) => {
+  try {
+    const result = await Review.aggregate([
+      { $match: { product_id: productId } },
+      { 
+        $group: { 
+          _id: null, 
+          avgRating: { $avg: '$rating' },
+          totalReviews: { $sum: 1 }
+        } 
+      }
+    ]);
+
+    const avgRating = result[0]?.avgRating || 0;
+    const totalReviews = result[0]?.totalReviews || 0;
+    
+    await Product.findOneAndUpdate(
+      { product_id: productId },
+      { 
+        rating: Math.round(avgRating * 10) / 10, // Round to 1 decimal
+        review_count: totalReviews
+      }
+    );
+  } catch (error) {
+    console.error('Error updating product rating:', error);
+  }
+};
+
+module.exports = {
+  getProductReviews,
+  createReview,
+  getUserReview
+};

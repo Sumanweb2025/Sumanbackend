@@ -1,18 +1,16 @@
-// const express = require('express');
-// const router = express.Router();
-// const reviewController = require('../Controllers/Review.controller');
-// const { protect } = require('../Middleware/auth.middleware');
+// routes/review.routes.js
+const express = require('express');
+const router = express.Router();
+const reviewController = require('../Controllers/Review.controller');
+const auth = require('../Middleware/auth.middleware');
 
-// router.route('/add')
-//   .post(protect, reviewController.addReview);
+// Get all reviews for a product (public route)
+router.get('/product/:productId', reviewController.getProductReviews);
 
-// router.route('/:id')
-//   .delete(protect, reviewController.deleteReview);
+// Create a review (protected route)
+router.post('/product/:productId', auth, reviewController.createReview);
 
-// router.route('/products/:productId/reviews')
-//   .get(reviewController.getProductReviews);
+// Get user's review for a specific product (protected route)
+router.get('/product/:productId/user', auth, reviewController.getUserReview);
 
-// router.route('/products/:productId/rating')
-//   .get(reviewController.getProductRating);
-
-// module.exports = router;
+module.exports = router;
