@@ -1,6 +1,16 @@
 const Order = require('../Models/order.model');
 const Cart = require('../Models/cart.model'); 
 const Coupon = require('../Models/coupon.model'); 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const path = require('path');
+const fs = require('fs');
+
+// Import our services
+const PDFGeneratorService = require('../Services/pdfGenerator.js');
+const EmailService = require('../Services/mailer.js');
+
+// Initialize email service
+const emailService = new EmailService();
 
 // Helper function to add imageUrl to product and ensure price is a number
 const addImageUrlToProduct = (product, req) => {
@@ -10,7 +20,7 @@ const addImageUrlToProduct = (product, req) => {
   return {
     ...productObj,
     imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
-    price: parseFloat(productObj.price) || 0 // Ensure price is always a number
+    price: parseFloat(productObj.price) || 0
   };
 };
 
@@ -25,12 +35,130 @@ const safeParseInt = (value) => {
   return isNaN(parsed) ? 0 : parsed;
 };
 
+// Helper function to ensure uploads directory exists
+const ensureUploadsDirectory = () => {
+  const uploadsDir = path.join(__dirname, '../uploads/pdfs');
+  if (!fs.existsSync(uploadsDir)) {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  }
+  return uploadsDir;
+};
+
+// Helper function to process order and send emails
+const processOrderEmails = async (order, items, req, isPaymentCompleted = false) => {
+  try {
+    const uploadsDir = ensureUploadsDirectory();
+    const tempFiles = [];
+
+    // Generate and send order confirmation
+    const orderConfirmationPath = path.join(uploadsDir, `order-confirmation-${order.orderNumber}.pdf`);
+    await PDFGeneratorService.generateOrderConfirmationPDF(order, items, orderConfirmationPath);
+    tempFiles.push(orderConfirmationPath);
+    
+    await emailService.sendOrderConfirmationEmail(order, items, orderConfirmationPath);
+
+    if (order.paymentMethod === 'cod') {
+      // For COD orders, send bill PDF
+      const billPath = path.join(uploadsDir, `bill-${order.orderNumber}.pdf`);
+      await PDFGeneratorService.generateBillPDF(order, items, billPath);
+      tempFiles.push(billPath);
+      
+      await emailService.sendBillEmail(order, items, billPath);
+
+      // Send admin notification with bill
+      await emailService.sendAdminNotificationEmail(order, items, [
+        {
+          filename: `Order-Confirmation-${order.orderNumber}.pdf`,
+          path: orderConfirmationPath,
+          contentType: 'application/pdf'
+        },
+        {
+          filename: `Bill-${order.orderNumber}.pdf`,
+          path: billPath,
+          contentType: 'application/pdf'
+        }
+      ]);
+
+    } else if (isPaymentCompleted) {
+      // For paid orders, generate and send invoice
+      const invoicePath = path.join(uploadsDir, `invoice-${order.orderNumber}.pdf`);
+      await PDFGeneratorService.generateInvoicePDF(order, items, invoicePath);
+      tempFiles.push(invoicePath);
+      
+      await emailService.sendInvoiceEmail(order, items, invoicePath);
+
+      // Send admin notification with invoice
+      await emailService.sendAdminNotificationEmail(order, items, [
+        {
+          filename: `Order-Confirmation-${order.orderNumber}.pdf`,
+          path: orderConfirmationPath,
+          contentType: 'application/pdf'
+        },
+        {
+          filename: `Invoice-${order.orderNumber}.pdf`,
+          path: invoicePath,
+          contentType: 'application/pdf'
+        }
+      ]);
+    } else {
+      // For pending payments, just send admin notification
+      await emailService.sendAdminNotificationEmail(order, items, [
+        {
+          filename: `Order-Confirmation-${order.orderNumber}.pdf`,
+          path: orderConfirmationPath,
+          contentType: 'application/pdf'
+        }
+      ]);
+    }
+
+    // Clean up temp files after a delay (5 minutes)
+    setTimeout(() => {
+      emailService.cleanupTempFiles(tempFiles);
+    }, 5 * 60 * 1000);
+
+  } catch (error) {
+    console.error('Error processing order emails:', error);
+    // Don't throw error to prevent order creation failure
+  }
+};
+
+// Helper function to send payment confirmation after COD delivery
+const sendCODPaymentConfirmation = async (order, items) => {
+  try {
+    const uploadsDir = ensureUploadsDirectory();
+    const tempFiles = [];
+
+    // Generate invoice for completed COD payment
+    const invoicePath = path.join(uploadsDir, `invoice-${order.orderNumber}.pdf`);
+    await PDFGeneratorService.generateInvoicePDF(order, items, invoicePath);
+    tempFiles.push(invoicePath);
+    
+    await emailService.sendPaymentConfirmationEmail(order, items, invoicePath);
+
+    // Send invoice to admin
+    await emailService.sendAdminNotificationEmail(order, items, [
+      {
+        filename: `Invoice-${order.orderNumber}.pdf`,
+        path: invoicePath,
+        contentType: 'application/pdf'
+      }
+    ]);
+
+    // Clean up temp files after delay
+    setTimeout(() => {
+      emailService.cleanupTempFiles(tempFiles);
+    }, 5 * 60 * 1000);
+
+  } catch (error) {
+    console.error('Error sending COD payment confirmation:', error);
+  }
+};
+
 // Get order data for checkout
 const getCheckoutData = async (req, res) => {
   try {
     const userId = req.user.id;
     
-    // Get cart items
     const cart = await Cart.findOne({ userId }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -43,22 +171,20 @@ const getCheckoutData = async (req, res) => {
       });
     }
 
-    // Add imageUrl to each product and ensure proper data types
     const cartItemsWithImageUrls = cart.items.map(item => ({
       ...item.toObject(),
       quantity: safeParseInt(item.quantity),
       productId: addImageUrlToProduct(item.productId, req)
     }));
 
-    // Calculate totals with safe parsing
     const subtotal = cartItemsWithImageUrls.reduce((total, item) => {
       const price = safeParseFloat(item.productId.price);
       const quantity = safeParseInt(item.quantity);
       return total + (price * quantity);
     }, 0);
 
-    const tax = subtotal * 0.13; 
-   const shipping = subtotal > 75 ? 0 : 15; 
+    const tax = subtotal * 0.18;
+    const shipping = subtotal > 500 ? 0 : 50;
     const total = subtotal + tax + shipping;
 
     res.status(200).json({
@@ -82,7 +208,7 @@ const getCheckoutData = async (req, res) => {
   }
 };
 
-// Apply Coupon Function - UPDATED
+// Apply Coupon Function
 const applyCoupon = async (req, res) => {
   try {
     const { couponCode } = req.body;
@@ -95,7 +221,6 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    // Find the coupon
     const coupon = await Coupon.findOne({
       code: couponCode.toUpperCase(),
       isActive: true
@@ -108,7 +233,6 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    // Check if coupon is expired
     const currentDate = new Date();
     if (currentDate < coupon.validFrom || currentDate > coupon.validUntil) {
       return res.status(400).json({
@@ -117,7 +241,6 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    // Check usage limit
     if (coupon.usageLimit && coupon.usedCount >= coupon.usageLimit) {
       return res.status(400).json({
         success: false,
@@ -125,7 +248,6 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    // Get user's cart
     const cart = await Cart.findOne({ userId }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -138,7 +260,6 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    // Calculate cart total with safe parsing
     let subtotal = 0;
     cart.items.forEach(item => {
       const price = safeParseFloat(item.productId.price);
@@ -146,32 +267,16 @@ const applyCoupon = async (req, res) => {
       subtotal += price * quantity;
     });
 
-    // Check minimum order amount
     if (subtotal < coupon.minimumOrderAmount) {
       return res.status(400).json({
         success: false,
-        message: `Minimum order amount of $${coupon.minimumOrderAmount} required for this coupon`
+        message: `Minimum order amount of ₹${coupon.minimumOrderAmount} required for this coupon`
       });
     }
 
-    // Check if user has already used this coupon (optional - implement if needed)
-    const existingOrder = await Order.findOne({
-      userId,
-      'appliedCoupon.code': coupon.code
-    });
-
-    if (existingOrder && coupon.userUsageLimit <= 1) {
-      return res.status(400).json({
-        success: false,
-        message: 'You have already used this coupon'
-      });
-    }
-
-    // Calculate discount
     let discount = 0;
     if (coupon.discountType === 'percentage') {
       discount = (subtotal * coupon.discountValue) / 100;
-      // Apply maximum discount limit if set
       if (coupon.maximumDiscountAmount && discount > coupon.maximumDiscountAmount) {
         discount = coupon.maximumDiscountAmount;
       }
@@ -179,7 +284,6 @@ const applyCoupon = async (req, res) => {
       discount = coupon.discountValue;
     }
 
-    // Ensure discount doesn't exceed subtotal
     discount = Math.min(discount, subtotal);
 
     res.status(200).json({
@@ -203,23 +307,12 @@ const applyCoupon = async (req, res) => {
   }
 };
 
-// Create new order - UPDATED
-const createOrder = async (req, res) => {
+// Create Stripe Payment Intent
+const createPaymentIntent = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { contactInfo, billingAddress, paymentMethod, appliedCoupon } = req.body;
+    const { appliedCoupon } = req.body;
 
-    // Validate required fields
-    if (!contactInfo?.email || !billingAddress?.firstName || !billingAddress?.lastName || 
-        !billingAddress?.address || !billingAddress?.city || !billingAddress?.province || 
-        !billingAddress?.postalCode) {
-      return res.status(400).json({
-        success: false,
-        message: 'All required fields must be filled'
-      });
-    }
-
-    // Get cart items
     const cart = await Cart.findOne({ userId }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -232,22 +325,239 @@ const createOrder = async (req, res) => {
       });
     }
 
-    // Calculate totals with safe parsing
     const subtotal = cart.items.reduce((total, item) => {
       const price = safeParseFloat(item.productId.price);
       const quantity = safeParseInt(item.quantity);
       return total + (price * quantity);
     }, 0);
 
-    const tax = subtotal * 0.13; 
-    const shipping = subtotal > 75 ? 0 : 15; 
+    const tax = subtotal * 0.18;
+    const shipping = subtotal > 500 ? 0 : 50;
     
-    // Apply discount if coupon is provided
+    let discount = 0;
+    if (appliedCoupon) {
+      const coupon = await Coupon.findOne({
+        code: appliedCoupon.code.toUpperCase(),
+        isActive: true
+      });
+
+      if (coupon && subtotal >= coupon.minimumOrderAmount) {
+        if (coupon.discountType === 'percentage') {
+          discount = (subtotal * coupon.discountValue) / 100;
+          if (coupon.maximumDiscountAmount && discount > coupon.maximumDiscountAmount) {
+            discount = coupon.maximumDiscountAmount;
+          }
+        } else if (coupon.discountType === 'fixed') {
+          discount = coupon.discountValue;
+        }
+        discount = Math.min(discount, subtotal);
+      }
+    }
+
+    const total = subtotal + tax + shipping - discount;
+    const amountInPaise = Math.round(total * 100);
+
+    const paymentIntent = await stripe.paymentIntents.create({
+      amount: amountInPaise,
+      currency: 'inr',
+      metadata: {
+        userId: userId.toString(),
+        subtotal: subtotal.toString(),
+        tax: tax.toString(),
+        shipping: shipping.toString(),
+        discount: discount.toString(),
+        total: total.toString(),
+        appliedCoupon: appliedCoupon ? JSON.stringify(appliedCoupon) : null
+      }
+    });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        clientSecret: paymentIntent.client_secret,
+        amount: total,
+        currency: 'INR'
+      }
+    });
+
+  } catch (error) {
+    console.error('Error creating payment intent:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to create payment intent'
+    });
+  }
+};
+
+// Confirm Payment and Create Order
+const confirmPaymentAndCreateOrder = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { paymentIntentId, contactInfo, billingAddress, paymentMethod } = req.body;
+
+    const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
+    
+    if (paymentIntent.status !== 'succeeded') {
+      return res.status(400).json({
+        success: false,
+        message: 'Payment not completed successfully'
+      });
+    }
+
+    if (!contactInfo?.email || !billingAddress?.firstName || !billingAddress?.lastName || 
+        !billingAddress?.address || !billingAddress?.city || !billingAddress?.province || 
+        !billingAddress?.postalCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be filled'
+      });
+    }
+
+    const cart = await Cart.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
+    
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cart is empty'
+      });
+    }
+
+    const metadata = paymentIntent.metadata;
+    const subtotal = parseFloat(metadata.subtotal);
+    const tax = parseFloat(metadata.tax);
+    const shipping = parseFloat(metadata.shipping);
+    const discount = parseFloat(metadata.discount);
+    const total = parseFloat(metadata.total);
+    
+    let couponData = null;
+    if (metadata.appliedCoupon && metadata.appliedCoupon !== 'null') {
+      const appliedCoupon = JSON.parse(metadata.appliedCoupon);
+      
+      await Coupon.findOneAndUpdate(
+        { code: appliedCoupon.code.toUpperCase() },
+        { $inc: { usedCount: 1 } }
+      );
+      
+      couponData = {
+        code: appliedCoupon.code,
+        description: appliedCoupon.description || '',
+        discountType: appliedCoupon.discountType,
+        discountValue: appliedCoupon.discountValue,
+        discount: discount
+      };
+    }
+
+    const orderItems = cart.items.map(item => {
+      const productWithImageUrl = addImageUrlToProduct(item.productId, req);
+      return {
+        productId: item.productId._id,
+        name: productWithImageUrl.name,
+        price: safeParseFloat(productWithImageUrl.price),
+        quantity: safeParseInt(item.quantity),
+        image: productWithImageUrl.image,
+        imageUrl: productWithImageUrl.imageUrl,
+        brand: productWithImageUrl.brand,
+        category: productWithImageUrl.category
+      };
+    });
+
+    const timestamp = Date.now().toString();
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const orderNumber = `ORD${timestamp}${random}`;
+
+    const order = new Order({
+      userId,
+      orderNumber,
+      items: orderItems,
+      contactInfo,
+      billingAddress,
+      paymentMethod: 'card',
+      paymentStatus: 'paid',
+      status: 'confirmed',
+      appliedCoupon: couponData,
+      orderSummary: {
+        subtotal,
+        tax,
+        shipping,
+        discount,
+        total
+      },
+      stripePaymentId: paymentIntentId
+    });
+
+    await order.save();
+
+    await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [] } }
+    );
+
+    // Process emails and PDF generation
+    await processOrderEmails(order, orderItems, req, true);
+
+    res.status(201).json({
+      success: true,
+      message: 'Order placed and payment confirmed successfully!',
+      data: {
+        orderNumber: order.orderNumber,
+        orderId: order._id,
+        total: total.toFixed(2),
+        paymentStatus: 'paid'
+      }
+    });
+
+  } catch (error) {
+    console.error('Error confirming payment and creating order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to process order. Please contact support.'
+    });
+  }
+};
+
+// Create new order (for COD/UPI/NetBanking)
+const createOrder = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { contactInfo, billingAddress, paymentMethod, appliedCoupon } = req.body;
+
+    if (!contactInfo?.email || !billingAddress?.firstName || !billingAddress?.lastName || 
+        !billingAddress?.address || !billingAddress?.city || !billingAddress?.province || 
+        !billingAddress?.postalCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be filled'
+      });
+    }
+
+    const cart = await Cart.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
+    
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cart is empty'
+      });
+    }
+
+    const subtotal = cart.items.reduce((total, item) => {
+      const price = safeParseFloat(item.productId.price);
+      const quantity = safeParseInt(item.quantity);
+      return total + (price * quantity);
+    }, 0);
+
+    const tax = subtotal * 0.18;
+    const shipping = subtotal > 500 ? 0 : 50;
+    
     let discount = 0;
     let couponData = null;
 
     if (appliedCoupon) {
-      // Verify coupon again for security
       const coupon = await Coupon.findOne({
         code: appliedCoupon.code.toUpperCase(),
         isActive: true
@@ -275,7 +585,6 @@ const createOrder = async (req, res) => {
               discount: discount
             };
 
-            // Increment coupon usage count
             await Coupon.findByIdAndUpdate(coupon._id, {
               $inc: { usedCount: 1 }
             });
@@ -286,7 +595,6 @@ const createOrder = async (req, res) => {
 
     const total = subtotal + tax + shipping - discount;
 
-    // Prepare order items with image URLs
     const orderItems = cart.items.map(item => {
       const productWithImageUrl = addImageUrlToProduct(item.productId, req);
       return {
@@ -301,19 +609,19 @@ const createOrder = async (req, res) => {
       };
     });
 
-    // Generate order number manually
     const timestamp = Date.now().toString();
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
     const orderNumber = `ORD${timestamp}${random}`;
 
-    // Create order
     const order = new Order({
       userId,
       orderNumber,
       items: orderItems,
       contactInfo,
       billingAddress,
-      paymentMethod: paymentMethod || 'COD',
+      paymentMethod: paymentMethod || 'cod',
+      paymentStatus: (paymentMethod === 'upi' || paymentMethod === 'netbanking') ? 'paid' : 'pending',
+      status: (paymentMethod === 'upi' || paymentMethod === 'netbanking') ? 'confirmed' : 'pending',
       appliedCoupon: couponData,
       orderSummary: {
         subtotal,
@@ -326,11 +634,14 @@ const createOrder = async (req, res) => {
 
     await order.save();
 
-    // Clear cart after successful order
     await Cart.findOneAndUpdate(
       { userId },
       { $set: { items: [] } }
     );
+
+    // Process emails and PDF generation based on payment method
+    const isPaymentCompleted = paymentMethod === 'upi' || paymentMethod === 'netbanking';
+    await processOrderEmails(order, orderItems, req, isPaymentCompleted);
 
     res.status(201).json({
       success: true,
@@ -338,7 +649,8 @@ const createOrder = async (req, res) => {
       data: {
         orderNumber: order.orderNumber,
         orderId: order._id,
-        total: total.toFixed(2)
+        total: total.toFixed(2),
+        paymentStatus: order.paymentStatus
       }
     });
 
@@ -351,7 +663,7 @@ const createOrder = async (req, res) => {
   }
 };
 
-// Get user orders - UPDATED
+// Get user orders
 const getUserOrders = async (req, res) => {
   try {
     const userId = req.user.id;
@@ -362,7 +674,6 @@ const getUserOrders = async (req, res) => {
       })
       .sort({ createdAt: -1 });
 
-    // Add imageUrl to products in each order
     const ordersWithImageUrls = orders.map(order => {
       const orderObj = order.toObject();
       return {
@@ -389,7 +700,7 @@ const getUserOrders = async (req, res) => {
   }
 };
 
-// Get single order by ID - UPDATED
+// Get single order by ID
 const getOrderById = async (req, res) => {
   try {
     const { orderId } = req.params;
@@ -408,7 +719,6 @@ const getOrderById = async (req, res) => {
       });
     }
 
-    // Add imageUrl to products in the order
     const orderObj = order.toObject();
     const orderWithImageUrls = {
       ...orderObj,
@@ -439,7 +749,10 @@ const updateOrderStatus = async (req, res) => {
     const { orderId } = req.params;
     const { status, paymentStatus } = req.body;
 
-    const order = await Order.findById(orderId);
+    const order = await Order.findById(orderId).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
     
     if (!order) {
       return res.status(404).json({
@@ -448,10 +761,31 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
+    const oldPaymentStatus = order.paymentStatus;
+    
     if (status) order.status = status;
     if (paymentStatus) order.paymentStatus = paymentStatus;
 
     await order.save();
+
+    // If COD order payment status changed from pending to paid, send invoice
+    if (order.paymentMethod === 'cod' && 
+        oldPaymentStatus === 'pending' && 
+        order.paymentStatus === 'paid') {
+      
+      const orderItems = order.items.map(item => ({
+        productId: item.productId._id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+        imageUrl: item.imageUrl,
+        brand: item.brand,
+        category: item.category
+      }));
+
+      await sendCODPaymentConfirmation(order, orderItems);
+    }
 
     res.status(200).json({
       success: true,
@@ -495,7 +829,7 @@ const getAvailableCoupons = async (req, res) => {
   }
 };
 
-// Track Order - UPDATED
+// Track Order
 const trackOrder = async (req, res) => {
   try {
     const { orderId, email } = req.body;
@@ -507,7 +841,6 @@ const trackOrder = async (req, res) => {
       });
     }
 
-    // Find order by orderNumber and email (no authentication required)
     const order = await Order.findOne({ 
       orderNumber: orderId.trim(), 
       'contactInfo.email': email.trim().toLowerCase() 
@@ -523,7 +856,6 @@ const trackOrder = async (req, res) => {
       });
     }
 
-    // Add imageUrl to products in the order
     const orderObj = order.toObject();
     const itemsWithImageUrls = orderObj.items.map(item => ({
       ...item,
@@ -532,7 +864,6 @@ const trackOrder = async (req, res) => {
       quantity: safeParseInt(item.quantity)
     }));
 
-    // Return order details
     res.status(200).json({
       success: true,
       data: {
@@ -566,6 +897,8 @@ const trackOrder = async (req, res) => {
 module.exports = {
   getCheckoutData,
   applyCoupon,
+  createPaymentIntent,
+  confirmPaymentAndCreateOrder,
   createOrder,
   getUserOrders,
   getOrderById,

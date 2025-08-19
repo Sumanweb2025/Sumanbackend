@@ -30,6 +30,7 @@ const orderSchema = new mongoose.Schema({
       min: 1
     },
     image: String,
+    imageUrl: String, // Added for storing full image URL
     brand: String,
     category: String
   }],
@@ -72,7 +73,7 @@ const orderSchema = new mongoose.Schema({
     },
     phone: String
   },
-  // NEW: Applied coupon information
+  // Applied coupon information
   appliedCoupon: {
     code: String,
     description: String,
@@ -99,7 +100,6 @@ const orderSchema = new mongoose.Schema({
       type: Number,
       required: true
     },
-    // NEW: Discount field
     discount: {
       type: Number,
       default: 0
@@ -119,11 +119,32 @@ const orderSchema = new mongoose.Schema({
     enum: ['pending', 'paid', 'failed', 'refunded'],
     default: 'pending'
   },
-  // UPDATED: Payment method options
   paymentMethod: {
     type: String,
-    enum: ['card', 'upi', 'netbanking', 'wallet', 'cod'],
+    enum: ['card', 'upi','netbanking','cod'],
     default: 'cod'
+  },
+  // NEW: Stripe payment integration fields
+  stripePaymentId: {
+    type: String,
+    default: null
+  },
+  stripePaymentIntentId: {
+    type: String,
+    default: null
+  },
+  // Additional tracking fields
+  trackingNumber: {
+    type: String,
+    default: null
+  },
+  estimatedDeliveryDate: {
+    type: Date,
+    default: null
+  },
+  notes: {
+    type: String,
+    default: null
   }
 }, {
   timestamps: true
@@ -138,5 +159,12 @@ orderSchema.pre('save', async function(next) {
   }
   next();
 });
+
+// Index for better query performance
+orderSchema.index({ userId: 1, createdAt: -1 });
+orderSchema.index({ orderNumber: 1 });
+orderSchema.index({ 'contactInfo.email': 1 });
+orderSchema.index({ status: 1 });
+orderSchema.index({ paymentStatus: 1 });
 
 module.exports = mongoose.model('Order', orderSchema);
