@@ -2,6 +2,7 @@ const User = require('../Models/user.model');
 const jwt = require('jsonwebtoken');
 const { validationResult } = require('express-validator');
 const { OAuth2Client } = require('google-auth-library');
+const multer = require('multer');
 
 // Initialize Google OAuth client
 const googleClient = new OAuth2Client(
@@ -9,11 +10,57 @@ const googleClient = new OAuth2Client(
   process.env.GOOGLE_CLIENT_SECRET
 );
 
+// Configure multer for memory storage (DATABASE ONLY - NO FILE STORAGE)
+const storage = multer.memoryStorage();
+
+// File filter for images only
+const fileFilter = (req, file, cb) => {
+  const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp'];
+  
+  if (allowedTypes.includes(file.mimetype)) {
+    cb(null, true);
+  } else {
+    cb(new Error('Invalid file type. Only JPEG, PNG, GIF and WebP images are allowed.'), false);
+  }
+};
+
+// Multer upload configuration - Memory storage only
+const upload = multer({
+  storage: storage,
+  limits: {
+    fileSize: 5 * 1024 * 1024, // 5MB limit
+  },
+  fileFilter: fileFilter
+});
+
 // Generate JWT Token
 const generateToken = (userId) => {
   return jwt.sign({ userId }, process.env.JWT_SECRET || 'your_jwt_secret', {
     expiresIn: '7d'
   });
+};
+
+// Helper function to format user data consistently
+const formatUserData = (user) => {
+  return {
+    id: user._id,
+    name: user.name,
+    email: user.email,
+    phone: user.phone,
+    address: user.address,
+    role: user.role,
+    lastLogin: user.lastLogin,
+    authProvider: user.authProvider,
+    profileImage: user.displayImage, // Use virtual field that handles priority
+    picture: user.picture,
+    googleProfileImage: user.googleProfileImage,
+    profileImageInfo: user.profileImageInfo, // Include image metadata
+    emailVerified: user.emailVerified,
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt,
+    wishlist: user.wishlist,
+    cart: user.cart
+  };
 };
 
 // User Signup
@@ -59,15 +106,7 @@ exports.signup = async (req, res) => {
       success: true,
       message: 'User registered successfully',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          role: user.role,
-          authProvider: user.authProvider
-        },
+        user: formatUserData(user),
         token
       }
     });
@@ -96,8 +135,8 @@ exports.login = async (req, res) => {
 
     const { email, password } = req.body;
 
-    // Find user and include password field
-    const user = await User.findOne({ email }).select('+password');
+    // Find user and include password field and profile image
+    const user = await User.findOne({ email }).select('+password +profileImageBase64');
     if (!user) {
       return res.status(401).json({
         success: false,
@@ -141,16 +180,7 @@ exports.login = async (req, res) => {
       success: true,
       message: 'Login successful',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          role: user.role,
-          lastLogin: user.lastLogin,
-          authProvider: user.authProvider
-        },
+        user: formatUserData(user),
         token
       }
     });
@@ -185,23 +215,16 @@ exports.googleAuth = async (req, res) => {
     const payload = ticket.getPayload();
     const { sub: googleId, email, name, picture } = payload;
 
-    // Check if user already exists
-    let user = await User.findOne({ 
-      $or: [
-        { email: email },
-        { googleId: googleId }
-      ]
-    });
+    console.log('Google payload:', { googleId, email, name, picture });
+
+    // Check if user already exists (include profile image)
+    let user = await User.findByEmailOrGoogleId(email, googleId).select('+profileImageBase64');
 
     if (user) {
-      // Update existing user with Google info if needed
-      if (!user.googleId) {
-        user.googleId = googleId;
-        user.authProvider = 'google';
-        user.profileImage = picture;
-      }
-      user.lastLogin = new Date();
+      // Update existing user with Google info
+      user.updateGoogleInfo(payload);
       await user.save();
+      console.log('Updated existing user with Google info');
     } else {
       // Create new user with Google info
       user = new User({
@@ -209,31 +232,26 @@ exports.googleAuth = async (req, res) => {
         email: email,
         googleId: googleId,
         authProvider: 'google',
-        profileImage: picture,
+        picture: picture,
+        googleProfileImage: picture,
         isActive: true,
         lastLogin: new Date()
       });
       await user.save();
+      console.log('Created new Google user');
     }
 
     // Generate JWT token
     const token = generateToken(user._id);
 
+    const userData = formatUserData(user);
+    console.log('Final user data being sent:', userData);
+
     res.status(200).json({
       success: true,
       message: 'Google authentication successful',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          role: user.role,
-          lastLogin: user.lastLogin,
-          authProvider: user.authProvider,
-          profileImage: user.profileImage
-        },
+        user: userData,
         token
       }
     });
@@ -250,7 +268,8 @@ exports.googleAuth = async (req, res) => {
 // Get User Profile
 exports.getProfile = async (req, res) => {
   try {
-    const user = await User.findById(req.user.userId);
+    // Include profile image in query
+    const user = await User.findByIdWithProfileImage(req.user.userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -258,22 +277,13 @@ exports.getProfile = async (req, res) => {
       });
     }
 
+    console.log('Profile data for user:', user.profileImageInfo);
+
     res.status(200).json({
       success: true,
       message: 'Profile retrieved successfully',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          role: user.role,
-          createdAt: user.createdAt,
-          lastLogin: user.lastLogin,
-          authProvider: user.authProvider,
-          profileImage: user.profileImage
-        }
+        user: formatUserData(user)
       }
     });
 
@@ -282,6 +292,99 @@ exports.getProfile = async (req, res) => {
     res.status(500).json({
       success: false,
       message: 'Server error while fetching profile'
+    });
+  }
+};
+
+// Upload Profile Image - DATABASE ONLY STORAGE
+exports.uploadProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    
+    // Check if file was uploaded
+    if (!req.file) {
+      return res.status(400).json({
+        success: false,
+        message: 'No image file provided'
+      });
+    }
+
+    console.log('Received file:', {
+      originalname: req.file.originalname,
+      mimetype: req.file.mimetype,
+      size: req.file.size,
+      bufferLength: req.file.buffer.length
+    });
+
+    // Find user
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Update user profile image using the model method
+    user.updateProfileImageBase64(req.file.buffer, req.file.mimetype, req.file.size);
+    
+    await user.save();
+
+    console.log('Profile image saved to database:', {
+      type: user.profileImageType,
+      size: user.profileImageSize,
+      uploadDate: user.profileImageUploadDate
+    });
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile image uploaded successfully',
+      data: {
+        imageUrl: user.displayImage, // This will be the base64 data URL
+        imageInfo: user.profileImageInfo
+      }
+    });
+
+  } catch (error) {
+    console.error('Upload profile image error:', error);
+    
+    res.status(500).json({
+      success: false,
+      message: 'Server error while uploading profile image'
+    });
+  }
+};
+
+// Remove Profile Image
+exports.removeProfileImage = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
+      });
+    }
+
+    // Remove profile image using model method
+    user.removeProfileImage();
+    await user.save();
+
+    res.status(200).json({
+      success: true,
+      message: 'Profile image removed successfully',
+      data: {
+        imageUrl: user.displayImage // Will show Google image or null
+      }
+    });
+
+  } catch (error) {
+    console.error('Remove profile image error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while removing profile image'
     });
   }
 };
@@ -302,7 +405,7 @@ exports.updateProfile = async (req, res) => {
     const { name, phone, address } = req.body;
     const userId = req.user.userId;
 
-    const user = await User.findById(userId);
+    const user = await User.findByIdWithProfileImage(userId);
     if (!user) {
       return res.status(404).json({
         success: false,
@@ -321,16 +424,7 @@ exports.updateProfile = async (req, res) => {
       success: true,
       message: 'Profile updated successfully',
       data: {
-        user: {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          phone: user.phone,
-          address: user.address,
-          role: user.role,
-          authProvider: user.authProvider,
-          profileImage: user.profileImage
-        }
+        user: formatUserData(user)
       }
     });
 
@@ -342,3 +436,6 @@ exports.updateProfile = async (req, res) => {
     });
   }
 };
+
+// Export multer upload middleware for use in routes
+exports.uploadMiddleware = upload.single('profileImage');

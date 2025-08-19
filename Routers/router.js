@@ -8,7 +8,8 @@ const wishlistRoutes = require("./wishlist.router");
 const orderRoutes = require("./order.router");
 const Reviewrouter = require("./Review.router");
 const offerRouter = require("./offer.router");
-
+const contactRouter =require("./contact.router");
+const subscriptionRouter =require("./subscription.router")
 //const testimonialRoutes = require("./testimonial.router");
 
 router.use("/api/auth", authRouter);
@@ -19,6 +20,9 @@ router.use('/api/wishlist', wishlistRoutes);
 router.use('/api/orders', orderRoutes);
 router.use("/api/reviews", Reviewrouter);
 router.use("/api/offers", offerRouter);
+router.use("/api/contact", contactRouter);
+router.use("/api/subscription", subscriptionRouter);
+
 
 //router.use("/api/testimonials", testimonialRoutes);
 

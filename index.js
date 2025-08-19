@@ -20,7 +20,7 @@ app.get('/' , (req,res)=>{
 })
 // Change to EXACTLY this:
 app.use('/images/Products', express.static(path.join(__dirname, 'Iyappaa/Products')));
-
+// app.use('/uploads', express.static('uploads'))
 
 app.use( Approuter);
 
