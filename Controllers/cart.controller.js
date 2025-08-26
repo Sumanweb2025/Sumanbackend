@@ -56,7 +56,7 @@ const getCart = async (req, res) => {
     const cart = await Cart.findOne({ userId })
       .populate({
         path: 'items.productId',
-        select: 'name price image description category'
+        select: 'product_id name brand category price description gram piece rating review_count image'
       });
 
     if (!cart) {
@@ -67,10 +67,20 @@ const getCart = async (req, res) => {
       });
     }
 
+    // Filter out items where product is null (deleted products)
+    const validItems = cart.items.filter(item => item.productId !== null);
+    
+    // If we filtered out items, update the cart
+    if (validItems.length !== cart.items.length) {
+      cart.items = validItems;
+      await cart.save();
+      console.log(`Removed ${cart.items.length - validItems.length} invalid items from cart`);
+    }
+
     // Add imageUrl to each product and ensure price is a number
     const cartWithImageUrls = {
       ...cart.toObject(),
-      items: cart.items.map(item => ({
+      items: validItems.map(item => ({
         ...item,
         quantity: parseInt(item.quantity) || 1,
         productId: addImageUrlToProduct(item.productId, req)
@@ -86,6 +96,7 @@ const getCart = async (req, res) => {
       message: 'Cart retrieved successfully'
     });
   } catch (error) {
+    console.error('Error in getCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error fetching cart',
@@ -103,6 +114,7 @@ const addToCart = async (req, res) => {
     // Debug logging
     console.log('User object:', req.user);
     console.log('User ID:', userId);
+    console.log('Product ID:', productId);
 
     if (!userId) {
       return res.status(401).json({
@@ -174,7 +186,7 @@ const addToCart = async (req, res) => {
     await cart.save();
     await cart.populate({
       path: 'items.productId',
-      select: 'name price image description category'
+      select: 'product_id name brand category price description gram piece rating review_count image'
     });
 
     // Add imageUrl to each product in the response and ensure proper data types
@@ -196,6 +208,7 @@ const addToCart = async (req, res) => {
       message: 'Product added to cart successfully'
     });
   } catch (error) {
+    console.error('Error in addToCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error adding to cart',
@@ -269,8 +282,11 @@ const updateCartItem = async (req, res) => {
     await cart.save();
     await cart.populate({
       path: 'items.productId',
-      select: 'name price image description category'
+      select: 'product_id name brand category price description gram piece rating review_count image'
     });
+
+    // Filter out null products after populate
+    cart.items = cart.items.filter(item => item.productId !== null);
 
     // Add imageUrl to each product in the response and ensure proper data types
     const cartWithImageUrls = {
@@ -291,6 +307,7 @@ const updateCartItem = async (req, res) => {
       message: 'Cart updated successfully'
     });
   } catch (error) {
+    console.error('Error in updateCartItem:', error);
     res.status(500).json({
       success: false,
       message: 'Error updating cart',
@@ -347,8 +364,11 @@ const removeFromCart = async (req, res) => {
     await cart.save();
     await cart.populate({
       path: 'items.productId',
-      select: 'name price image description category'
+      select: 'product_id name brand category price description gram piece rating review_count image'
     });
+
+    // Filter out null products after populate
+    cart.items = cart.items.filter(item => item.productId !== null);
 
     // Add imageUrl to each product in the response and ensure proper data types
     const cartWithImageUrls = {
@@ -369,6 +389,7 @@ const removeFromCart = async (req, res) => {
       message: 'Product removed from cart successfully'
     });
   } catch (error) {
+    console.error('Error in removeFromCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error removing from cart',
@@ -401,6 +422,7 @@ const clearCart = async (req, res) => {
       message: 'Cart cleared successfully'
     });
   } catch (error) {
+    console.error('Error in clearCart:', error);
     res.status(500).json({
       success: false,
       message: 'Error clearing cart',
@@ -430,6 +452,7 @@ const getCartCount = async (req, res) => {
       message: 'Cart count retrieved successfully'
     });
   } catch (error) {
+    console.error('Error in getCartCount:', error);
     res.status(500).json({
       success: false,
       message: 'Error getting cart count',

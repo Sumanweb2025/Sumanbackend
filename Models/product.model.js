@@ -1,4 +1,4 @@
-// models/Product.js
+
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
@@ -22,6 +22,7 @@ const productSchema = new mongoose.Schema({
     required: true,
     trim: true
   },
+  sub_category: { type: String },
   price: {
     type: Number,
     required: true,
@@ -47,6 +48,8 @@ const productSchema = new mongoose.Schema({
     type: String,
     required: true
   },
+  ingredients: { type: String },
+  storage_condition: { type: String },
   image: {
     type: String,
     required: true

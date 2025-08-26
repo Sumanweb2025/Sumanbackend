@@ -1,65 +1,72 @@
 const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
-  Product_id: {
+
+  product_id: {
     type: String,
-    default: ''
+    required: true,
+    unique: true, // prevent duplicates
+    trim: true
   },
-  Brand: {
+  name: {
     type: String,
-    default: ''
+    required: true,
+    trim: true
   },
-  Name: {
+  brand: {
     type: String,
-    default: ''
+    required: true,
+    trim: true
   },
-  Gram: {
+  category: {
     type: String,
-    default: ''
+    required: true,
+    trim: true
   },
-  Category: {
+  sub_category: {
     type: String,
-    default: ''
+    trim: true
   },
-  'Sub-category': {
-    type: String,
-    default: ''
-  },
-  Price: {
+  price: {
     type: Number,
-    default: 0,
-    min: 0  // Ensure price is not negative
+    required: false,
+    min: 0
   },
-  Ingredients: {
-    type: String,
-    default: ''
-  },
-  Description: {
-    type: String,
-    default: ''
-  },
-  Piece: {
+  piece: {
     type: Number,
-    default: 0,
-    min: 0  // Ensure piece count is not negative
+    default: 1
   },
-  'Storage Condition': {
-    type: String,
-    default: ''
-  },
-  image: {
-    type: String,
-    default: ''
-  },
-  // Optional: Add rating if you want to include it later
+
   rating: {
     type: Number,
     default: 0,
     min: 0,
     max: 5
+
+  },
+  description: {
+    type: String,
+    trim: true
+  },
+  ingredients: {
+    type: String,
+    trim: true
+  },
+  storage_condition: {
+    type: String,
+    trim: true
+  },
+  image: {
+    type: String,
+    trim: true
+  },
+  gram: {
+    type: String,
+    trim: true
   }
 }, {
-  timestamps: true  // Optional: adds createdAt and updatedAt
+  timestamps: true // auto adds createdAt & updatedAt
+
 });
 
 module.exports = mongoose.model('Product', productSchema);

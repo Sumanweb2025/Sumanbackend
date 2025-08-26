@@ -1,3 +1,4 @@
+// services/pdfGenerator.service.js
 const PDFDocument = require('pdfkit');
 const fs = require('fs');
 const path = require('path');
@@ -35,7 +36,7 @@ class PDFGeneratorService {
 
   // Generate QR Code for invoice download URL
   static async generateDownloadQRCode(order) {
-    const downloadUrl = `http://localhost:8000/api/invoices/download-invoice/${order.orderNumber}`;
+    const downloadUrl = `http://localhost:3000/api/download-invoice/${order.orderNumber}`;
     return await QRCode.toBuffer(downloadUrl, { 
       width: 100,
       margin: 1,
@@ -76,10 +77,10 @@ class PDFGeneratorService {
         // From section (right aligned)
         doc.fontSize(10)
            .text('From:', 400, 110)
-           .text('Iyappaa Sweets & Snacks Inc', 400, 125)
-           .text('Contact No: +1 6475736363', 400, 140)
-           .text('Email: sellappan@gmail.com', 400, 155)
-           .text('Website: www.iyappaa.com', 400, 170);
+           .text('Your Company Name', 400, 125)
+           .text('Contact No: +91-XXX-XXX-XXXX', 400, 140)
+           .text('Email: info@company.com', 400, 155)
+           .text('Website: www.yourcompany.com', 400, 170);
 
         // To section (left aligned)
         doc.text('To:', 50, 135)
@@ -211,12 +212,12 @@ class PDFGeneratorService {
         this.addLogo(doc, 40, 40, 60);
 
         // Company name and details (top right)
-        const companyName = order.companyName || 'Iyappaa Sweets & Snacks Inc';
+        const companyName = order.companyName || 'Your Company Name';
         const companyAddress = order.companyAddress || {
-          street: '2721 Markham Road, Unit #18',
-          area: 'Scarborough', 
-          city: 'Toronto - M1X 1L5',
-          country: 'Canada'
+          street: '14B, Northern Street',
+          area: 'Greater South Avenue', 
+          city: 'New York 10001',
+          country: 'U.S.A'
         };
 
         doc.fontSize(16)
@@ -452,39 +453,31 @@ class PDFGeneratorService {
            .text('Balance Due', summaryX + 10, summaryTop + 68)
            .text(`$${order.orderSummary.total.toFixed(2)}`, summaryX + 80, summaryTop + 68, { width: 70, align: 'right' });
 
-        // QR Code and Terms section - Better positioning
-      const bottomSectionY = summaryTop + 130;
-      
-      // QR Code on the left
-      if (qrCodeBuffer) {
-        doc.image(qrCodeBuffer, 50, bottomSectionY, { width: 80 });
-        doc.fontSize(8)
-           .fillColor('#666666')
+        // Terms & Conditions (left side) and QR Code (right side)
+        const termsTop = summaryTop + 100;
+        
+        // QR Code positioned on left side above terms
+        if (qrCodeBuffer) {
+          doc.image(qrCodeBuffer, 40, termsTop, { width: 80 });
+          doc.fontSize(7)
+             .fillColor('#666666')
+             .text('Scan to download', 40, termsTop + 85, { width: 80, align: 'center' });
+        }
+
+        // Terms & Conditions
+        doc.fillColor('black')
+           .fontSize(10)
+           .font('Helvetica-Bold')
+           .text('Terms & Conditions', 40, termsTop + 110)
+           .fontSize(8)
            .font('Helvetica')
-           .text('Scan to download', 50, bottomSectionY + 85, { width: 80, align: 'center' });
-      }
+           .text('1. Payment is due within 30 days of invoice date.', 40, termsTop + 125)
+           .text('2. Late payments may incur additional charges.', 40, termsTop + 137)
+           .text('3. Goods remain property of seller until payment.', 40, termsTop + 149);
 
-      // Terms & Conditions - Better formatting
-      const termsX = 150;
-      
-      doc.fillColor('#333333')
-         .fontSize(11)
-         .font('Helvetica-Bold')
-         .text('Terms & Conditions', termsX, bottomSectionY)
-         .fontSize(9)
-         .font('Helvetica')
-         .text('1. Payment is due within 30 days of invoice date.', termsX, bottomSectionY + 20, { width: 300 })
-         .text('2. Late payments may incur additional charges.', termsX, bottomSectionY + 35, { width: 300 })
-         .text('3. Goods remain property of seller until payment.', termsX, bottomSectionY + 50, { width: 300 });
+        // NO BORDER around PDF (removed)
 
-      // Footer line (optional)
-      doc.moveTo(50, doc.page.height - 80)
-         .lineTo(545, doc.page.height - 80)
-         .strokeColor('#EEEEEE')
-         .lineWidth(0.5)
-         .stroke();
-
-      doc.end();
+        doc.end();
 
       } catch (error) {
         reject(error);
@@ -492,307 +485,292 @@ class PDFGeneratorService {
     });
   }
 
- // Generate Bill PDF Buffer (Fixed - Proper alignment and spacing)
-static async generateBillPDFBuffer(order, items) {
-  return new Promise(async (resolve, reject) => {
-    try {
-      const doc = new PDFDocument({ margin: 50, size: 'A4' });
-      const chunks = [];
+  // Generate Bill PDF Buffer (Updated - No borders, $ symbols, improved layout)
+  static async generateBillPDFBuffer(order, items) {
+    return new Promise(async (resolve, reject) => {
+      try {
+        const doc = new PDFDocument({ margin: 50 });
+        const chunks = [];
 
-      doc.on('data', chunk => chunks.push(chunk));
-      doc.on('end', () => {
-        const buffer = Buffer.concat(chunks);
-        resolve(buffer);
-      });
-      doc.on('error', reject);
+        doc.on('data', chunk => chunks.push(chunk));
+        doc.on('end', () => {
+          const buffer = Buffer.concat(chunks);
+          resolve(buffer);
+        });
+        doc.on('error', reject);
 
-      // Generate QR Code for download
-      const qrCodeBuffer = await this.generateDownloadQRCode(order);
+        // Generate QR Code for download
+        const qrCodeBuffer = await this.generateDownloadQRCode(order);
 
-      // Logo (top left)
-      this.addLogo(doc, 50, 50, 60);
+        // Logo (top left) - circular orange logo with Z
+        doc.circle(90, 70, 25)
+           .fillColor('#22c55e')
+           .fill()
+           .fillColor('white')
+           .fontSize(20)
+           .font('Helvetica-Bold')
+           .text('Z', 83, 60)
+           .fillColor('black')
+           .font('Helvetica');
 
-      // Company name and details (top right) - Fixed alignment
-      const companyName = order.companyName || 'Iyappaa Sweets & Snacks Inc';
-      const companyAddress = order.companyAddress || {
-        street: '2721 Markham Road, Unit #18',
-        area: 'Scarborough',
-        city: 'Toronto - M1X 1L5',
-        country: 'Canada'
-      };
+        // Company name and details (top right)
+        doc.fontSize(18)
+           .fillColor('#22c55e')
+           .font('Helvetica-Bold')
+           .text('Zylker Design Labs', 350, 50, { align: 'right', width: 195 })
+           .fillColor('#666666')
+           .fontSize(9)
+           .font('Helvetica')
+           .text('14B, Northern Street', 350, 75, { align: 'right', width: 195 })
+           .text('Greater South Avenue', 350, 88, { align: 'right', width: 195 })
+           .text('New York 10001', 350, 101, { align: 'right', width: 195 })
+           .text('U.S.A', 350, 114, { align: 'right', width: 195 });
 
-      // Calculate proper right alignment
-      const pageWidth = 595; // A4 width in points
-      const rightMargin = 50;
-      const companyDetailsWidth = 200;
-      const companyX = pageWidth - rightMargin - companyDetailsWidth;
+        // Horizontal line separator
+        doc.moveTo(50, 140)
+           .lineTo(545, 140)
+           .strokeColor('#CCCCCC')
+           .stroke();
 
-      doc.fontSize(16)
-         .fillColor('#22c55e')
-         .font('Helvetica-Bold')
-         .text(companyName, companyX, 50, { align: 'right', width: companyDetailsWidth })
-         .fillColor('#666666')
-         .fontSize(9)
-         .font('Helvetica')
-         .text(companyAddress.street, companyX, 70, { align: 'right', width: companyDetailsWidth })
-         .text(companyAddress.area, companyX, 83, { align: 'right', width: companyDetailsWidth })
-         .text(companyAddress.city, companyX, 96, { align: 'right', width: companyDetailsWidth })
-         .text(companyAddress.country, companyX, 109, { align: 'right', width: companyDetailsWidth });
+        // BILL INVOICE title (centered, no lines)
+        const titleY = 160;
+        const titleWidth = 495;
 
-      // Horizontal line separator - Better positioning
-      doc.moveTo(50, 140)
-         .lineTo(545, 140)
-         .strokeColor('#CCCCCC')
-         .lineWidth(1)
-         .stroke();
+        doc.fontSize(24)
+           .fillColor('#22c55e')
+           .font('Helvetica-Bold')
+           .text('BILL INVOICE', 50, titleY, { align: 'center', width: titleWidth })
+           .fillColor('black')
+           .font('Helvetica');
 
-      // BILL INVOICE title (centered, proper spacing)
-      doc.fontSize(22)
-         .fillColor('#22c55e')
-         .font('Helvetica-Bold')
-         .text('BILL INVOICE', 50, 155, { align: 'center', width: 495 })
-         .fillColor('black')
-         .font('Helvetica');
+        // Bill To section (left side)
+        doc.fontSize(12)
+           .fillColor('black')
+           .font('Helvetica-Bold')
+           .text('Bill To', 50, 210)
+           .fontSize(12)
+           .fillColor('#22c55e')
+           .text(`${order.billingAddress.firstName} ${order.billingAddress.lastName}`, 50, 230)
+           .fillColor('black')
+           .fontSize(10)
+           .font('Helvetica')
+           .text(`${order.billingAddress.address}`, 50, 248)
+           .text(`${order.billingAddress.city}`, 50, 263)
+           .text(`${order.billingAddress.province} ${order.billingAddress.postalCode}`, 50, 278);
 
-      // Bill To section (left side) - Better spacing
-      const leftColumnX = 50;
-      const billToY = 190;
+        // Ship To section
+        doc.fontSize(12)
+           .fillColor('black')
+           .font('Helvetica-Bold')
+           .text('Ship To', 50, 320)
+           .fontSize(10)
+           .font('Helvetica')
+           .text(`${order.billingAddress.address}`, 50, 340)
+           .text(`${order.billingAddress.city}`, 50, 355)
+           .text(`${order.billingAddress.province} ${order.billingAddress.postalCode}`, 50, 370);
 
-      doc.fontSize(12)
-         .fillColor('#333333')
-         .font('Helvetica-Bold')
-         .text('Bill To', leftColumnX, billToY)
-         .fontSize(11)
-         .fillColor('#22c55e')
-         .font('Helvetica-Bold')
-         .text(`${order.billingAddress.firstName} ${order.billingAddress.lastName}`, leftColumnX, billToY + 18)
-         .fillColor('#333333')
-         .fontSize(10)
-         .font('Helvetica')
-         .text(`${order.billingAddress.address}`, leftColumnX, billToY + 35)
-         .text(`${order.billingAddress.city}`, leftColumnX, billToY + 50)
-         .text(`${order.billingAddress.province} ${order.billingAddress.postalCode}`, leftColumnX, billToY + 65);
+        // Bill details table (top right)
+        const detailsX = 355;
+        const detailsY = 210;
+        const cellWidth = 95;
+        const cellHeight = 25;
 
-      // Ship To section (left side, below Bill To) - Better spacing
-      const shipToY = billToY + 95;
-      
-      doc.fontSize(12)
-         .fillColor('#333333')
-         .font('Helvetica-Bold')
-         .text('Ship To', leftColumnX, shipToY)
-         .fontSize(10)
-         .font('Helvetica')
-         .text(`${order.shippingAddress?.address || order.billingAddress.address}`, leftColumnX, shipToY + 18)
-         .text(`${order.shippingAddress?.city || order.billingAddress.city}`, leftColumnX, shipToY + 33)
-         .text(`${order.shippingAddress?.province || order.billingAddress.province} ${order.shippingAddress?.postalCode || order.billingAddress.postalCode}`, leftColumnX, shipToY + 48);
-
-      // Bill details table (top right) - Fixed positioning and alignment
-      const detailsX = 320;
-      const detailsY = 190;
-      const labelCellWidth = 80;
-      const valueCellWidth = 120;
-      const cellHeight = 25;
-
-      // Helper function to create detail rows
-      const createDetailRow = (label, value, rowIndex) => {
-        const yPos = detailsY + (rowIndex * cellHeight);
-        
-        // Label cell (green background)
-        doc.rect(detailsX, yPos, labelCellWidth, cellHeight)
+        // Bill# row
+        doc.rect(detailsX, detailsY, cellWidth, cellHeight)
            .fillColor('#22c55e')
            .fill();
-        
-        // Value cell (white background with green border)
-        doc.rect(detailsX + labelCellWidth, yPos, valueCellWidth, cellHeight)
+        doc.rect(detailsX + cellWidth, detailsY, cellWidth, cellHeight)
            .fillColor('white')
            .fill()
            .strokeColor('#22c55e')
-           .lineWidth(1)
            .stroke();
-        
-        // Label text
         doc.fillColor('white')
            .fontSize(10)
            .font('Helvetica-Bold')
-           .text(label, detailsX + 8, yPos + 8);
+           .text('Bill#', detailsX + 8, detailsY + 8);
+        doc.fillColor('black')
+           .font('Helvetica')
+           .text(`BILL-${order.orderNumber}`, detailsX + cellWidth + 8, detailsY + 8);
+
+        // Bill Date row
+        doc.rect(detailsX, detailsY + cellHeight, cellWidth, cellHeight)
+           .fillColor('#22c55e')
+           .fill();
+        doc.rect(detailsX + cellWidth, detailsY + cellHeight, cellWidth, cellHeight)
+           .fillColor('white')
+           .fill()
+           .strokeColor('#22c55e')
+           .stroke();
+        doc.fillColor('white')
+           .font('Helvetica-Bold')
+           .text('Bill Date', detailsX + 8, detailsY + cellHeight + 8);
+        doc.fillColor('black')
+           .font('Helvetica')
+           .text(new Date(order.createdAt).toLocaleDateString('en-CA'), detailsX + cellWidth + 8, detailsY + cellHeight + 8);
+
+        // Terms row
+        doc.rect(detailsX, detailsY + cellWidth * 2, cellWidth, cellHeight)
+           .fillColor('#22c55e')
+           .fill();
+        doc.rect(detailsX + cellWidth, detailsY + cellHeight * 2, cellWidth, cellHeight)
+           .fillColor('white')
+           .fill()
+           .strokeColor('#22c55e')
+           .stroke();
+        doc.fillColor('white')
+           .font('Helvetica-Bold')
+           .text('Terms', detailsX + 8, detailsY + cellHeight * 2 + 8);
+        doc.fillColor('black')
+           .font('Helvetica')
+           .text('Cash on Delivery', detailsX + cellWidth + 8, detailsY + cellHeight * 2 + 8);
+
+        // Due Date row
+        doc.rect(detailsX, detailsY + cellHeight * 3, cellWidth, cellHeight)
+           .fillColor('#22c55e')
+           .fill();
+        doc.rect(detailsX + cellWidth, detailsY + cellHeight * 3, cellWidth, cellHeight)
+           .fillColor('white')
+           .fill()
+           .strokeColor('#22c55e')
+           .stroke();
+        doc.fillColor('white')
+           .font('Helvetica-Bold')
+           .text('Due Date', detailsX + 8, detailsY + cellHeight * 3 + 8);
+        doc.fillColor('black')
+           .font('Helvetica')
+           .text('On Delivery', detailsX + cellWidth + 8, detailsY + cellHeight * 3 + 8);
+
+        // Items table (no gaps between header and rows)
+        const tableTop = 420;
+        const tableWidth = 495;
         
-        // Value text - with proper width and alignment
-        doc.fillColor('#333333')
+        // Table header with orange background
+        doc.rect(50, tableTop, tableWidth, 35)
+           .fillColor('#22c55e')
+           .fill();
+           
+        doc.fillColor('white')
+           .fontSize(11)
+           .font('Helvetica-Bold')
+           .text('#', 65, tableTop + 12)
+           .text('Item & Description', 100, tableTop + 12)
+           .text('Qty', 400, tableTop + 12, { width: 30, align: 'center' })
+           .text('Rate', 440, tableTop + 12, { width: 40, align: 'center' })
+           .text('Amount', 485, tableTop + 12, { width: 50, align: 'center' });
+
+        // Table items with light gray background (no gaps between rows)
+        let yPos = tableTop + 35;
+        const rowHeight = 60;
+        
+        items.forEach((item, index) => {
+          // Light gray background for all rows
+          doc.rect(50, yPos, tableWidth, rowHeight)
+             .fillColor('#F5F5F5')
+             .fill();
+          
+          doc.fillColor('black')
+             .fontSize(10)
+             .font('Helvetica')
+             .text((index + 1).toString(), 65, yPos + 15);
+          
+          // Item name (bold)
+          const itemName = item.name.length > 25 ? item.name.substring(0, 22) + '...' : item.name;
+          doc.fontSize(11)
+             .fillColor('black')
+             .font('Helvetica-Bold')
+             .text(itemName, 100, yPos + 10, { width: 280 });
+          
+          // Item description/details
+          const description = item.description || `${item.name} - Product details`;
+          const shortDescription = description.length > 45 ? description.substring(0, 42) + '...' : description;
+          doc.fontSize(9)
+             .fillColor('#6B7280')
+             .font('Helvetica')
+             .text(shortDescription, 100, yPos + 25, { width: 280 });
+          
+          // Right aligned numbers with $ symbols
+          doc.fillColor('black')
+             .fontSize(10)
+             .font('Helvetica')
+             .text(item.quantity.toString(), 400, yPos + 20, { width: 30, align: 'center' })
+             .text(`$${item.price.toFixed(2)}`, 440, yPos + 20, { width: 40, align: 'right' })
+             .text(`$${(item.price * item.quantity).toFixed(2)}`, 485, yPos + 20, { width: 50, align: 'right' });
+          
+          yPos += rowHeight;
+        });
+
+        // Summary section
+        const summaryTop = yPos + 30;
+        const summaryX = 300;
+        
+        // Thank you message (bottom left)
+        doc.fontSize(11)
+           .fillColor('black')
+           .font('Helvetica')
+           .text('Thanks for your business.', 50, summaryTop);
+
+        // QR Code positioned on left side above terms
+        if (qrCodeBuffer) {
+          doc.image(qrCodeBuffer, 50, summaryTop + 30, { width: 80 });
+          doc.fontSize(7)
+             .fillColor('#666666')
+             .text('Scan to download', 50, summaryTop + 115, { width: 80, align: 'center' });
+        }
+
+        // Terms & Conditions (left side, below QR code)
+        doc.fillColor('black')
+           .fontSize(12)
+           .font('Helvetica-Bold')
+           .text('Terms & Conditions', 50, summaryTop + 140)
            .fontSize(9)
            .font('Helvetica')
-           .text(value, detailsX + labelCellWidth + 8, yPos + 8, { 
-             width: valueCellWidth - 16, 
-             align: 'left',
-             ellipsis: true
-           });
-      };
+           .text('All payments must be made in full before the', 50, summaryTop + 160)
+           .text('commencement of any design work.', 50, summaryTop + 175);
 
-      createDetailRow('Bill#', `BILL-${order.orderNumber}`, 0);
-      createDetailRow('Bill Date', new Date(order.createdAt).toLocaleDateString('en-CA'), 1);
-      createDetailRow('Terms', 'Cash on Delivery', 2);
-      createDetailRow('Due Date', 'On Delivery', 3);
-
-      // Items table - Better spacing and alignment
-      const tableTop = 370;
-      const tableWidth = 495;
-      const headerHeight = 35;
-      
-      // Table header with proper alignment
-      doc.rect(50, tableTop, tableWidth, headerHeight)
-         .fillColor('#22c55e')
-         .fill();
-         
-      doc.fillColor('white')
-         .fontSize(11)
-         .font('Helvetica-Bold')
-         .text('#', 60, tableTop + 12, { width: 30 })
-         .text('Item & Description', 95, tableTop + 12, { width: 200 })
-         .text('Qty', 310, tableTop + 12, { width: 40, align: 'center' })
-         .text('Rate', 360, tableTop + 12, { width: 50, align: 'center' })
-         .text('Discount', 420, tableTop + 12, { width: 60, align: 'center' })
-         .text('Amount', 485, tableTop + 12, { width: 60, align: 'center' });
-
-      // Table items with proper row spacing
-      let yPos = tableTop + headerHeight;
-      const rowHeight = 65;
-      
-      items.forEach((item, index) => {
-        // Alternating row colors for better readability
-        const bgColor = index % 2 === 0 ? '#F8F9FA' : '#FFFFFF';
-        
-        doc.rect(50, yPos, tableWidth, rowHeight)
-           .fillColor(bgColor)
-           .fill();
-        
-        // Row number
-        doc.fillColor('#333333')
-           .fontSize(10)
-           .font('Helvetica')
-           .text((index + 1).toString(), 60, yPos + 25, { width: 30, align: 'center' });
-        
-        // Item name (bold, proper truncation)
-        const itemName = item.name.length > 30 ? item.name.substring(0, 27) + '...' : item.name;
+        // Summary section (right aligned)
         doc.fontSize(11)
-           .fillColor('#333333')
+           .fillColor('black')
+           .font('Helvetica')
+           .text('Sub Total', summaryX, summaryTop)
+           .text(`$${order.orderSummary.subtotal.toFixed(2)}`, summaryX + 130, summaryTop, { width: 65, align: 'right' });
+
+        // Tax Rate
+        const taxRate = order.orderSummary.taxRate || 5.00;
+        doc.text(`Tax ${taxRate}%`, summaryX, summaryTop + 20)
+           .text(`$${order.orderSummary.tax.toFixed(2)}`, summaryX + 130, summaryTop + 20, { width: 65, align: 'right' });
+
+        // Line above Total
+        doc.moveTo(summaryX, summaryTop + 35)
+           .lineTo(summaryX + 195, summaryTop + 35)
+           .strokeColor('#CCCCCC')
+           .stroke();
+
+        // Total
+        doc.fontSize(14)
+           .fillColor('black')
            .font('Helvetica-Bold')
-           .text(itemName, 95, yPos + 15, { width: 200 });
-        
-        // Item description
-        const description = item.description || `${item.name} - Product details`;
-        const shortDescription = description.length > 45 ? description.substring(0, 42) + '...' : description;
-        doc.fontSize(9)
-           .fillColor('#6B7280')
-           .font('Helvetica')
-           .text(shortDescription, 95, yPos + 32, { width: 200 });
-        
-        // Quantity - center aligned
-        doc.fillColor('#333333')
-           .fontSize(10)
-           .font('Helvetica')
-           .text(item.quantity.toString(), 310, yPos + 25, { width: 40, align: 'center' });
-        
-        // Rate - right aligned
-        doc.text(`$${item.price.toFixed(2)}`, 360, yPos + 25, { width: 50, align: 'center' });
-        
-        // Discount - right aligned
-        const discount = item.discount || 0;
-        doc.text(`$${discount.toFixed(2)}`, 420, yPos + 25, { width: 60, align: 'center' });
-        
-        // Amount - right aligned
-        doc.text(`$${((item.price * item.quantity) - discount).toFixed(2)}`, 485, yPos + 25, { width: 60, align: 'center' });
-        
-        yPos += rowHeight;
-      });
+           .text('Total', summaryX + 15, summaryTop + 50)
+           .text(`$${order.orderSummary.total.toFixed(2)}`, summaryX + 90, summaryTop + 50, { width: 90, align: 'right' });
 
-      // Summary section - Proper alignment and spacing
-      const summaryTop = yPos + 30;
-      const summaryX = 320;
-      const summaryLabelWidth = 100;
-      const summaryValueWidth = 100;
-      
-      // Thank you message (left side)
-      doc.fontSize(11)
-         .fillColor('#333333')
-         .font('Helvetica-Oblique')
-         .text('Thanks for your business.', 50, summaryTop + 10);
+        // Balance Due with green background (changed to green as requested)
+        doc.rect(summaryX, summaryTop + 75, 195, 35)
+           .fillColor('#22c55e')
+           .fill();
+        doc.fillColor('white')
+           .fontSize(12)
+           .font('Helvetica-Bold')
+           .text('Balance Due', summaryX + 15, summaryTop + 88)
+           .text(`$${order.orderSummary.total.toFixed(2)}`, summaryX + 90, summaryTop + 88, { width: 90, align: 'right' });
 
-      // Summary calculations with proper alignment
-      const createSummaryRow = (label, value, yOffset, isBold = false) => {
-        doc.fontSize(isBold ? 11 : 10)
-           .fillColor('#333333')
-           .font(isBold ? 'Helvetica-Bold' : 'Helvetica')
-           .text(label, summaryX, summaryTop + yOffset, { width: summaryLabelWidth })
-           .text(value, summaryX + summaryLabelWidth, summaryTop + yOffset, { width: summaryValueWidth, align: 'right' });
-      };
+        // NO BORDER around PDF (removed)
 
-      // Sub Total
-      createSummaryRow('Sub Total', `$${order.orderSummary.subtotal.toFixed(2)}`, 0);
+        doc.end();
 
-      // Tax Rate
-      const taxRate = order.orderSummary.taxRate || 13.00;
-      createSummaryRow(`Tax (${taxRate}%)`, `$${order.orderSummary.tax.toFixed(2)}`, 20);
-
-      // Line above Total
-      doc.moveTo(summaryX, summaryTop + 45)
-         .lineTo(summaryX + summaryLabelWidth + summaryValueWidth, summaryTop + 45)
-         .strokeColor('#CCCCCC')
-         .lineWidth(1)
-         .stroke();
-
-      // Total
-      createSummaryRow('Total', `$${order.orderSummary.total.toFixed(2)}`, 55, true);
-
-      // Balance Due with proper styling
-      const balanceDueY = summaryTop + 85;
-      doc.rect(summaryX, balanceDueY, summaryLabelWidth + summaryValueWidth, 30)
-         .fillColor('#22c55e')
-         .fill();
-      
-      doc.fillColor('white')
-         .fontSize(12)
-         .font('Helvetica-Bold')
-         .text('Balance Due', summaryX + 10, balanceDueY + 9)
-         .text(`$${order.orderSummary.total.toFixed(2)}`, summaryX + summaryLabelWidth, balanceDueY + 9, { width: summaryValueWidth, align: 'right' });
-
-      // QR Code and Terms section - Better positioning
-      const bottomSectionY = summaryTop + 130;
-      
-      // QR Code on the left
-      if (qrCodeBuffer) {
-        doc.image(qrCodeBuffer, 50, bottomSectionY, { width: 80 });
-        doc.fontSize(8)
-           .fillColor('#666666')
-           .font('Helvetica')
-           .text('Scan to download', 50, bottomSectionY + 85, { width: 80, align: 'center' });
+      } catch (error) {
+        reject(error);
       }
-
-      // Terms & Conditions - Better formatting
-      const termsX = 150;
-      
-      doc.fillColor('#333333')
-         .fontSize(11)
-         .font('Helvetica-Bold')
-         .text('Terms & Conditions', termsX, bottomSectionY)
-         .fontSize(9)
-         .font('Helvetica')
-         .text('1. Payment is due within 30 days of invoice date.', termsX, bottomSectionY + 20, { width: 300 })
-         .text('2. Late payments may incur additional charges.', termsX, bottomSectionY + 35, { width: 300 })
-         .text('3. Goods remain property of seller until payment.', termsX, bottomSectionY + 50, { width: 300 });
-
-      // Footer line (optional)
-      doc.moveTo(50, doc.page.height - 80)
-         .lineTo(545, doc.page.height - 80)
-         .strokeColor('#EEEEEE')
-         .lineWidth(0.5)
-         .stroke();
-
-      doc.end();
-
-    } catch (error) {
-      reject(error);
-    }
-  });
-}
+    });
+  }
 
   // Legacy methods for file-based PDF generation
   static async generateOrderConfirmationPDF(order, items, outputPath) {
