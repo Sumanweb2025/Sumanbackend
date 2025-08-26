@@ -121,7 +121,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['card', 'upi','netbanking','cod'],
+    enum: ['card','cod'],
     default: 'cod'
   },
   // NEW: Stripe payment integration fields
@@ -131,6 +131,36 @@ const orderSchema = new mongoose.Schema({
   },
   stripePaymentIntentId: {
     type: String,
+    default: null
+  },
+  // Cancellation Fields - ADD THESE
+  cancellationReason: {
+    type: String,
+    default: null
+  },
+  cancelledAt: {
+    type: Date,
+    default: null
+  },
+  cancelledBy: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    default: null
+  },
+  
+  // Refund Fields - ADD THESE  
+  refundStatus: {
+    type: String,
+    enum: ['none', 'pending', 'processing', 'completed', 'failed'],
+    default: 'none'
+  },
+  refundAmount: {
+    type: Number,
+    default: null
+  },
+  refundId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Refund',
     default: null
   },
   // Additional tracking fields
@@ -159,6 +189,25 @@ orderSchema.pre('save', async function(next) {
   }
   next();
 });
+
+// Method to check if order can be cancelled
+orderSchema.methods.canBeCancelled = function() {
+  const cancellableStatuses = ['pending', 'confirmed', 'processing'];
+  if (!cancellableStatuses.includes(this.status)) {
+    return { canCancel: false, reason: 'Order status does not allow cancellation' };
+  }
+
+  const orderTime = new Date(this.createdAt);
+  const currentTime = new Date();
+  const timeDifference = currentTime - orderTime;
+  const hoursDifference = timeDifference / (1000 * 60 * 60);
+
+  if (hoursDifference > 48) {
+    return { canCancel: false, reason: 'Cancellation window (48 hours) has expired' };
+  }
+
+  return { canCancel: true, reason: null };
+};
 
 // Index for better query performance
 orderSchema.index({ userId: 1, createdAt: -1 });

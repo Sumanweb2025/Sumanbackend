@@ -1,19 +1,25 @@
 const mongoose = require('mongoose');
 
 const paymentSchema = new mongoose.Schema({
-  userId: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User',
-    required: true
-  },
   orderId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Order',
     required: true
   },
+  userId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User',
+    required: true
+  },
   orderNumber: {
     type: String,
     required: true
+  },
+  // Add a unique payment identifier for all orders
+  paymentId: {
+    type: String,
+    required: true,
+    unique: true // This will be our main unique identifier
   },
   paymentMethod: {
     type: String,
@@ -31,44 +37,69 @@ const paymentSchema = new mongoose.Schema({
   },
   currency: {
     type: String,
-    default: 'INR'
+    default: 'CAD'
+  },
+  // Stripe payment details (only for card payments)
+  stripePaymentId: {
+    type: String,
+    default: null
   },
   stripePaymentIntentId: {
     type: String,
-    sparse: true // Only for card payments
+    default: null
   },
-  stripePaymentMethodId: {
-    type: String,
-    sparse: true // Only for card payments
-  },
-  transactionId: {
-    type: String,
-    unique: true,
-    sparse: true
-  },
-  // PDF Storage
-  documents: {
+  // PDF storage
+  pdfs: {
     orderConfirmation: {
       filename: String,
-      path: String,
-      url: String,
-      createdAt: Date
+      data: Buffer,
+      contentType: {
+        type: String,
+        default: 'application/pdf'
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
     },
     invoice: {
       filename: String,
-      path: String, 
-      url: String,
-      createdAt: Date
+      data: Buffer,
+      contentType: {
+        type: String,
+        default: 'application/pdf'
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
     },
     bill: {
       filename: String,
-      path: String,
-      url: String, 
-      createdAt: Date
+      data: Buffer,
+      contentType: {
+        type: String,
+        default: 'application/pdf'
+      },
+      createdAt: {
+        type: Date,
+        default: Date.now
+      }
     }
   },
-  // Customer Details (for easy access)
-  customerDetails: {
+  // Transaction details
+  transactionDetails: {
+    subtotal: Number,
+    tax: Number,
+    shipping: Number,
+    discount: {
+      type: Number,
+      default: 0
+    },
+    total: Number
+  },
+  // Customer information
+  customerInfo: {
     email: String,
     firstName: String,
     lastName: String,
@@ -79,96 +110,157 @@ const paymentSchema = new mongoose.Schema({
       city: String,
       province: String,
       postalCode: String,
-      country: String
+      country: {
+        type: String,
+        default: 'Canada'
+      }
     }
   },
-  // Payment Breakdown
-  paymentSummary: {
-    subtotal: Number,
-    tax: Number,
-    shipping: Number,
+  // Applied coupon
+  appliedCoupon: {
+    code: String,
+    description: String,
+    discountType: {
+      type: String,
+      enum: ['percentage', 'fixed']
+    },
+    discountValue: Number,
     discount: {
       type: Number,
       default: 0
+    }
+  },
+  // Payment processing logs
+  paymentLogs: [{
+    action: String,
+    status: String,
+    message: String,
+    timestamp: {
+      type: Date,
+      default: Date.now
     },
-    total: Number
-  },
-  appliedCoupon: {
-    code: String,
-    discount: Number,
-    discountType: String
-  },
-  // Metadata
-  metadata: {
-    type: Map,
-    of: mongoose.Schema.Types.Mixed,
-    default: {}
-  },
-  // Timestamps
-  paidAt: Date,
-  failedAt: Date,
-  refundedAt: Date
+    metadata: mongoose.Schema.Types.Mixed
+  }],
+  // Email delivery status
+  emailStatus: {
+    orderConfirmationSent: {
+      type: Boolean,
+      default: false
+    },
+    invoiceSent: {
+      type: Boolean,
+      default: false
+    },
+    billSent: {
+      type: Boolean,
+      default: false
+    },
+    adminNotificationSent: {
+      type: Boolean,
+      default: false
+    },
+    lastEmailAttempt: Date,
+    emailErrors: [String]
+  }
 }, {
   timestamps: true
 });
 
-// Indexes
-paymentSchema.index({ userId: 1 });
+// Indexes for better query performance (removed unique from stripePaymentId)
 paymentSchema.index({ orderId: 1 });
+paymentSchema.index({ userId: 1 });
 paymentSchema.index({ orderNumber: 1 });
+paymentSchema.index({ paymentId: 1 }, { unique: true }); // Main unique identifier
+paymentSchema.index({ stripePaymentId: 1 }); // Removed unique constraint
 paymentSchema.index({ paymentStatus: 1 });
-paymentSchema.index({ stripePaymentIntentId: 1 });
-paymentSchema.index({ transactionId: 1 });
 paymentSchema.index({ createdAt: -1 });
 
-// Pre-save middleware to generate transaction ID
+// Create partial unique index for stripePaymentId (only when not null)
+paymentSchema.index(
+  { stripePaymentId: 1 }, 
+  { 
+    unique: true, 
+    partialFilterExpression: { stripePaymentId: { $ne: null, $exists: true } }
+  }
+);
+
+// Method to generate unique payment ID
+paymentSchema.statics.generatePaymentId = function(paymentMethod) {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substr(2, 9);
+  
+  if (paymentMethod === 'cod') {
+    return `COD_${timestamp}_${random}`;
+  } else {
+    return `CARD_${timestamp}_${random}`;
+  }
+};
+
+// Pre-save hook to generate paymentId if not provided
 paymentSchema.pre('save', function(next) {
-  if (!this.transactionId && this.isNew) {
-    const timestamp = Date.now().toString();
-    const random = Math.floor(Math.random() * 10000).toString().padStart(4, '0');
-    this.transactionId = `TXN${timestamp}${random}`;
+  if (!this.paymentId) {
+    this.paymentId = this.constructor.generatePaymentId(this.paymentMethod);
   }
   next();
 });
 
-// Instance Methods
-paymentSchema.methods.markAsPaid = function() {
-  this.paymentStatus = 'paid';
-  this.paidAt = new Date();
-  return this.save();
-};
-
-paymentSchema.methods.markAsFailed = function() {
-  this.paymentStatus = 'failed';
-  this.failedAt = new Date();
-  return this.save();
-};
-
-paymentSchema.methods.addDocument = function(type, filename, filepath, url) {
-  this.documents = this.documents || {};
-  this.documents[type] = {
-    filename,
-    path: filepath,
-    url,
+// Method to store PDF in database
+paymentSchema.methods.storePDF = function(pdfType, filename, buffer) {
+  if (!this.pdfs) {
+    this.pdfs = {};
+  }
+  
+  this.pdfs[pdfType] = {
+    filename: filename,
+    data: buffer,
+    contentType: 'application/pdf',
     createdAt: new Date()
   };
+  
   return this.save();
 };
 
-// Static Methods
-paymentSchema.statics.findByOrderNumber = function(orderNumber) {
-  return this.findOne({ orderNumber });
+// Method to get PDF from database
+paymentSchema.methods.getPDF = function(pdfType) {
+  if (this.pdfs && this.pdfs[pdfType]) {
+    return {
+      filename: this.pdfs[pdfType].filename,
+      data: this.pdfs[pdfType].data,
+      contentType: this.pdfs[pdfType].contentType
+    };
+  }
+  return null;
 };
 
-paymentSchema.statics.findByStripePaymentIntent = function(paymentIntentId) {
-  return this.findOne({ stripePaymentIntentId: paymentIntentId });
+// Method to add payment log
+paymentSchema.methods.addPaymentLog = function(action, status, message, metadata = {}) {
+  this.paymentLogs.push({
+    action,
+    status,
+    message,
+    metadata,
+    timestamp: new Date()
+  });
+  return this.save();
 };
 
-paymentSchema.statics.getUserPayments = function(userId, limit = 10) {
-  return this.find({ userId })
-    .sort({ createdAt: -1 })
-    .limit(limit)
-    .populate('orderId', 'orderNumber status items');
+// Method to update email status
+paymentSchema.methods.updateEmailStatus = function(emailType, sent, error = null) {
+  if (!this.emailStatus) {
+    this.emailStatus = {};
+  }
+  
+  this.emailStatus[emailType] = sent;
+  this.emailStatus.lastEmailAttempt = new Date();
+  
+  if (error) {
+    if (!this.emailStatus.emailErrors) {
+      this.emailStatus.emailErrors = [];
+    }
+    this.emailStatus.emailErrors.push(error);
+  }
+  
+  return this.save();
 };
 
 module.exports = mongoose.model('Payment', paymentSchema);

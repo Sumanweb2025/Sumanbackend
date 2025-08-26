@@ -1,9 +1,28 @@
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Order = require('../Models/order.model');
-const Cart = require('../Models/cart.model');
-const Coupon = require('../Models/coupon.model');
-const { sendOrderConfirmationWithPDF, sendInvoicePDF, notifyAdminNewOrder } = require('../Services/mailer');
-const { generateOrderPDF, generateInvoicePDF } = require('../Services/pdfGenerator');
+const Payment = require('../Models/payment.model');
+const Cart = require('../Models/cart.model'); 
+const Coupon = require('../Models/coupon.model'); 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const Refund = require('../Models/refund.model');
+
+// Import our services
+const PDFGeneratorService = require('../Services/pdfGenerator.js');
+const EmailService = require('../Services/mailer.js');
+
+// Initialize email service
+const emailService = new EmailService();
+
+// Helper function to add imageUrl to product and ensure price is a number
+const addImageUrlToProduct = (product, req) => {
+  if (!product) return product;
+  
+  const productObj = product.toObject ? product.toObject() : product;
+  return {
+    ...productObj,
+    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
+    price: parseFloat(productObj.price) || 0
+  };
+};
 
 // Helper function to safely parse numbers
 const safeParseFloat = (value) => {
@@ -16,59 +35,145 @@ const safeParseInt = (value) => {
   return isNaN(parsed) ? 0 : parsed;
 };
 
-// Helper function to add imageUrl to product
-const addImageUrlToProduct = (product, req) => {
-  if (!product) return product;
-  
-  const productObj = product.toObject ? product.toObject() : product;
-  return {
-    ...productObj,
-    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
-    price: parseFloat(productObj.price) || 0
-  };
-};
+// Helper function to generate PDF in memory
+const generatePDFBuffer = async (type, order, items) => {
+  try {
+    let buffer;
 
-// Calculate Canadian tax based on province
-const calculateCanadianTax = (subtotal, province) => {
-  const taxRates = {
-    'ON': 0.13, // Ontario - HST
-    'QC': 0.14975, // Quebec - GST + QST
-    'BC': 0.12, // British Columbia - GST + PST
-    'AB': 0.05, // Alberta - GST only
-    'SK': 0.11, // Saskatchewan - GST + PST
-    'MB': 0.12, // Manitoba - GST + PST
-    'NB': 0.15, // New Brunswick - HST
-    'NS': 0.15, // Nova Scotia - HST
-    'PE': 0.15, // Prince Edward Island - HST
-    'NL': 0.15, // Newfoundland and Labrador - HST
-    'NT': 0.05, // Northwest Territories - GST only
-    'NU': 0.05, // Nunavut - GST only
-    'YT': 0.05  // Yukon - GST only
-  };
-  return subtotal * (taxRates[province?.toUpperCase()] || 0.13); // Default to Ontario rate
-};
+    // Create appropriate PDF based on type
+    // These methods return Promises that resolve to buffers, not streams
+    if (type === 'orderConfirmation') {
+      buffer = await PDFGeneratorService.generateOrderConfirmationPDFBuffer(order, items);
+    } else if (type === 'invoice') {
+      buffer = await PDFGeneratorService.generateInvoicePDFBuffer(order, items);
+    } else if (type === 'bill') {
+      buffer = await PDFGeneratorService.generateBillPDFBuffer(order, items);
+    } else {
+      throw new Error('Invalid PDF type');
+    }
 
-// Helper function to get supported payment methods based on selection
-const getSupportedMethods = (paymentMethod) => {
-  switch (paymentMethod) {
-    case 'digital_wallet':
-      return ['apple_pay', 'google_pay', 'link'];
-    case 'klarna':
-      return ['card', 'klarna'];
-    case 'afterpay':
-      return ['card', 'afterpay_clearpay'];
-    default:
-      return ['card'];
+    // Since the PDFGeneratorService methods return buffers directly,
+    // we don't need to handle streams - just return the buffer
+    if (!Buffer.isBuffer(buffer)) {
+      throw new Error(`PDF generation for type ${type} did not return a valid buffer`);
+    }
+
+    return buffer;
+  } catch (error) {
+    console.error(`Error generating PDF buffer for type ${type}:`, error);
+    throw new Error(`PDF generation failed: ${error.message}`);
+  }
+};
+// Helper function to process order and send emails
+const processOrderEmails = async (order, items, payment, req, isPaymentCompleted = false) => {
+  try {
+    const emailAttachments = [];
+
+    // Generate and store order confirmation PDF
+    const orderConfirmationBuffer = await generatePDFBuffer('orderConfirmation', order, items);
+    const orderConfirmationFilename = `Order-Confirmation-${order.orderNumber}.pdf`;
+    
+    await payment.storePDF('orderConfirmation', orderConfirmationFilename, orderConfirmationBuffer);
+    emailAttachments.push({
+      filename: orderConfirmationFilename,
+      content: orderConfirmationBuffer,
+      contentType: 'application/pdf'
+    });
+
+    // Send order confirmation email
+    try {
+      await emailService.sendOrderConfirmationEmailWithBuffer(order, items, orderConfirmationBuffer, orderConfirmationFilename);
+      await payment.updateEmailStatus('orderConfirmationSent', true);
+    } catch (emailError) {
+      console.error('Error sending order confirmation email:', emailError);
+      await payment.updateEmailStatus('orderConfirmationSent', false, emailError.message);
+    }
+
+    if (order.paymentMethod === 'cod') {
+      // For COD orders, generate and store bill PDF
+      const billBuffer = await generatePDFBuffer('bill', order, items);
+      const billFilename = `Bill-${order.orderNumber}.pdf`;
+      
+      await payment.storePDF('bill', billFilename, billBuffer);
+      emailAttachments.push({
+        filename: billFilename,
+        content: billBuffer,
+        contentType: 'application/pdf'
+      });
+
+      // Send bill email
+      try {
+        await emailService.sendBillEmailWithBuffer(order, items, billBuffer, billFilename);
+        await payment.updateEmailStatus('billSent', true);
+      } catch (emailError) {
+        console.error('Error sending bill email:', emailError);
+        await payment.updateEmailStatus('billSent', false, emailError.message);
+      }
+
+    } else if (isPaymentCompleted) {
+      // For paid orders, generate and store invoice PDF
+      const invoiceBuffer = await generatePDFBuffer('invoice', order, items);
+      const invoiceFilename = `Invoice-${order.orderNumber}.pdf`;
+      
+      await payment.storePDF('invoice', invoiceFilename, invoiceBuffer);
+      emailAttachments.push({
+        filename: invoiceFilename,
+        content: invoiceBuffer,
+        contentType: 'application/pdf'
+      });
+
+      // Send invoice email
+      try {
+        await emailService.sendInvoiceEmailWithBuffer(order, items, invoiceBuffer, invoiceFilename);
+        await payment.updateEmailStatus('invoiceSent', true);
+      } catch (emailError) {
+        console.error('Error sending invoice email:', emailError);
+        await payment.updateEmailStatus('invoiceSent', false, emailError.message);
+      }
+    }
+
+    // Send admin notification
+    try {
+      await emailService.sendAdminNotificationEmailWithBuffer(order, items, emailAttachments);
+      await payment.updateEmailStatus('adminNotificationSent', true);
+    } catch (emailError) {
+      console.error('Error sending admin notification:', emailError);
+      await payment.updateEmailStatus('adminNotificationSent', false, emailError.message);
+    }
+
+    // Log successful payment processing
+    await payment.addPaymentLog(
+      'EMAIL_PROCESSING',
+      'SUCCESS',
+      'Order emails and PDFs processed successfully',
+      { 
+        orderNumber: order.orderNumber,
+        emailsSent: emailAttachments.length,
+        paymentCompleted: isPaymentCompleted
+      }
+    );
+
+  } catch (error) {
+    console.error('Error processing order emails:', error);
+    
+    // Log error
+    await payment.addPaymentLog(
+      'EMAIL_PROCESSING',
+      'ERROR',
+      error.message,
+      { orderNumber: order.orderNumber }
+    );
+    
+    // Don't throw error to prevent order creation failure
   }
 };
 
-// Create Payment Intent for Canadian payment methods
+// Create Stripe Payment Intent
 const createPaymentIntent = async (req, res) => {
   try {
     const userId = req.user.id;
-    const { appliedCoupon, paymentMethod, province } = req.body;
+    const { appliedCoupon } = req.body;
 
-    // Get cart items
     const cart = await Cart.findOne({ userId }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -81,20 +186,16 @@ const createPaymentIntent = async (req, res) => {
       });
     }
 
-    // Calculate totals
     const subtotal = cart.items.reduce((total, item) => {
       const price = safeParseFloat(item.productId.price);
       const quantity = safeParseInt(item.quantity);
       return total + (price * quantity);
     }, 0);
 
-    // Calculate Canadian tax based on province
-    const tax = calculateCanadianTax(subtotal, province);
+    // Canadian tax rates (average HST/GST+PST)
+    const tax = subtotal * 0.13; // 13% HST for most provinces
+    const shipping = subtotal > 100 ? 0 : 15; // Free shipping over CAD $100
     
-    // Free shipping for orders over $75 CAD (common Canadian threshold)
-    const shipping = subtotal > 75 ? 0 : 15; // $15 CAD shipping
-    
-    // Apply discount if coupon is provided
     let discount = 0;
     if (appliedCoupon) {
       const coupon = await Coupon.findOne({
@@ -116,12 +217,11 @@ const createPaymentIntent = async (req, res) => {
     }
 
     const total = subtotal + tax + shipping - discount;
-    const amountInCents = Math.round(total * 100); // Convert to cents for CAD
+    const amountInCents = Math.round(total * 100); // Convert to cents for Stripe
 
-    // Create Payment Intent with Canadian configuration
-    const paymentIntentData = {
+    const paymentIntent = await stripe.paymentIntents.create({
       amount: amountInCents,
-      currency: 'cad', // Canadian Dollar
+      currency: 'cad',
       metadata: {
         userId: userId.toString(),
         subtotal: subtotal.toString(),
@@ -129,59 +229,16 @@ const createPaymentIntent = async (req, res) => {
         shipping: shipping.toString(),
         discount: discount.toString(),
         total: total.toString(),
-        paymentMethod: paymentMethod || 'card',
-        province: province || 'ON',
         appliedCoupon: appliedCoupon ? JSON.stringify(appliedCoupon) : null
       }
-    };
-
-    // Configure payment methods for Canada - Use ONLY ONE approach
-    switch (paymentMethod) {
-      case 'card':
-        paymentIntentData.payment_method_types = ['card'];
-        break;
-      case 'digital_wallet':
-        // Enable Apple Pay, Google Pay, Link for Canada
-        paymentIntentData.automatic_payment_methods = { 
-          enabled: true,
-          allow_redirects: 'never' // Keeps it to wallets only, no redirects
-        };
-        break;
-      case 'klarna':
-        // Buy now, pay later option (check if available in your Stripe account)
-        paymentIntentData.payment_method_types = ['card', 'klarna'];
-        break;
-      case 'afterpay':
-        // Another BNPL option (check availability in Canada)
-        paymentIntentData.payment_method_types = ['card', 'afterpay_clearpay'];
-        break;
-      case 'paypal':
-        // If you want to add PayPal support later
-        paymentIntentData.payment_method_types = ['card', 'paypal'];
-        break;
-      default:
-        // Default to card payments
-        paymentIntentData.payment_method_types = ['card'];
-    }
-
-    const paymentIntent = await stripe.paymentIntents.create(paymentIntentData);
+    });
 
     res.status(200).json({
       success: true,
       data: {
         clientSecret: paymentIntent.client_secret,
         amount: total,
-        currency: 'CAD',
-        paymentMethod: paymentMethod || 'card',
-        supportedMethods: getSupportedMethods(paymentMethod),
-        taxBreakdown: {
-          subtotal: subtotal.toFixed(2),
-          tax: tax.toFixed(2),
-          shipping: shipping.toFixed(2),
-          discount: discount.toFixed(2),
-          total: total.toFixed(2),
-          province: province || 'ON'
-        }
+        currency: 'CAD'
       }
     });
 
@@ -189,10 +246,16 @@ const createPaymentIntent = async (req, res) => {
     console.error('Error creating payment intent:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to create payment intent',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: 'Failed to create payment intent'
     });
   }
+};
+
+// Helper function to generate unique payment ID
+const generateUniquePaymentId = (paymentMethod, orderNumber) => {
+  const timestamp = Date.now();
+  const random = Math.random().toString(36).substr(2, 9);
+  return `${paymentMethod.toUpperCase()}_${orderNumber}_${timestamp}_${random}`;
 };
 
 // Confirm Payment and Create Order
@@ -201,7 +264,6 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
     const userId = req.user.id;
     const { paymentIntentId, contactInfo, billingAddress, paymentMethod } = req.body;
 
-    // Retrieve payment intent from Stripe
     const paymentIntent = await stripe.paymentIntents.retrieve(paymentIntentId);
     
     if (paymentIntent.status !== 'succeeded') {
@@ -211,7 +273,6 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       });
     }
 
-    // Validate required fields for Canadian address
     if (!contactInfo?.email || !billingAddress?.firstName || !billingAddress?.lastName || 
         !billingAddress?.address || !billingAddress?.city || !billingAddress?.province || 
         !billingAddress?.postalCode) {
@@ -221,16 +282,6 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       });
     }
 
-    // Validate Canadian postal code format (basic validation)
-    const postalCodeRegex = /^[A-Za-z]\d[A-Za-z][ -]?\d[A-Za-z]\d$/;
-    if (!postalCodeRegex.test(billingAddress.postalCode)) {
-      return res.status(400).json({
-        success: false,
-        message: 'Please enter a valid Canadian postal code (e.g., K1A 0A6)'
-      });
-    }
-
-    // Get cart items
     const cart = await Cart.findOne({ userId }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -243,21 +294,17 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       });
     }
 
-    // Extract data from payment intent metadata
     const metadata = paymentIntent.metadata;
     const subtotal = parseFloat(metadata.subtotal);
     const tax = parseFloat(metadata.tax);
     const shipping = parseFloat(metadata.shipping);
     const discount = parseFloat(metadata.discount);
     const total = parseFloat(metadata.total);
-    const selectedPaymentMethod = metadata.paymentMethod || 'card';
-    const province = metadata.province || 'ON';
     
     let couponData = null;
     if (metadata.appliedCoupon && metadata.appliedCoupon !== 'null') {
       const appliedCoupon = JSON.parse(metadata.appliedCoupon);
       
-      // Update coupon usage count
       await Coupon.findOneAndUpdate(
         { code: appliedCoupon.code.toUpperCase() },
         { $inc: { usedCount: 1 } }
@@ -272,7 +319,6 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       };
     }
 
-    // Prepare order items with image URLs
     const orderItems = cart.items.map(item => {
       const productWithImageUrl = addImageUrlToProduct(item.productId, req);
       return {
@@ -287,58 +333,91 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       };
     });
 
-    // Generate order number with Canadian prefix
     const timestamp = Date.now().toString();
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-    const orderNumber = `CAN${timestamp}${random}`;
+    const orderNumber = `ORD${timestamp}${random}`;
 
-    // Create order
+    // Create Order
     const order = new Order({
       userId,
       orderNumber,
       items: orderItems,
       contactInfo,
       billingAddress,
-      paymentMethod: selectedPaymentMethod,
-      paymentStatus: 'paid', // Mark as paid since Stripe payment succeeded
-      status: 'confirmed', // Automatically confirm order for successful payments
+      paymentMethod: 'card',
+      paymentStatus: 'paid',
+      status: 'confirmed',
       appliedCoupon: couponData,
       orderSummary: {
         subtotal,
         tax,
         shipping,
         discount,
-        total,
-        currency: 'CAD',
-        province: province
+        total
       },
-      stripePaymentId: paymentIntentId,
-      stripePaymentIntentId: paymentIntent.id
+      stripePaymentId: paymentIntentId
     });
 
     await order.save();
 
-    // Clear cart after successful order
+    // Create Payment Record
+    const payment = new Payment({
+      orderId: order._id,
+      userId,
+      orderNumber: order.orderNumber,
+      paymentId: generateUniquePaymentId('card', order.orderNumber),
+      paymentMethod: 'card',
+      paymentStatus: 'paid',
+      amount: total,
+      currency: 'CAD',
+      stripePaymentId: paymentIntentId,
+      stripePaymentIntentId: paymentIntentId,
+      transactionDetails: {
+        subtotal,
+        tax,
+        shipping,
+        discount,
+        total
+      },
+      customerInfo: {
+        email: contactInfo.email,
+        firstName: billingAddress.firstName,
+        lastName: billingAddress.lastName,
+        phone: billingAddress.phone,
+        address: {
+          street: billingAddress.address,
+          apartment: billingAddress.apartment,
+          city: billingAddress.city,
+          province: billingAddress.province,
+          postalCode: billingAddress.postalCode,
+          country: billingAddress.country
+        }
+      },
+      appliedCoupon: couponData
+    });
+
+    await payment.save();
+
+    // Log payment creation
+    await payment.addPaymentLog(
+      'PAYMENT_CREATED',
+      'SUCCESS',
+      'Payment record created successfully',
+      { 
+        stripePaymentId: paymentIntentId,
+        amount: total,
+        currency: 'CAD'
+      }
+    );
+
+    // Clear cart
     await Cart.findOneAndUpdate(
       { userId },
       { $set: { items: [] } }
     );
 
-    // Generate PDFs
-    const orderConfirmationPDF = await generateOrderPDF(order);
-    const invoicePDF = await generateInvoicePDF(order, true); // true for paid invoice
-
-    // Send order confirmation email with PDFs to customer
-    await sendOrderConfirmationWithPDF(order, orderItems, {
-      orderConfirmation: orderConfirmationPDF,
-      invoice: invoicePDF
-    });
-
-    // Notify admin about new order
-    await notifyAdminNewOrder(order, orderItems, {
-      orderConfirmation: orderConfirmationPDF,
-      invoice: invoicePDF
-    });
+    // Process emails and PDF generation
+    await processOrderEmails(order, orderItems, payment, req, true);
 
     res.status(201).json({
       success: true,
@@ -346,10 +425,10 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       data: {
         orderNumber: order.orderNumber,
         orderId: order._id,
-        total: `$${total.toFixed(2)} CAD`,
+        paymentId: payment._id,
+        total: total.toFixed(2),
         paymentStatus: 'paid',
-        paymentMethod: selectedPaymentMethod,
-        province: province
+        currency: 'CAD'
       }
     });
 
@@ -357,211 +436,847 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
     console.error('Error confirming payment and creating order:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to process order. Please contact support.',
-      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+      message: 'Failed to process order. Please contact support.'
     });
   }
 };
 
-// Process COD Payment (when delivered) - Updated for Canadian context
-const processCODPayment = async (req, res) => {
+// Create COD Order
+const createCODOrder = async (req, res) => {
   try {
-    const { orderId } = req.params;
-    const { adminId } = req.body; // Admin confirmation
+    const userId = req.user.id;
+    const { contactInfo, billingAddress, appliedCoupon } = req.body;
 
-    // Find order
-    const order = await Order.findById(orderId).populate({
+    if (!contactInfo?.email || !billingAddress?.firstName || !billingAddress?.lastName || 
+        !billingAddress?.address || !billingAddress?.city || !billingAddress?.province || 
+        !billingAddress?.postalCode) {
+      return res.status(400).json({
+        success: false,
+        message: 'All required fields must be filled'
+      });
+    }
+
+    const cart = await Cart.findOne({ userId }).populate({
+      path: 'items.productId',
+      select: 'name price image description category brand'
+    });
+    
+    if (!cart || cart.items.length === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Cart is empty'
+      });
+    }
+
+    const subtotal = cart.items.reduce((total, item) => {
+      const price = safeParseFloat(item.productId.price);
+      const quantity = safeParseInt(item.quantity);
+      return total + (price * quantity);
+    }, 0);
+
+    const tax = subtotal * 0.13; // 13% HST for Canada
+    const shipping = subtotal > 100 ? 0 : 15; // Free shipping over CAD $100
+    
+    let discount = 0;
+    let couponData = null;
+
+    if (appliedCoupon) {
+      const coupon = await Coupon.findOne({
+        code: appliedCoupon.code.toUpperCase(),
+        isActive: true
+      });
+
+      if (coupon) {
+        const currentDate = new Date();
+        if (currentDate >= coupon.validFrom && currentDate <= coupon.validUntil) {
+          if (subtotal >= coupon.minimumOrderAmount) {
+            if (coupon.discountType === 'percentage') {
+              discount = (subtotal * coupon.discountValue) / 100;
+              if (coupon.maximumDiscountAmount && discount > coupon.maximumDiscountAmount) {
+                discount = coupon.maximumDiscountAmount;
+              }
+            } else if (coupon.discountType === 'fixed') {
+              discount = coupon.discountValue;
+            }
+            discount = Math.min(discount, subtotal);
+
+            couponData = {
+              code: coupon.code,
+              description: coupon.description,
+              discountType: coupon.discountType,
+              discountValue: coupon.discountValue,
+              discount: discount
+            };
+
+            await Coupon.findByIdAndUpdate(coupon._id, {
+              $inc: { usedCount: 1 }
+            });
+          }
+        }
+      }
+    }
+
+    const total = subtotal + tax + shipping - discount;
+
+    const orderItems = cart.items.map(item => {
+      const productWithImageUrl = addImageUrlToProduct(item.productId, req);
+      return {
+        productId: item.productId._id,
+        name: productWithImageUrl.name,
+        price: safeParseFloat(productWithImageUrl.price),
+        quantity: safeParseInt(item.quantity),
+        image: productWithImageUrl.image,
+        imageUrl: productWithImageUrl.imageUrl,
+        brand: productWithImageUrl.brand,
+        category: productWithImageUrl.category
+      };
+    });
+
+    const timestamp = Date.now().toString();
+    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+    const orderNumber = `ORD${timestamp}${random}`;
+
+    // Create Order
+    const order = new Order({
+      userId,
+      orderNumber,
+      items: orderItems,
+      contactInfo,
+      billingAddress,
+      paymentMethod: 'cod',
+      paymentStatus: 'pending',
+      status: 'pending',
+      appliedCoupon: couponData,
+      orderSummary: {
+        subtotal,
+        tax,
+        shipping,
+        discount,
+        total
+      }
+    });
+
+    await order.save();
+
+    // Create Payment Record
+    const payment = new Payment({
+      orderId: order._id,
+      userId,
+      orderNumber: order.orderNumber,
+      paymentId: generateUniquePaymentId('cod', order.orderNumber),
+      paymentMethod: 'cod',
+      paymentStatus: 'pending',
+      amount: total,
+      currency: 'CAD',
+      transactionDetails: {
+        subtotal,
+        tax,
+        shipping,
+        discount,
+        total
+      },
+      customerInfo: {
+        email: contactInfo.email,
+        firstName: billingAddress.firstName,
+        lastName: billingAddress.lastName,
+        phone: billingAddress.phone,
+        address: {
+          street: billingAddress.address,
+          apartment: billingAddress.apartment,
+          city: billingAddress.city,
+          province: billingAddress.province,
+          postalCode: billingAddress.postalCode,
+          country: billingAddress.country
+        }
+      },
+      appliedCoupon: couponData
+    });
+
+    await payment.save();
+
+    // Log payment creation
+    await payment.addPaymentLog(
+      'COD_ORDER_CREATED',
+      'SUCCESS',
+      'COD order created successfully',
+      { 
+        amount: total,
+        currency: 'CAD'
+      }
+    );
+
+    // Clear cart
+    await Cart.findOneAndUpdate(
+      { userId },
+      { $set: { items: [] } }
+    );
+
+    // Process emails and PDF generation for COD
+    await processOrderEmails(order, orderItems, payment, req, false);
+
+    res.status(201).json({
+      success: true,
+      message: 'COD Order placed successfully!',
+      data: {
+        orderNumber: order.orderNumber,
+        orderId: order._id,
+        paymentId: payment._id,
+        total: total.toFixed(2),
+        paymentStatus: 'pending',
+        currency: 'CAD'
+      }
+    });
+
+  } catch (error) {
+    console.error('Error creating COD order:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Failed to place order. Please try again.'
+    });
+  }
+};
+
+// Update Payment Status (for COD completion)
+const updatePaymentStatus = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const { paymentStatus, notes } = req.body;
+
+    const payment = await Payment.findById(paymentId).populate('orderId');
+    
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Payment record not found'
+      });
+    }
+
+    const oldStatus = payment.paymentStatus;
+    payment.paymentStatus = paymentStatus;
+
+    // Update corresponding order
+    const order = await Order.findById(payment.orderId).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
     });
 
-    if (!order) {
+    if (order) {
+      order.paymentStatus = paymentStatus;
+      if (paymentStatus === 'paid') {
+        order.status = 'confirmed';
+      }
+      await order.save();
+    }
+
+    await payment.save();
+
+    // Log status update
+    await payment.addPaymentLog(
+      'PAYMENT_STATUS_UPDATE',
+      'SUCCESS',
+      `Payment status updated from ${oldStatus} to ${paymentStatus}`,
+      { 
+        oldStatus,
+        newStatus: paymentStatus,
+        notes: notes || null
+      }
+    );
+
+    // If COD payment completed, send invoice
+    if (payment.paymentMethod === 'cod' && 
+        oldStatus === 'pending' && 
+        paymentStatus === 'paid') {
+      
+      // Generate and store invoice
+      const invoiceBuffer = await generatePDFBuffer('invoice', order, order.items);
+      const invoiceFilename = `Invoice-${order.orderNumber}.pdf`;
+      
+      await payment.storePDF('invoice', invoiceFilename, invoiceBuffer);
+
+      // Send payment confirmation email with invoice
+      try {
+        await emailService.sendPaymentConfirmationEmailWithBuffer(
+          order, 
+          order.items, 
+          invoiceBuffer, 
+          invoiceFilename
+        );
+        await payment.updateEmailStatus('invoiceSent', true);
+      } catch (emailError) {
+        console.error('Error sending payment confirmation:', emailError);
+        await payment.updateEmailStatus('invoiceSent', false, emailError.message);
+      }
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Payment status updated successfully',
+      data: {
+        payment: payment,
+        order: order
+      }
+    });
+  } catch (error) {
+    console.error('Error updating payment status:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Get Payment Details
+const getPaymentDetails = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    
+    const payment = await Payment.findById(paymentId)
+      .populate('orderId')
+      .populate('userId', 'firstName lastName email');
+    
+    if (!payment) {
       return res.status(404).json({
         success: false,
-        message: 'Order not found'
+        message: 'Payment not found'
       });
     }
 
-    if (order.paymentMethod !== 'cod') {
-      return res.status(400).json({
+    res.status(200).json({
+      success: true,
+      data: payment
+    });
+  } catch (error) {
+    console.error('Error getting payment details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Download PDF from Database
+const downloadPDF = async (req, res) => {
+  try {
+    const { paymentId, pdfType } = req.params;
+    
+    const payment = await Payment.findById(paymentId);
+    
+    if (!payment) {
+      return res.status(404).json({
         success: false,
-        message: 'This is not a Cash on Delivery order'
+        message: 'Payment record not found'
       });
     }
 
-    if (order.paymentStatus === 'paid') {
-      return res.status(400).json({
+    const pdf = payment.getPDF(pdfType);
+    
+    if (!pdf) {
+      return res.status(404).json({
         success: false,
-        message: 'Order is already marked as paid'
+        message: 'PDF not found'
       });
     }
+
+    res.setHeader('Content-Type', pdf.contentType);
+    res.setHeader('Content-Disposition', `attachment; filename="${pdf.filename}"`);
+    res.send(pdf.data);
+
+  } catch (error) {
+    console.error('Error downloading PDF:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Get All Payments (Admin)
+const getAllPayments = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status, method, search } = req.query;
+    
+    const query = {};
+    
+    if (status) query.paymentStatus = status;
+    if (method) query.paymentMethod = method;
+    if (search) {
+      query.$or = [
+        { orderNumber: { $regex: search, $options: 'i' } },
+        { 'customerInfo.email': { $regex: search, $options: 'i' } },
+        { 'customerInfo.firstName': { $regex: search, $options: 'i' } },
+        { 'customerInfo.lastName': { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const payments = await Payment.find(query)
+      .populate('orderId', 'orderNumber status')
+      .populate('userId', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const total = await Payment.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        payments,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        total
+      }
+    });
+  } catch (error) {
+    console.error('Error getting payments:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Get User Payments
+const getUserPayments = async (req, res) => {
+  try {
+    const userId = req.user.id;
+    const { page = 1, limit = 10 } = req.query;
+
+    const payments = await Payment.find({ userId })
+      .populate('orderId', 'orderNumber status items')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const total = await Payment.countDocuments({ userId });
+
+    res.status(200).json({
+      success: true,
+      data: {
+        payments,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        total
+      }
+    });
+  } catch (error) {
+    console.error('Error getting user payments:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// Refund Payment
+const refundPayment = async (req, res) => {
+  try {
+    const { paymentId } = req.params;
+    const { reason, refundAmount } = req.body;
+
+    const payment = await Payment.findById(paymentId).populate('orderId');
+    
+    if (!payment) {
+      return res.status(404).json({
+        success: false,
+        message: 'Payment not found'
+      });
+    }
+
+    if (payment.paymentMethod !== 'card') {
+      return res.status(400).json({
+        success: false,
+        message: 'Only card payments can be refunded through Stripe'
+      });
+    }
+
+    if (!payment.stripePaymentId) {
+      return res.status(400).json({
+        success: false,
+        message: 'No Stripe payment ID found'
+      });
+    }
+
+    // Process refund with Stripe
+    const refundAmountInCents = Math.round((refundAmount || payment.amount) * 100);
+    
+    const refund = await stripe.refunds.create({
+      payment_intent: payment.stripePaymentId,
+      amount: refundAmountInCents,
+      reason: 'requested_by_customer',
+      metadata: {
+        orderId: payment.orderId._id.toString(),
+        reason: reason || 'Customer request'
+      }
+    });
+
+    // Update payment status
+    payment.paymentStatus = 'refunded';
+    await payment.save();
 
     // Update order status
-    order.paymentStatus = 'paid';
-    order.status = 'delivered'; // Mark as delivered when COD is paid
-    await order.save();
+    if (payment.orderId) {
+      const order = await Order.findById(payment.orderId);
+      if (order) {
+        order.paymentStatus = 'refunded';
+        order.status = 'cancelled';
+        await order.save();
+      }
+    }
 
-    // Generate paid invoice PDF
-    const paidInvoicePDF = await generateInvoicePDF(order, true);
-
-    // Send paid invoice to customer
-    await sendInvoicePDF(order, paidInvoicePDF, 'paid');
+    // Log refund
+    await payment.addPaymentLog(
+      'REFUND_PROCESSED',
+      'SUCCESS',
+      `Refund processed: ${(refundAmountInCents / 100).toFixed(2)} CAD`,
+      { 
+        stripeRefundId: refund.id,
+        refundAmount: refundAmountInCents / 100,
+        reason: reason || 'Customer request'
+      }
+    );
 
     res.status(200).json({
       success: true,
-      message: 'Cash on Delivery payment processed successfully',
+      message: 'Refund processed successfully',
       data: {
-        orderNumber: order.orderNumber,
-        paymentStatus: order.paymentStatus,
-        status: order.status,
-        total: `$${order.orderSummary.total.toFixed(2)} CAD`
+        refundId: refund.id,
+        amount: refundAmountInCents / 100,
+        currency: 'CAD',
+        status: refund.status
       }
     });
 
   } catch (error) {
-    console.error('Error processing COD payment:', error);
+    console.error('Error processing refund:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to process COD payment'
+      message: 'Failed to process refund'
     });
   }
 };
 
-// Get payment methods available in Canada
-const getPaymentMethods = async (req, res) => {
+// Get Payment Statistics (Admin)
+const getPaymentStatistics = async (req, res) => {
   try {
-    const paymentMethods = [
+    const { period = '30d' } = req.query;
+    
+    let startDate = new Date();
+    switch (period) {
+      case '7d':
+        startDate.setDate(startDate.getDate() - 7);
+        break;
+      case '30d':
+        startDate.setDate(startDate.getDate() - 30);
+        break;
+      case '90d':
+        startDate.setDate(startDate.getDate() - 90);
+        break;
+      case '1y':
+        startDate.setFullYear(startDate.getFullYear() - 1);
+        break;
+    }
+
+    // Total revenue
+    const totalRevenue = await Payment.aggregate([
       {
-        id: 'card',
-        name: 'Credit/Debit Card',
-        description: 'Visa, Mastercard, American Express - Secure payment',
-        icon: '💳',
-        enabled: true,
-        popular: true
+        $match: {
+          paymentStatus: 'paid',
+          createdAt: { $gte: startDate }
+        }
       },
       {
-        id: 'digital_wallet',
-        name: 'Digital Wallets',
-        description: 'Apple Pay, Google Pay - Quick & secure checkout',
-        icon: '📱',
-        enabled: true,
-        popular: true
-      },
-      {
-        id: 'klarna',
-        name: 'Klarna',
-        description: 'Buy now, pay later in installments',
-        icon: '🛍️',
-        enabled: false, // Enable this if you have Klarna activated in your Stripe account
-        note: 'Subject to approval'
-      },
-      {
-        id: 'afterpay',
-        name: 'Afterpay',
-        description: 'Split your purchase into 4 interest-free payments',
-        icon: '💰',
-        enabled: false, // Enable this if you have Afterpay activated in your Stripe account
-        note: 'Available for orders $35-$1000 CAD'
-      },
-      {
-        id: 'cod',
-        name: 'Cash on Delivery',
-        description: 'Pay when you receive your order',
-        icon: '💵',
-        enabled: true,
-        note: 'Available in select areas'
+        $group: {
+          _id: null,
+          total: { $sum: '$amount' }
+        }
       }
-    ];
+    ]);
+
+    // Payment method breakdown
+    const paymentMethodStats = await Payment.aggregate([
+      {
+        $match: {
+          paymentStatus: 'paid',
+          createdAt: { $gte: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: '$paymentMethod',
+          count: { $sum: 1 },
+          total: { $sum: '$amount' }
+        }
+      }
+    ]);
+
+    // Payment status breakdown
+    const paymentStatusStats = await Payment.aggregate([
+      {
+        $match: {
+          createdAt: { $gte: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: '$paymentStatus',
+          count: { $sum: 1 },
+          total: { $sum: '$amount' }
+        }
+      }
+    ]);
+
+    // Daily revenue (for charts)
+    const dailyRevenue = await Payment.aggregate([
+      {
+        $match: {
+          paymentStatus: 'paid',
+          createdAt: { $gte: startDate }
+        }
+      },
+      {
+        $group: {
+          _id: {
+            year: { $year: '$createdAt' },
+            month: { $month: '$createdAt' },
+            day: { $dayOfMonth: '$createdAt' }
+          },
+          revenue: { $sum: '$amount' },
+          orders: { $sum: 1 }
+        }
+      },
+      {
+        $sort: { '_id.year': 1, '_id.month': 1, '_id.day': 1 }
+      }
+    ]);
 
     res.status(200).json({
       success: true,
-      data: paymentMethods.filter(method => method.enabled), // Only return enabled methods
-      currency: 'CAD',
-      country: 'Canada'
+      data: {
+        totalRevenue: totalRevenue[0]?.total || 0,
+        paymentMethodStats,
+        paymentStatusStats,
+        dailyRevenue,
+        period,
+        currency: 'CAD'
+      }
     });
+
   } catch (error) {
-    console.error('Error getting payment methods:', error);
+    console.error('Error getting payment statistics:', error);
     res.status(500).json({
       success: false,
-      message: 'Failed to get payment methods'
+      message: 'Server error'
     });
   }
 };
 
-// Get Canadian provinces for tax calculation
-const getCanadianProvinces = async (req, res) => {
-  try {
-    const provinces = [
-      { code: 'AB', name: 'Alberta', taxRate: 0.05 },
-      { code: 'BC', name: 'British Columbia', taxRate: 0.12 },
-      { code: 'MB', name: 'Manitoba', taxRate: 0.12 },
-      { code: 'NB', name: 'New Brunswick', taxRate: 0.15 },
-      { code: 'NL', name: 'Newfoundland and Labrador', taxRate: 0.15 },
-      { code: 'NS', name: 'Nova Scotia', taxRate: 0.15 },
-      { code: 'NT', name: 'Northwest Territories', taxRate: 0.05 },
-      { code: 'NU', name: 'Nunavut', taxRate: 0.05 },
-      { code: 'ON', name: 'Ontario', taxRate: 0.13 },
-      { code: 'PE', name: 'Prince Edward Island', taxRate: 0.15 },
-      { code: 'QC', name: 'Quebec', taxRate: 0.14975 },
-      { code: 'SK', name: 'Saskatchewan', taxRate: 0.11 },
-      { code: 'YT', name: 'Yukon', taxRate: 0.05 }
-    ];
-
-    res.status(200).json({
-      success: true,
-      data: provinces
-    });
-  } catch (error) {
-    console.error('Error getting provinces:', error);
-    res.status(500).json({
-      success: false,
-      message: 'Failed to get provinces'
-    });
-  }
-};
-
-// Webhook to handle Stripe events
+// ADD THIS NEW WEBHOOK HANDLER FUNCTION
 const handleStripeWebhook = async (req, res) => {
   const sig = req.headers['stripe-signature'];
   const endpointSecret = process.env.STRIPE_WEBHOOK_SECRET;
-
+  
   let event;
 
   try {
     event = stripe.webhooks.constructEvent(req.body, sig, endpointSecret);
   } catch (err) {
-    console.log(`Webhook signature verification failed.`, err.message);
+    console.log('Webhook signature verification failed:', err.message);
     return res.status(400).send(`Webhook Error: ${err.message}`);
   }
 
-  // Handle the event
-  switch (event.type) {
-    case 'payment_intent.succeeded':
-      const paymentIntent = event.data.object;
-      console.log('Payment succeeded:', paymentIntent.id);
-      // Additional processing can be done here
-      break;
-    case 'payment_intent.payment_failed':
-      const failedPayment = event.data.object;
-      console.log('Payment failed:', failedPayment.id);
-      // Handle failed payment - maybe send notification
-      break;
-    case 'payment_method.attached':
-      const paymentMethod = event.data.object;
-      console.log('Payment method attached:', paymentMethod.id);
-      break;
-    default:
-      console.log(`Unhandled event type ${event.type}`);
-  }
+  try {
+    switch (event.type) {
+      case 'refund.created':
+        await handleRefundCreated(event.data.object);
+        break;
+      
+      case 'refund.updated':
+        await handleRefundUpdated(event.data.object);
+        break;
+      
+      default:
+        console.log(`Unhandled event type ${event.type}`);
+    }
 
-  res.json({ received: true });
+    res.json({ received: true });
+  } catch (error) {
+    console.error('Webhook handling error:', error);
+    res.status(500).json({ error: 'Webhook handling failed' });
+  }
+};
+
+// ADD THIS NEW HELPER FUNCTION
+const handleRefundCreated = async (refundObject) => {
+  try {
+    const refund = await Refund.findOne({ stripeRefundId: refundObject.id });
+    
+    if (refund) {
+      refund.refundStatus = 'processing';
+      refund.stripeRefundObject = refundObject;
+      await refund.save();
+
+      // Update order refund status
+      await Order.findByIdAndUpdate(
+        refund.orderId,
+        { refundStatus: 'processing' }
+      );
+
+      // Log refund processing
+      await refund.addRefundLog(
+        'REFUND_PROCESSING',
+        'SUCCESS',
+        'Refund is being processed by Stripe',
+        { stripeRefundId: refundObject.id }
+      );
+    }
+  } catch (error) {
+    console.error('Error handling refund created:', error);
+  }
+};
+
+// ADD THIS NEW HELPER FUNCTION
+const handleRefundUpdated = async (refundObject) => {
+  try {
+    const refund = await Refund.findOne({ stripeRefundId: refundObject.id })
+      .populate('orderId')
+      .populate('userId', 'firstName lastName email');
+    
+    if (refund) {
+      const newStatus = refundObject.status === 'succeeded' ? 'completed' : 'failed';
+      
+      refund.refundStatus = newStatus;
+      refund.stripeRefundObject = refundObject;
+      
+      if (newStatus === 'completed') {
+        refund.processedAt = new Date();
+      }
+      
+      await refund.save();
+
+      // Update order refund status
+      await Order.findByIdAndUpdate(
+        refund.orderId._id,
+        { refundStatus: newStatus }
+      );
+
+      // Log refund completion/failure
+      await refund.addRefundLog(
+        newStatus === 'completed' ? 'REFUND_COMPLETED' : 'REFUND_FAILED',
+        newStatus.toUpperCase(),
+        `Refund ${newStatus} by Stripe`,
+        { 
+          stripeRefundId: refundObject.id,
+          amount: refundObject.amount / 100
+        }
+      );
+
+      // Send completion email if successful
+      if (newStatus === 'completed') {
+        try {
+          await emailService.sendRefundCompletionEmail(refund.orderId, refund, refund.userId);
+          await refund.updateEmailStatus('refundCompletedSent', true);
+        } catch (emailError) {
+          console.error('Error sending refund completion email:', emailError);
+        }
+      }
+    }
+  } catch (error) {
+    console.error('Error handling refund updated:', error);
+  }
+};
+
+// ADD THIS NEW ADMIN FUNCTION
+const getRefundDetails = async (req, res) => {
+  try {
+    const { refundId } = req.params;
+    
+    const refund = await Refund.findById(refundId)
+      .populate('orderId')
+      .populate('paymentId')
+      .populate('userId', 'firstName lastName email')
+      .populate('processedBy', 'firstName lastName email');
+    
+    if (!refund) {
+      return res.status(404).json({
+        success: false,
+        message: 'Refund not found'
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      data: refund
+    });
+  } catch (error) {
+    console.error('Error getting refund details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
+};
+
+// ADD THIS NEW ADMIN FUNCTION
+const getAllRefunds = async (req, res) => {
+  try {
+    const { page = 1, limit = 10, status, paymentMethod, search } = req.query;
+    
+    const query = {};
+    
+    if (status) query.refundStatus = status;
+    if (paymentMethod) query.paymentMethod = paymentMethod;
+    if (search) {
+      query.$or = [
+        { orderNumber: { $regex: search, $options: 'i' } },
+        { 'customerInfo.email': { $regex: search, $options: 'i' } },
+        { 'customerInfo.firstName': { $regex: search, $options: 'i' } },
+        { 'customerInfo.lastName': { $regex: search, $options: 'i' } }
+      ];
+    }
+
+    const refunds = await Refund.find(query)
+      .populate('orderId', 'orderNumber status')
+      .populate('paymentId', 'paymentId')
+      .populate('userId', 'firstName lastName email')
+      .populate('processedBy', 'firstName lastName email')
+      .sort({ createdAt: -1 })
+      .limit(limit * 1)
+      .skip((page - 1) * limit);
+
+    const total = await Refund.countDocuments(query);
+
+    res.status(200).json({
+      success: true,
+      data: {
+        refunds,
+        totalPages: Math.ceil(total / limit),
+        currentPage: page,
+        total
+      }
+    });
+  } catch (error) {
+    console.error('Error getting refunds:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
+  }
 };
 
 module.exports = {
   createPaymentIntent,
   confirmPaymentAndCreateOrder,
-  processCODPayment,
-  getPaymentMethods,
-  getCanadianProvinces,
-  handleStripeWebhook
+  createCODOrder,
+  updatePaymentStatus,
+  getPaymentDetails,
+  downloadPDF,
+  getAllPayments,
+  getUserPayments,
+  refundPayment,
+  getPaymentStatistics,
+   handleStripeWebhook,
+  handleRefundCreated,
+  handleRefundUpdated,
+  getRefundDetails,
+  getAllRefunds
 };
