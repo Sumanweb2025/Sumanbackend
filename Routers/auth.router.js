@@ -1,8 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const { body } = require('express-validator');
-const authController = require('../controllers/auth.controller');
-const authMiddleware = require('../middleware/auth.middleware'); // Your JWT middleware
+const authController = require('../Controllers/auth.controller');
+const authMiddleware = require('../Middleware/auth.middleware'); // Your JWT middleware
 
 // Validation rules
 const signupValidation = [
