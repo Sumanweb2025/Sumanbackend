@@ -162,8 +162,9 @@
   "Description": "Iyappaa Banana Chips Salt is a traditional South Indian snack made from fresh raw bananas, thinly sliced and fried to golden crispiness. Lightly seasoned with salt, these chips are simple yet irresistibly tasty. Perfect for tea-time, travel, or festive celebrations, they deliver a crunchy bite in every mouthful. Made without artificial flavors or preservatives, it’s a healthy and delicious snacking choice for all ages.",
   "Piece": 10,
   "Rating" : 5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "bananachips _salt.png"
+},
  {
   "Product_id": "iy12bst001",
   "Brand": "Iyappaa",
@@ -176,8 +177,9 @@
   "Description": "Iyappaa Banana Chips Salt is a traditional South Indian snack made from fresh raw bananas, thinly sliced and fried to golden crispiness. Lightly seasoned with salt, these chips are simple yet irresistibly tasty. Perfect for tea-time, travel, or festive celebrations, they deliver a crunchy bite in every mouthful. Made without artificial flavors or preservatives, it’s a healthy and delicious snacking choice for all ages.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "bananachips _salt.png"
+},
  {
   "Product_id": "iy13bsy400",
   "Brand": "Iyappaa",
@@ -190,8 +192,9 @@
   "Description": "Iyappaa Banana Chips Spicy brings you the authentic taste of South Indian snacking with an extra kick of spice. Made from farm-fresh raw bananas and fried to a crisp golden texture, each chip is coated with red chili powder and salt for a bold flavor. Crunchy, spicy, and addictive, it’s the perfect snack to enjoy with tea, during travel, or at gatherings. Prepared without artificial colors or preservatives, it’s a natural and flavorful treat for spice lovers.",
   "Piece": 10,
   "Rating" : 3.9,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "banaba chips spicy.png"
+},
  {
   "Product_id": "iy13bsy001",
   "Brand": "Iyappaa",
@@ -204,8 +207,9 @@
   "Description": "Iyappaa Banana Chips Spicy brings you the authentic taste of South Indian snacking with an extra kick of spice. Made from farm-fresh raw bananas and fried to a crisp golden texture, each chip is coated with red chili powder and salt for a bold flavor. Crunchy, spicy, and addictive, it’s the perfect snack to enjoy with tea, during travel, or at gatherings. Prepared without artificial colors or preservatives, it’s a natural and flavorful treat for spice lovers.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "banaba chips spicy.png"
+},
  {
   "Product_id": "iy14sb400",
   "Brand": "Iyappaa",
@@ -218,8 +222,9 @@
   "Description": "Iyappaa Sweet Banana Chips are a delightful snack made from ripe bananas, fried to crisp perfection, and coated with natural sweetness from jaggery. The mild touch of cardamom enhances the flavor, giving a rich and aromatic taste in every bite. Crispy on the outside yet sweet and light, it’s a perfect treat for festivals, tea-time, or anytime munching. Free from preservatives and artificial flavors, it brings you the authentic traditional taste of sweetness and crunch.",
   "Piece": 10,
   "Rating" : 4.3,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "sweet_banana.png"
+},
  {
   "Product_id": "iy15sv350",
   "Brand": "Iyappaa",
@@ -232,8 +237,9 @@
   "Description": "Iyappaa Sakkaravettu is a traditional South Indian delicacy loved for its crunchy texture and rich jaggery sweetness. Made with rice flour, coconut, and cardamom, it is deep-fried to a golden crisp, offering a perfect blend of taste and aroma. Often enjoyed during festive seasons and special occasions, this sweet carries the charm of age-old recipes. With no artificial additives, it delivers authentic homemade flavor in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "sakkaravattu.png"
+},
  {
   "Product_id": "iy16csy150",
   "Brand": "Iyappaa",
@@ -246,8 +252,9 @@
   "Description": "Iyappaa Cassava Chips Spicy brings the authentic taste of traditional tapioca chips with an extra punch of heat. Made from farm-fresh cassava, thinly sliced and fried until crisp, each chip is coated with red chili powder and curry leaves for a fiery flavor. Perfect for spice lovers, these crunchy chips are an ideal companion for tea, travel, or festive gatherings. With no preservatives or artificial flavors, they deliver pure taste and crunch in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "cassavachips_spicy.png"
+},
  {
   "Product_id": "iy17cst150",
   "Brand": "Iyappaa",
@@ -260,8 +267,9 @@
   "Description": "Iyappaa Cassava Chips Salt is a classic South Indian snack made from fresh cassava, thinly sliced and fried until golden and crisp. Lightly sprinkled with salt, it delivers a natural taste with a satisfying crunch in every bite. Simple, tasty, and wholesome, these chips are perfect for tea-time, travel, or anytime snacking. With no added preservatives or artificial flavors, they bring you the pure goodness of traditional homemade chips.",
   "Piece": 10,
   "Rating" : 4.3,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "cassava_chip_salt.png"
+},
  {
   "Product_id": "iy18cfc150",
   "Brand": "Iyappaa",
@@ -274,8 +282,9 @@
   "Description": "Iyappaa Cassava Finger Chips Salt is a traditional snack made from farm-fresh cassava, sliced into thick finger-like pieces and fried until crisp and golden. Lightly sprinkled with salt, it delivers a simple yet irresistible taste with every bite. Crunchy, tasty, and light, these chips are perfect for tea-time, travel, or casual munching. With no artificial flavors or preservatives, they offer the pure and authentic goodness of homemade cassava snacks.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "cassavafinger_chips.png"
+},
  {
   "Product_id": "iy19cls150",
   "Brand": "Iyappaa",
@@ -288,8 +297,9 @@
   "Description": "Iyappaa Cassava Chips Long Seeval is a crispy and spicy snack crafted from fresh cassava, mixed with flour and traditional spices, then fried into long crunchy sticks. With the bold flavors of red chili, black pepper, and curry leaves, it delivers a perfect balance of heat and taste. Enjoyed by all ages, it’s an ideal snack for tea-time, festive moments, or casual munching. Made with care and free from artificial flavors, it brings authentic South Indian taste straight to your plate.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "cassava_long.png"
+},
  {
   "Product_id": "iy20jc175",
   "Brand": "Iyappaa",
@@ -302,8 +312,9 @@
   "Description": "Iyappaa Jackfruit Chips are a unique and traditional South Indian snack made from thinly sliced raw jackfruit, fried to golden crisp perfection. Lightly seasoned with salt, they deliver a natural flavor with a satisfying crunch. A wholesome alternative to regular chips, they are perfect for tea-time, festive occasions, or casual snacking. Free from artificial flavors and preservatives, these chips bring you the authentic taste of nature in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "jackfruit_chips.png"
+},
  {
   "Product_id": "iy21ksy500",
   "Brand": "Iyappaa",
@@ -316,8 +327,9 @@
   "Description": "Iyappaa Kuzhalappam Spicy is a traditional Kerala-style snack, shaped like hollow rolls and fried to a golden crisp. Made with rice flour, coconut, and a blend of spices, it delivers a crunchy bite with a spicy kick. Perfect for tea-time, festive occasions, or casual snacking, this snack is both unique in shape and rich in taste. Free from artificial flavors and preservatives, it brings you the authentic taste of Kerala in every bite.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": ""
+},
  {
   "Product_id": "iy22kst500",
   "Brand": "Iyappaa",
@@ -344,8 +356,9 @@
   "Description": "Iyappaa Large Rice Murukku is a traditional South Indian crunchy delight, prepared using rice flour, urad dal flour, and a blend of spices. Shaped into big, spiral rings and fried to a crisp golden brown, it delivers an irresistible crunch with authentic flavor. A must-have during festivals, family gatherings, or as a tea-time snack, this murukku is loved across generations. Made with care and without artificial additives, it brings the taste of homemade tradition to every bite.",
   "Piece": 10,
   "Rating" : 4.3,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "largerice_murukku.png"
+},
  {
   "Product_id": "iy24rm175",
   "Brand": "Iyappaa",
@@ -358,8 +371,9 @@
   "Description": "Iyappaa Rice Murukku is a crunchy and delicious traditional snack, prepared from rice flour and urad dal flour with a blend of sesame and cumin seeds. Shaped into beautiful spirals and fried to a crisp golden brown, it delivers an irresistible crunch with authentic flavor. Perfect for tea-time, festive occasions, or family gatherings, this murukku is a timeless favorite. Made without preservatives, it captures the true homemade taste of South Indian tradition.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "rice_murukku.png"
+},
  {
   "Product_id": "iy25km175",
   "Brand": "Iyappaa",
@@ -372,8 +386,9 @@
   "Description": "Iyappaa Kai Murukku is a heritage South Indian snack, made with rice flour, urad dal flour, and aromatic spices. Expertly twisted by hand into elegant spirals, each piece carries the authentic touch of tradition. Crispy, crunchy, and full of flavor, it is a favorite during Diwali and special occasions. With no artificial additives, this handmade murukku delivers the wholesome taste of homemade snacks passed down through generations.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "kai_murukku.png"
+},
  {
   "Product_id": "iy26gm175",
   "Brand": "Iyappaa",
@@ -386,8 +401,9 @@
   "Description": "Iyappaa Garlic Murukku is a crunchy twist to the traditional South Indian murukku, infused with the rich aroma and flavor of fresh garlic. Made with rice flour and urad dal flour, blended with sesame, cumin, and spices, it is fried to a crisp golden perfection. Each bite delivers a delightful garlicky crunch, making it a unique snack for tea-time or festive moments. Free from preservatives, it offers a perfect balance of tradition and bold flavor.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "garlic_murukku.png"
+},
  {
   "Product_id": "iy27bm175",
   "Brand": "Iyappaa",
@@ -400,8 +416,9 @@
   "Description": "Iyappaa Butter Murukku is a light, crispy, and melt-in-the-mouth South Indian delicacy. Made with rice flour and roasted gram flour, blended with rich butter and mild spices, it is fried to a golden perfection. Its soft crunch and subtle buttery flavor make it a favorite snack for kids and adults alike. Perfect for tea-time, festive occasions, or anytime munching, this murukku is crafted without preservatives, delivering a truly homemade taste.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "butter_murukku.png"
+},
  {
   "Product_id": "iy28sm200",
   "Brand": "Iyappaa",
@@ -414,8 +431,9 @@
   "Description": "Iyappaa Star Murukku is a traditional South Indian snack with a playful star-shaped twist. Made from rice flour, roasted gram flour, and butter, it is fried to a crisp golden perfection, offering a crunchy texture and mild, flavorful taste. Perfect for festive celebrations, tea-time, or gifting, this murukku combines authentic homemade taste with fun presentation. Free from preservatives and artificial additives, it delivers the true essence of traditional South Indian snacking.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "star_murukku.png"
+},
  {
   "Product_id": "iy29mm200",
   "Brand": "Iyappaa",
@@ -428,8 +446,9 @@
   "Description": "Iyappaa Mini Murukku is a crunchy, bite-sized snack made from rice flour, urad dal flour, and a blend of sesame and cumin seeds. Shaped into small spirals and fried to a crisp golden finish, each piece delivers authentic South Indian flavor in a convenient size. Perfect for tea-time, festive occasions, or snacking on the go, it is loved by kids and adults alike. Free from preservatives and artificial flavors, it captures the homemade taste and tradition of classic murukku.",
   "Piece": 10,
   "Rating" : 3.9,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "mini_murukku.png"
+},
  {
   "Product_id": "iy30am100",
   "Brand": "Iyappaa",
@@ -442,8 +461,9 @@
   "Description": "Iyappaa Achu Murukku is a classic South Indian snack, known for its delicate, flower-like shape created using a traditional mold (achu). Made from rice flour and urad dal flour with sesame, cumin, and a hint of butter, it is fried to a crisp golden perfection. Light, crunchy, and flavorful, it is perfect for tea-time, festivals, and family gatherings. Free from preservatives and artificial additives, it delivers the authentic homemade taste and traditional charm in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "achu_murukku.png"
+},
  {
   "Product_id": "iy31pd225",
   "Brand": "Iyappaa",
@@ -456,8 +476,9 @@
   "Description": "Iyappaa Pineapple Drops are tangy, sweet, and irresistibly fruity hard candies, crafted to deliver a burst of pineapple flavor with every bite. Smooth and long-lasting, these drops are perfect for satisfying your sweet cravings anytime. Ideal for kids, festive treats, or as a refreshing snack, they bring joy with their vibrant taste and aroma. Made with quality ingredients, they ensure a safe and delightful candy experience without preservatives.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "pineapple_drops.png"
+},
  {
   "Product_id": "iy32od225",
   "Brand": "Iyappaa",
@@ -470,8 +491,9 @@
   "Description": "Iyappaa Orange Drops are tangy, sweet candies infused with the natural essence of oranges. Each drop offers a burst of citrusy flavor that delights the taste buds and refreshes the senses. Perfect for kids, parties, festive occasions, or a quick sweet treat, these candies are loved by all ages. Crafted with quality ingredients and free from preservatives, they bring a safe and flavorful candy experience every time.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "orange_drops.png"
+},
  {
   "Product_id": "iy33gp250",
   "Brand": "Iyappaa",
@@ -484,8 +506,9 @@
   "Description": "Unlock the taste of a fresh-picked garden any day of the year with Iyappaa Frozen Green Peas. We capture our peas at their peak of sweetness and vibrant green color, then quickly freeze them to seal in their wholesome goodness, ensuring you get perfect peas every time.Packed with protein, fiber, and essential nutrients, they are the effortless secret to creating healthier, more vibrant meals without the fuss. Their brilliant color and sweet flavor elevate everything from hearty Indian curries and pilafs to global cuisines like pastas and risottos. A pantry (or freezer) staple that makes eating well both simple and delicious.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "greenpeas.png"
+},
  {
   "Product_id": "iy34cd250",
   "Brand": "Iyappaa",
@@ -498,8 +521,9 @@
   "Description": "Iyappaa Channa Dal is a traditional crunchy snack made from premium channa dal, roasted until golden and perfectly crisp. Lightly seasoned with salt and optional spices, it delivers a flavorful and protein-packed bite. Ideal for tea-time, parties, or on-the-go snacking, it combines health and taste seamlessly. Prepared without preservatives, it captures the authentic homemade taste of this classic South Indian snack.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "channa_dal.png"
+},
  {
   "Product_id": "iy35cp250",
   "Brand": "Iyappaa",
@@ -512,8 +536,9 @@
   "Description": "Iyappaa Chickpeas are crunchy, roasted legumes, lightly seasoned to create a wholesome and delicious snack. Packed with protein and fiber, they make a nutritious option for tea-time, travel, or casual munching. Perfect for health-conscious snack lovers, they combine authentic taste with natural goodness. Made with quality ingredients and free from preservatives, each bite delivers a satisfying and crunchy experience.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "chickpeas.png"
+},
  {
   "Product_id": "iy36phl550",
   "Brand": "Iyappaa",
@@ -526,147 +551,159 @@
   "Description": "Our Peanut Halwa Large is an exquisite traditional Indian dessert that transforms humble peanuts into a rich, creamy, and indulgent sweet treat. This premium halwa is prepared using authentic recipes passed down through generations, combining the nutty goodness of fresh peanuts with aromatic spices and premium dairy to create a dessert worthy of special celebrations.",
   "Piece": 10,
   "Rating" : 4.6,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "peanut_halwa.png"
+},
  {
   "Product_id": "iy37ph175",
   "Brand": "Iyappaa",
   "Name": " Peanut Halwa",
   "Gram": "175g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 1.5,
   "Ingredients": "Jaggery, Peanut, Sugar, Glucose, Gardamom",
   "Description": "Indulge in the irresistible, creamy delight of Iyappaa Peanut Halwa—a sweet masterpiece where finely roasted peanuts blend seamlessly with rich ghee and aromatic cardamom. Each spoonful offers a luxuriously smooth texture, elevated by the gentle crunch of cashews and the natural sweetness of raisins. Perfectly balanced and lovingly prepared, this halwa is a heartwarming treat that brings joy to festivals, family dinners, or everyday moments of indulgence.Crafted for authenticity and quality, Iyappaa Peanut Halwa delivers the homemade taste and nourishment you cherish.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "peanut_halwa.png"
+},
  {
   "Product_id": "iy38phs600",
   "Brand": "Iyappaa",
-  "Name": "Peanut Halwa Small-24",
+  "Name": "Peanut Halwa ",
   "Gram": "600g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 7.00,
   "Ingredients": "Jaggery, Peanut, Sugar, Glucose, Gardamom",
   "Description": "Our Peanut Halwa  is an exquisite traditional Indian dessert that transforms humble peanuts into a rich, creamy, and indulgent sweet treat. This premium halwa is prepared using authentic recipes passed down through generations, combining the nutty goodness of fresh peanuts with aromatic spices and premium dairy to create a dessert worthy of special celebrations.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "peanut_halwa.png"
+},
  {
   "Product_id": "iy39kt100",
   "Brand": "Iyappaa",
   "Name": "Kamarkat",
   "Gram": "100g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "Peanut, Jaggery, Cardamom, Spices",
   "Description": "Iyappaa Kamarkat is a traditional South Indian sweet known for its rich, caramelized texture and delightful crunch. Made from sugar and ghee, and flavored with aromatic cardamom, it offers a perfect balance of sweetness and flavor. Ideal for festivals, gifting, or as a sweet treat anytime, this delicacy captures the authentic taste of homemade confectionery. Prepared with quality ingredients and without preservatives, it delivers a wholesome and satisfying sweet experience.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "kamarka.png"
+},
  {
   "Product_id": "iy40pb100",
   "Brand": "Iyappaa",
   "Name": "Peanut Ball",
   "Gram": "100g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "Jaggery, Peanut, Sugar, Glucose, Gardamom",
   "Description": "Iyappaa Peanut Ball is a traditional sweet crafted from roasted peanuts, jaggery, and ghee, lightly flavored with cardamom. Rolled into small, bite-sized balls, it offers a perfect combination of crunch and sweetness. Ideal for festivals, gifting, or as a quick energy-boosting snack, it delivers authentic homemade flavor in every bite. Made with quality ingredients and without preservatives, these peanut balls provide a wholesome and delightful treat for all ages.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "peanut_ball.png"
+},
  {
   "Product_id": "iy41sbw800",
   "Brand": "Iyappaa",
   "Name": "Sesame Ball White",
   "Gram": "80g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "White Sesame Seed, Peanut, Jaggery, Sugar, Liquid Glucose, Cardamon",
   "Description": "Iyappaa Sesame Ball White is a traditional South Indian sweet made with toasted white sesame seeds, jaggery, and ghee, lightly flavored with cardamom. Rolled into bite-sized balls, it offers a crunchy texture with a rich, nutty sweetness. Perfect for festive occasions, gifting, or as a healthy snack, these sesame balls combine traditional flavor with wholesome ingredients. Prepared without preservatives, they bring authentic homemade taste to every bite.",
   "Piece": 10,
   "Rating" : 4.6,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "white_sesameball.png"
+},
  {
   "Product_id": "iy42swp800",
   "Brand": "Iyappaa",
   "Name": "Sesame Ball White With Peanut",
   "Gram": "80g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "White Sesame Seed, Jaggery, Sugar, Liquid Glucose, Cardamon",
   "Description": "Iyappaa Sesame Ball White with Peanut is a wholesome South Indian sweet made from toasted white sesame seeds and crunchy roasted peanuts, bound together with jaggery and ghee. Lightly flavored with cardamom, each bite offers a delightful crunch and rich nutty sweetness. Perfect for festive occasions, gifting, or as an energy-boosting snack, these sesame peanut balls combine traditional taste with nutrition. Made with quality ingredients and free from preservatives, they bring authentic homemade goodness to every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "sesame_peanut.png"
+},
  {
   "Product_id": "iy43sbb800",
   "Brand": "Iyappaa",
   "Name": "Sesame Ball Black",
   "Gram": "80g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "Black Sesame Seed, Peanut, Jaggery, Sugar, Liquid Glucose, Cardamon",
   "Description": "Embrace the ancient wisdom of Ayurveda with Iyappaa Black Sesame Balls, a traditional sweet that is as nourishing as it is delicious. Crafted for festivals like Makar Sankranti and Lohri, these nutrient-dense treats are made from wholesome black sesame seeds and unrefined jaggery, creating a powerful combination of taste and wellness.Each ball is dry-roasted to perfection, releasing the deep, nutty aroma of sesame, then bound with mineral-rich jaggery for a natural, earthy sweetness. The addition of cardamom adds a warm, aromatic finish. These energy-packed balls are not just a festive indulgence but are also believed to provide warmth and vitality during the winter months, making them a timeless recipe passed down through generations.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "black_sesameball.png"
+},
  {
   "Product_id": "iy44sbp800",
   "Brand": "Iyappaa",
   "Name": "Sesame Ball Black With Peanut",
   "Gram": "80g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "Black Sesame Seed, Jaggery, Sugar, Liquid Glucose, Cardamon",
   "Description": "Iyappaa Sesame Ball Black with Peanut is a nutritious South Indian sweet made from roasted black sesame seeds and crunchy roasted peanuts, bound together with jaggery and ghee. Flavored with a hint of cardamom, each bite delivers a rich, nutty sweetness with a satisfying crunch. Perfect for festive occasions, gifting, or as an energy-boosting snack, these sesame peanut balls combine traditional taste with wholesome ingredients. Made without preservatives, they offer the authentic homemade flavor of South Indian sweets in every bite.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "sesameblack_peanut.png"
+},
  {
   "Product_id": "iy45oc100",
   "Brand": "Iyappaa",
   "Name": "Orange Candy",
   "Gram": "100g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Ingredients": "Sugar Glucose",
   "Description": "Iyappaa Orange Candy is a sweet and tangy treat that delivers a burst of refreshing orange flavor with every bite. Smooth and long-lasting, these candies are perfect for kids, festive occasions, or as a delightful snack anytime. Made with quality ingredients and free from preservatives, they provide a safe and enjoyable candy experience. With vibrant flavor and a satisfying texture, Iyappaa Orange Candy is a favorite for citrus lovers of all ages.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "orangecandy.png"
+
+},
  {
   "Product_id": "iy46pc100",
   "Brand": "Iyappaa",
   "Name": "Pan Candy",
   "Gram": "100g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 0.7,
   "Description": "Iyappaa Pan Candy is a traditional Indian hard candy infused with the unique flavor of paan, offering a refreshing and aromatic taste with every bite. Smooth and long-lasting, it is perfect for kids and adults who enjoy a sweet and minty treat. Ideal for festive occasions, gifting, or casual snacking, this candy combines vibrant flavor with a satisfying texture. Made with quality ingredients and free from preservatives, Iyappaa Pan Candy delivers a delightful and authentic paan experience.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "pan_candy.png"
+},
  {
   "Product_id": "iy47pp20",
   "Brand": "Iyappaa",
@@ -679,8 +716,9 @@
   "Description": "Iyappaa Peanut Pakoda is a crunchy, golden-brown snack made from peanuts dipped in a flavorful spiced gram flour and rice flour batter. Perfectly fried to a crisp, it offers a delightful combination of nutty flavor and mild spice in every bite. Ideal for tea-time, festive gatherings, or casual snacking, it brings authentic South Indian taste to your table. Made with quality ingredients and free from preservatives, it ensures a wholesome and satisfying snack experience.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "peanut_pakoda.png"
+},
  {
   "Product_id": "iy48ews100",
   "Brand": "Iyappaa",
@@ -693,8 +731,9 @@
   "Description": "Iyappaa Elanthavadai with Seed is a crunchy South Indian snack made from urad dal and rice flour, enhanced with sesame and cumin seeds for extra flavor. Carefully shaped and fried to golden perfection, each piece delivers a crisp bite with a nutty and mildly spiced taste. Ideal for tea-time, festivals, or casual snacking, it brings traditional flavors straight to your table. Made with quality ingredients and free from preservatives, it captures the authentic homemade taste of this classic delicacy.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "elanthavadai_seed.png"
+},
  {
   "Product_id": "iy49ev100",
   "Brand": "Iyappaa",
@@ -707,8 +746,9 @@
   "Description": "Iyappaa Elanthavadai is a traditional South Indian savory snack made from urad dal and rice flour, seasoned with black pepper and salt. Shaped into small discs and fried to a crisp golden brown, it offers a crunchy texture and authentic flavor in every bite. Perfect for tea-time, festivals, or casual snacking, it is loved by all age groups. Prepared without preservatives, it delivers the genuine homemade taste of this classic delicacy.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "elanthavadai.png"
+},
  {
   "Product_id": "iy50gr100",
   "Brand": "Iyappaa",
@@ -721,8 +761,9 @@
   "Description": "Iyappaa Glukarosa is a sweet, fragrant candy infused with the delicate flavor of rose. Smooth and long-lasting, each piece offers a refreshing floral taste that delights the senses. Ideal for kids, festive occasions, gifting, or as a delightful treat anytime, it combines vibrant flavor with a satisfying texture. Made with quality ingredients and free from preservatives, Iyappaa Glukarosa delivers a traditional homemade candy experience.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "glukarosa.png"
+},
  {
   "Product_id": "iy51il630",
   "Brand": "Iyappaa",
@@ -734,8 +775,9 @@
   "Description": "Savor the perfect balance of tangy and sweet with Iyappaa Imli—a classic Indian treat made from ripe tamarind pulp, slow-cooked with jaggery and a blend of traditional spices. This rich, dark paste offers an explosion of flavors, from the initial sour kick of tamarind to the deep sweetness of jaggery, finished with a hint of spice and saltiness.Enjoy it as a standalone snack, use it as a dipping chutney for chaats and snacks, or add a spoonful to your recipes for an authentic tangy twist. Made with care and natural ingredients, Iyappaa Imli brings the vibrant taste of street food right to your home!",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "imili_candy.png"
+},
  {
   "Product_id": "iy52prb130",
   "Brand": "Iyappaa",
@@ -748,21 +790,23 @@
   "Description": "Crunchy, sweet, and irresistibly light—Iyappaa Puffed Rice Balls are a timeless snack that brings together the airy crispness of puffed rice and the rich, caramel-like sweetness of jaggery. These delightful balls are gently bound with aromatic ghee and cardamom, with roasted peanuts adding a satisfying crunch in every bite.Perfect for munching during festivals, as a tea-time snack, or as a quick energy booster, these balls offer a guilt-free indulgence that’s both wholesome and delicious. Made with traditional recipes and natural ingredients, they are a nostalgic treat for all ages.",
   "Piece": 10,
   "Rating" : 3.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "puffedrice_ball.png"
+},
  {
   "Product_id": "iy53csc200",
   "Brand": "Iyappaa",
   "Name": "Crystal Sugar Candy",
   "Gram": "200g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Ingredients": "Candy Sugar",
   "Description": "Discover the pure, unrefined sweetness of Iyappaa Crystal Sugar Candy—a timeless ingredient revered in Indian households and temples. Carefully crystallized from natural sugarcane, these delicate crystals offer a mild, clean sweetness that enhances both spiritual and culinary experiences.Perfect for use as prasadam in poojas and rituals, these sugar crystals carry a sense of purity and devotion. They also serve as a gentle sweetener in traditional drinks like sherbets and panakam, or in desserts where subtle sweetness is desired. Embrace the simplicity and tradition of Iyappaa Crystal Sugar Candy—a symbol of sweetness in every aspect of life.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "crystal_sugar.png"
+},
  {
   "Product_id": "iy54ss001",
   "Brand": "Iyappaa",
@@ -775,8 +819,9 @@
   "Description": "Harvested from pristine ocean waters, Iyappaa Sea Salt is a pure, unrefined mineral-rich salt that brings the taste of the sea directly to your table. Unlike regular table salt, it is naturally evaporated, retaining essential trace minerals like magnesium, calcium, and potassium, which enhance its flavor and nutritional profile.With its delicate texture and balanced briny taste, Iyappaa Sea Salt is perfect for seasoning, cooking, and finishing a wide variety of dishes. Sprinkle it over salads, grilled meats, or roasted vegetables to elevate their natural flavors. Add a pinch to your favorite recipes for a wholesome and authentic taste experience.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "seasalt.png"
+},
  {
   "Product_id": "iy55hsp001",
   "Brand": "Iyappaa",
@@ -789,8 +834,9 @@
   "Description": "Experience the purity of the Himalayas with Iyappaa Himalayan Salt Powder. Mined from ancient salt deposits deep within the Himalayan mountains, this finely ground salt is renowned for its beautiful pink hue and rich mineral content, including iron, magnesium, and calcium.Its delicate texture makes it perfect for seasoning, finishing, and enhancing the natural flavors of your dishes. Use it in cooking, baking, or as a gourmet touch to elevate salads, grilled meats, and desserts. Iyappaa Himalayan Salt Powder not only adds a burst of flavor but also brings a visually appealing element to your culinary creations.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "himalaya_seasaltpowder.png"
+},
  {
   "Product_id": "iy56hsc001",
   "Brand": "Iyappaa",
@@ -803,8 +849,9 @@
   "Description": "Bring the ancient purity of the Himalayas to your kitchen with Iyappaa Himalayan Salt Crystals. Mined from pristine, million-year-old salt deposits, these coarse, vibrant pink crystals are unrefined and packed with over 80 essential trace minerals, including iron, magnesium, and potassium.Their robust texture and slow-dissolving nature make them ideal for grinding in mills, using in salt brines, or adding to dishes during cooking for a gradual release of flavor. Iyappaa Himalayan Salt Crystals not only enhance the taste of your meals but also add a touch of natural elegance to your culinary creations.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "himalaya_seasalt.png"
+},
  {
   "Product_id": "iy57ud30",
   "Brand": "Iyappaa",
@@ -816,8 +863,9 @@
   "Description": "Iyappaa Urid Dal—the soul of South Indian comfort food! These whole black gram lentils are the secret behind creamy dals, fluffy idlis, and crispy dosas. Sourced for their premium quality and rich, earthy flavor, they’re a kitchen must-have for authentic homemade meals.Packed with protein and fiber, this dal is as nutritious as it is delicious. Whether you’re simmering it into a hearty dal makhani or grinding it for fermented favorites, Iyappaa Urid Dal delivers consistent results and traditional taste every time.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "urid_dal.png"
+},
  {
   "Product_id": "iy58ud003",
   "Brand": "Iyappaa",
@@ -830,8 +878,9 @@
   "Description": "Iyappaa Urid Dal—the soul of South Indian comfort food! These whole black gram lentils are the secret behind creamy dals, fluffy idlis, and crispy dosas. Sourced for their premium quality and rich, earthy flavor, they’re a kitchen must-have for authentic homemade meals.Packed with protein and fiber, this dal is as nutritious as it is delicious. Whether you’re simmering it into a hearty dal makhani or grinding it for fermented favorites, Iyappaa Urid Dal delivers consistent results and traditional taste every time.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "urid_dal.png"
+},
  {
   "Product_id": "iy59da001",
   "Brand": "Iyappaa",
@@ -844,8 +893,9 @@
   "Description": "Iyappaa Dalia is high-quality broken wheat, carefully cleaned and packed to preserve freshness and nutrients. Rich in fiber and essential minerals, it is perfect for preparing wholesome breakfasts, porridge, upma, or savory dishes. Ideal for health-conscious individuals, it offers a light, nutritious, and delicious option for everyday meals. Free from additives and preservatives, Iyappaa Dalia ensures natural taste and consistent quality in every serving.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "dalia.png"
+},
  {
   "Product_id": "iy60da400",
   "Brand": "Iyappaa",
@@ -858,8 +908,9 @@
   "Description": "Iyappaa Dalia is high-quality broken wheat, carefully cleaned and packed to preserve freshness and nutrients. Rich in fiber and essential minerals, it is perfect for preparing wholesome breakfasts, porridge, upma, or savory dishes. Ideal for health-conscious individuals, it offers a light, nutritious, and delicious option for everyday meals. Free from additives and preservatives, Iyappaa Dalia ensures natural taste and consistent quality in every serving.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+"image": "dalia.png"
+},
  {
   "Product_id": "iy61dcp400",
   "Brand": "Iyappaa",
@@ -872,8 +923,9 @@
   "Description": "Iyappaa Desiccated Coconut is made from carefully selected coconuts that are finely grated and gently dried to preserve their natural flavor and nutrients. This versatile ingredient is perfect for adding a delicious coconut taste and texture to a wide variety of dishes. Use it in baking, cooking, or as a topping for desserts and breakfast bowls.With its long shelf life and consistent quality, Iyappaa Desiccated Coconut is a convenient way to enjoy the taste of fresh coconut anytime.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "decicated_coconutpowder.png"
+},
  {
   "Product_id": "iy62cp25",
   "Brand": "Iyappaa",
@@ -885,8 +937,9 @@
   "Description": "Iyappaa Coconut Powder is made from finely ground, dried coconut meat, offering a rich, tropical flavor and creamy texture. This versatile powder is perfect for adding authentic coconut taste to both sweet and savory dishes. Easily reconstitute it with water to create coconut milk or cream, or use it directly in baking, smoothies, curries, and desserts.Ideal for those seeking dairy-free alternatives, it’s a kitchen staple for creating luscious sauces, decadent desserts, and flavorful beverages. Enjoy the convenience and natural goodness of coconut in every spoonful!",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "coconut_powder.png"
+},
  {
   "Product_id": "iy63ra400",
   "Brand": "Iyappaa",
@@ -897,8 +950,9 @@
   "Description": "Iyappaa Red Avul (Aval) brings the wholesome goodness of traditional flattened rice to your kitchen! Made from parboiled rice that is pressed and flattened into thin, tender flakes, this versatile ingredient is a staple in South Indian households. Known for its quick cooking time and light texture, it’s perfect for creating both sweet and savory dishes in minutes.Rich in carbohydrates and easy to digest, Red Avul is ideal for breakfast, snacks, or even light meals. Whether you’re making classic poha, upma, or festive treats like aval laddu, Iyappaa Red Avul ensures authentic taste and quality in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "red_avul.png"
+},
  {
   "Product_id": "iy64rp001",
   "Brand": "Iyappaa",
@@ -910,8 +964,9 @@
   "Description": "Iyappaa Raw Peanuts are high-quality, freshly harvested peanuts, carefully cleaned and packed to ensure purity and freshness. Perfect for roasting, making peanut snacks, peanut butter, or as an ingredient in sweets and savory dishes, they offer natural flavor and crunch. Ideal for everyday cooking and snacking, these peanuts are nutritious and rich in protein. Free from additives and preservatives, Iyappaa Raw Peanuts bring wholesome quality and authentic taste to your kitchen.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "rawpeanut.png"
+},
  {
   "Product_id": "iy65wp300",
   "Brand": "Iyappaa",
@@ -924,8 +979,9 @@
   "Description": "Iyappaa Wheel Papadam—a crispy, savory delight that turns any meal into a celebration! Handcrafted in the traditional wheel shape, these papads are made from a blend of urad dal and rice flour, seasoned with cumin, black pepper, and a hint of hing for that authentic, aromatic flavor.Quick to cook and impossible to resist, they’re perfect as a side with dal-rice, as a snack with chutney, or even crushed over your favorite chaat. Light, crunchy, and full of character, Iyappaa Wheel Papadam brings homestyle goodness and a touch of fun to your plate.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "wheel_frymus.png"
+},
  {
   "Product_id": "iy66ctf300",
   "Brand": "Iyappaa",
@@ -938,8 +994,9 @@
   "Description": "Light up snack time with Iyappaa Color Tube Fryums! These playful, tube-shaped treats are made from a wholesome blend of rice and urad dal flour, then mixed with vibrant natural colors from turmeric, beetroot, and spinach. Each piece fries into a light, crispy, and pufftastic bite that’s as fun to eat as it is to look at!Perfect for parties, lunch boxes, or evening snacks, these fryums are mildly spiced to please everyone—especially kids. Fry them in minutes and enjoy the crunch and color that turn everyday moments into joyful ones.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "color_frymus.png"
+},
  {
   "Product_id": "iy67gf300",
   "Brand": "Iyappaa",
@@ -952,8 +1009,9 @@
   "Description": "Iyappaa Garlic Frymus is a savory South Indian fried snack made from a seasoned flour blend and fresh garlic, fried to crisp perfection. Packed with bold garlic aroma and a crunchy texture, it makes for an irresistible snack any time of the day. Perfect for tea-time, parties, or festive occasions, it delivers authentic traditional flavors in every bite. Made with quality ingredients and free from preservatives, Iyappaa Garlic Frymus ensures a delicious and wholesome snacking experience.",
   "Piece": 10,
   "Rating" : 3.9,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "garlic_frymus.png"
+},
  {
   "Product_id": "iy68of300",
   "Brand": "Iyappaa",
@@ -965,8 +1023,9 @@
   "Description": "Savor the sharp, irresistible taste of onions in every crispy bite with Iyappaa Onion Fryums! These uniquely shaped extruded snacks are crafted with real onion powder and a blend of rice and urad dal flours, seasoned with a hint of spices for a savory, addictive flavor.Light, airy, and perfectly puffed when fried, these fryums are ideal for snacking, parties, or as a side dish. Their bold onion taste and satisfying crunch make them a standout choice for those who love robust flavors. Fry them up in minutes and enjoy the wholesome goodness of a homemade-style snack!",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "onion_frymus.png"
+},
  {
   "Product_id": "iy69cdc50",
   "Brand": "Iyappaa",
@@ -978,8 +1037,9 @@
   "Description": "Iyappaa Curd Dried Chilli is a beloved South Indian delicacy that combines the fiery punch of whole red chilies with the tangy richness of curd. These chilies are carefully stuffed with spiced thick yogurt, then sun-dried to perfection to preserve their intense flavor and slightly chewy texture.A versatile ingredient, they can be quickly fried in oil for a crispy, flavorful side dish or tempered into curries and rice dishes for an extra layer of heat and tang. Perfect as a condiment with meals or as a standalone snack, these dried chilies bring the authentic taste of Tamil Nadu kitchens to your home.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "driedcurd_chilli.png"
+},
  {
   "Product_id": "iy70dbg100",
   "Brand": "Iyappaa",
@@ -991,8 +1051,9 @@
   "Description": "Iyappaa Dried Bitter Gourd brings the unique bitter-sweet flavor and health benefits of this beloved vegetable to your pantry year-round. Carefully sliced and sun-dried to preserve its nutrients and intensify its distinct taste, it’s a staple in traditional South Indian and Ayurvedic cooking.Rich in antioxidants and known for its blood sugar-regulating properties, dried bitter gourd is perfect for adding depth to curries, stir-fries, and fries. Just soak and cook to enjoy its signature flavor and crispy texture in dishes like poriyal, sambar, or thoran.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "Dried_bitterguard.png"
+},
  {
   "Product_id": "iy71dtb150",
   "Brand": "Iyappaa",
@@ -1004,8 +1065,9 @@
   "Description": "Iyappaa Dried Turkey Berry is a crunchy South Indian snack made from sun-dried turkey berries, lightly seasoned for a savory and authentic taste. Perfect for tea-time, evening munching, or as a healthy snack, it combines crispiness with the natural flavor of the berries. Ideal for those seeking traditional homemade snacks with nutritional benefits, it retains the essence of South Indian flavors. Made with quality ingredients and free from preservatives, Iyappaa Dried Turkey Berry delivers a wholesome and tasty experience in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "Dried_turkeyberry.png"
+},
  {
   "Product_id": "iy72rw001",
   "Brand": "Iyappaa",
@@ -1018,8 +1080,9 @@
   "Description": "Ragi Whole, also known as Finger Millet, is a highly nutritious and gluten-free grain packed with calcium, fiber, and essential minerals. Ideal for a healthy diet, it supports bone strength, aids digestion, and helps maintain steady blood sugar levels. Ragi can be used in a variety of recipes, from traditional porridge and rotis to baked goods, adding a natural earthy flavor and wholesome goodness to your meals. Perfect for health-conscious families and individuals seeking natural nutrition.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "ragi.png"
+},
  {
   "Product_id": "iy73rp001",
   "Brand": "Iyappaa",
@@ -1032,8 +1095,9 @@
   "Description": "Ragi Powder, made from finely milled whole finger millet, is a natural, gluten-free flour rich in calcium, iron, fiber, and essential amino acids. It promotes strong bones, supports digestive health, and helps maintain balanced blood sugar levels. Perfect for making nutritious porridge, rotis, pancakes, and baked goods, Ragi Powder is a versatile ingredient for healthy meals and snacks. Ideal for families, fitness enthusiasts, and anyone seeking wholesome, plant-based nutrition.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "ragi_powder.png"
+},
  {
   "Product_id": "iy74kb001",
   "Brand": "Iyappaa",
@@ -1046,8 +1110,9 @@
   "Description": "Kambu, also known as Pearl Millet, is a nutrient-dense, gluten-free grain rich in protein, fiber, iron, and essential minerals. It aids digestion, supports heart health, and provides sustained energy, making it an excellent choice for a balanced diet. Kambu can be used in traditional dishes like porridges, rotis, and porridges, as well as innovative recipes for health-conscious meals. A versatile grain for families, fitness enthusiasts, and anyone seeking natural, wholesome nutrition.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "kambu.png"
+},
  {
   "Product_id": "iy75hg001",
   "Brand": "Iyappaa",
@@ -1060,8 +1125,9 @@
   "Description": "Horse Gram is a small, nutrient-rich legume known for its high protein, fiber, iron, and antioxidant content. Traditionally valued in Indian diets, it helps improve digestion, supports weight management, and boosts immunity. Horse Gram can be used in soups, stews, curries, and sprouted salads, providing a wholesome and hearty addition to meals. Ideal for health-conscious individuals seeking plant-based nutrition with natural health benefits.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "horsegram.png"
+},
  {
   "Product_id": "iy76km001",
   "Brand": "Iyappaa",
@@ -1073,8 +1139,9 @@
   "Description": "Kodo Millet is a gluten-free, nutrient-rich grain loaded with protein, fiber, and essential minerals. It supports digestion, helps maintain healthy blood sugar levels, and promotes heart health. Kodo Millet can be used to prepare porridge, upma, pulao, and various healthy baked goods, offering a versatile and wholesome alternative to rice or wheat. Perfect for families, fitness enthusiasts, and anyone seeking natural, nutritious, and easily digestible grains.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "kodo_millet.png"
+},
  {
   "Product_id": "iy77fm001",
   "Brand": "Iyappaa",
@@ -1086,8 +1153,9 @@
   "Description": "Foxtail Millet is a nutritious, gluten-free grain rich in protein, fiber, and essential minerals like iron and magnesium. Known for its low glycemic index, it helps regulate blood sugar, supports digestion, and promotes heart health. Foxtail Millet can be used in porridge, upma, salads, pulao, and healthy baked goods, making it a versatile and wholesome addition to everyday meals. Ideal for health-conscious individuals and families seeking natural, nutrient-packed grains.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "foxtail_milet.png"
+},
  {
   "Product_id": "iy78bm001",
   "Brand": "Iyappaa",
@@ -1099,8 +1167,9 @@
   "Description": "Barnyard Millet is a gluten-free, nutrient-rich grain high in fiber, protein, and essential minerals. It aids digestion, helps maintain healthy blood sugar levels, and supports weight management, making it ideal for a balanced diet. Barnyard Millet can be used in porridge, upma, khichdi, and baked goods, offering a versatile and wholesome alternative to rice or wheat. Perfect for health-conscious individuals and families looking for natural, easily digestible, and nutrient-packed grains.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "barnyard_milet.png"
+},
  {
   "Product_id": "iy79wc908",
   "Brand": "Iyappaa",
@@ -1112,8 +1181,9 @@
   "Description": "White Corn is a versatile, naturally sweet grain rich in carbohydrates, fiber, and essential nutrients like B vitamins and antioxidants. It supports digestion, provides sustained energy, and adds a naturally mild flavor to meals. White Corn can be used in porridges, salads, soups, polenta, and snacks, making it a wholesome addition to daily diets. Ideal for families and health-conscious individuals looking for nutritious and easily digestible grains.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "whitecorn.png"
+},
  {
   "Product_id": "iy80ps400",
   "Brand": "Iyappaa",
@@ -1126,8 +1196,9 @@
   "Description": "Payasam Sago is a staple ingredient for traditional Indian desserts, especially sweet puddings like kheer or payasam. Made from high-quality tapioca pearls, it cooks to a soft, translucent texture that absorbs flavors beautifully. Rich in easily digestible carbohydrates, it provides quick energy while adding a smooth, creamy consistency to desserts. Ideal for festive occasions, celebrations, and everyday sweet treats.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "sago.png"
+},
  {
   "Product_id": "iy81us400",
   "Brand": "Iyappaa",
@@ -1140,8 +1211,9 @@
   "Description": "Uppuma Sago is a coarse, high-quality sago variety specially suited for savory dishes like upma. Made from tapioca pearls, it cooks quickly to a soft, fluffy texture, absorbing spices and flavors perfectly. Rich in easily digestible carbohydrates, it provides quick energy and makes a wholesome, light, and satisfying meal. Ideal for breakfast, snacks, and family-friendly savory dishes.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "sago.png"
+},
  {
   "Product_id": "iy82spi051",
   "Brand": "Iyappaa",
@@ -1153,8 +1225,9 @@
   "Description": "Sago Powder for Idly is a finely milled tapioca flour specially crafted to give soft, spongy, and fluffy idlies. It blends perfectly with rice and lentil batters, enhancing texture and fermentation for light and airy steamed cakes. Rich in easily digestible carbohydrates, it provides energy while maintaining a neutral taste that complements any savory or sweet accompaniment. Perfect for breakfast, snacks, and traditional South Indian dishes.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "sago_powder.png"
+},
  {
   "Product_id": "iy83jr001",
   "Brand": "Iyappaa",
@@ -1167,8 +1240,9 @@
   "Description": "Jaggery Round is a traditional, unrefined sweetener made from pure sugarcane juice. Naturally rich in iron and minerals, it offers a healthier alternative to refined sugar while imparting a rich, caramel-like flavor to dishes. Ideal for making desserts, sweets, beverages, and traditional recipes, it melts easily and enhances the natural taste of your preparations. Perfect for families and health-conscious individuals looking for natural, wholesome sweetness.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "sago_powder.png"
+},
  {
   "Product_id": "iy84ja001",
   "Brand": "Iyappaa",
@@ -1181,8 +1255,9 @@
   "Description": "Jaggery Achu is traditional unrefined jaggery made from pure sugarcane juice, molded into small, convenient discs. Naturally rich in iron and minerals, it’s a healthier alternative to refined sugar. Its sweet, caramel-like flavor enhances desserts, beverages, and festive recipes, while being easy to use in daily cooking. Ideal for families and those seeking natural, wholesome sweetness.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "jaggery_achu.png"
+},
  {
   "Product_id": "iy85jab001",
   "Brand": "Iyappaa",
@@ -1194,8 +1269,9 @@
   "Description": "Jaggery Achu Bottle contains traditional unrefined jaggery made from pure sugarcane juice, shaped into convenient small discs and packed in a hygienic, reusable bottle. Rich in natural minerals like iron and calcium, it offers a healthier alternative to refined sugar. Its natural caramel-like sweetness enhances desserts, beverages, and traditional recipes, making it easy to use and store. Perfect for daily use and festive cooking, combining convenience with wholesome nutrition.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaggery_achu.png"
+},
  {
   "Product_id": "iy86jay001",
   "Brand": "Iyappaa",
@@ -1207,8 +1283,9 @@
   "Description": "Jaggery Achu Yellow is traditional, unrefined jaggery made from pure sugarcane juice, shaped into small discs with a natural golden-yellow hue. Rich in iron and essential minerals, it provides a healthier alternative to refined sugar. Its mild caramel-like flavor enhances sweets, beverages, and festive recipes. Convenient and wholesome, Jaggery Achu Yellow is perfect for everyday cooking, traditional dishes, and natural sweetening.",
   "Piece": 10,
   "Rating" : 3.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": ""
+},
  {
   "Product_id": "iy87jab001",
   "Brand": "Iyappaa",
@@ -1220,8 +1297,9 @@
   "Description": "Jaggery Achu Black is traditional, unrefined jaggery made from pure sugarcane juice, shaped into small discs with a rich dark-brown color. Naturally packed with iron and minerals, it serves as a healthier alternative to refined sugar. Its deep caramel-like flavor enhances sweets, beverages, and festive recipes, while adding an authentic taste to traditional dishes. Convenient, wholesome, and naturally sweet, Jaggery Achu Black is ideal for daily use and special culinary preparations.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaggeryachu_black.png"
+},
  {
   "Product_id": "iy88jas908",
   "Brand": "Iyappaa",
@@ -1246,8 +1324,10 @@
   "Description": "Jaggery Round is a traditional, unrefined sweetener made from pure sugarcane juice. Naturally rich in iron and minerals, it offers a healthier alternative to refined sugar while imparting a rich, caramel-like flavor to dishes. Ideal for making desserts, sweets, beverages, and traditional recipes, it melts easily and enhances the natural taste of your preparations. Perfect for families and health-conscious individuals looking for natural, wholesome sweetness.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaggery_round.png"
+
+},
  {
   "Product_id": "iy90ja400",
   "Brand": "Iyappaa",
@@ -1259,8 +1339,9 @@
   "Description": "Jaggery Achu is traditional unrefined jaggery made from pure sugarcane juice, molded into small, convenient discs. Naturally rich in iron and minerals, it’s a healthier alternative to refined sugar. Its sweet, caramel-like flavor enhances desserts, beverages, and festive recipes, while being easy to use in daily cooking. Ideal for families and those seeking natural, wholesome sweetness.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "jaggery_achu.png"
+},
  {
   "Product_id": "iy91jp001",
   "Brand": "Iyappaa",
@@ -1273,8 +1354,9 @@
   "Description": "Jaggery Powder is finely ground, unrefined jaggery made from pure sugarcane juice. Naturally rich in iron and essential minerals, it provides a healthier alternative to refined sugar while offering a rich, caramel-like sweetness. Perfect for sprinkling over desserts, adding to beverages, or using in traditional recipes, Jaggery Powder dissolves easily and blends seamlessly. Ideal for families and health-conscious individuals seeking convenient, natural, and wholesome sweetness.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaggery_powder.png"
+},
  {
   "Product_id": "iy92jp400",
   "Brand": "Iyappaa",
@@ -1287,8 +1369,9 @@
   "Description": "Jaggery Powder is finely ground, unrefined jaggery made from pure sugarcane juice. Naturally rich in iron and essential minerals, it provides a healthier alternative to refined sugar while offering a rich, caramel-like sweetness. Perfect for sprinkling over desserts, adding to beverages, or using in traditional recipes, Jaggery Powder dissolves easily and blends seamlessly. Ideal for families and health-conscious individuals seeking convenient, natural, and wholesome sweetness.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaggery_powder.png"
+},
  {
   "Product_id": "iy93jp750",
   "Brand": "Iyappaa",
@@ -1301,8 +1384,9 @@
   "Description": "Jaggery Powder is finely ground, unrefined jaggery made from pure sugarcane juice. Naturally rich in iron and essential minerals, it provides a healthier alternative to refined sugar while offering a rich, caramel-like sweetness. Perfect for sprinkling over desserts, adding to beverages, or using in traditional recipes, Jaggery Powder dissolves easily and blends seamlessly. Ideal for families and health-conscious individuals seeking convenient, natural, and wholesome sweetness.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "jaggery_powder.png"
+},
  {
   "Product_id": "iy94pj400",
   "Brand": "Iyappaa",
@@ -1315,8 +1399,9 @@
   "Description": "Palm Jaggery is a traditional, unrefined sweetener made from the concentrated sap of palm trees. Naturally rich in iron, calcium, and essential minerals, it offers a healthier and more nutritious alternative to refined sugar. With its deep, earthy flavor and rich caramel-like sweetness, Palm Jaggery enhances traditional desserts, beverages, and everyday cooking. It also aids digestion and provides sustained energy. Perfect for health-conscious individuals and families seeking natural, wholesome sweetness.",
   "Piece": 10,
   "Rating" : 3.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "palm_jaggery.png"
+},
  {
   "Product_id": "iy95pjp350",
   "Brand": "Iyappaa",
@@ -1329,8 +1414,9 @@
   "Description": "Palm Jaggery Powder is a natural, unrefined sweetener made from the sap of palm trees, finely ground for easy use. Packed with iron, calcium, and essential minerals, it is a healthier alternative to refined sugar. With its rich, earthy flavor and quick-dissolving texture, it blends perfectly into tea, coffee, milk, sweets, and traditional dishes. Convenient and wholesome, Palm Jaggery Powder is ideal for daily use, offering natural sweetness with added nutrition.",
   "Piece": 10,
   "Rating" : 4.4,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "palm_jaggerypowder.png"
+},
  {
   "Product_id": "iy96pc150",
   "Brand": "Iyappaa",
@@ -1343,8 +1429,9 @@
   "Description": "Palm Crystal is a natural sweetener made from the sap of palm trees, crystallized into small granules. Rich in iron, calcium, and essential minerals, it is a healthier alternative to refined sugar. With its mild caramel-like taste, Palm Crystal blends perfectly in tea, coffee, milk, desserts, and traditional recipes. Convenient to use and naturally nutritious, it provides a wholesome sweetness that supports a healthy lifestyle.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "palm_crystal.png"
+},
  {
   "Product_id": "iy97sjp350",
   "Brand": "Iyappaa",
@@ -1356,8 +1443,9 @@
   "Description": "Sukku Jaggery Powder is a natural sweetener infused with the goodness of dry ginger (sukku). It combines the rich caramel-like taste of jaggery with the digestive and immunity-boosting benefits of sukku. Naturally packed with iron and minerals, this herbal blend helps improve digestion, relieve cold-related discomfort, and energize the body. Perfect for tea, herbal drinks, traditional recipes, or as a healthy alternative to refined sugar, Sukku Jaggery Powder is both delicious and nourishing.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "sukku_jaggerypowder.png"
+},
  {
   "Product_id": "iy98cjp350",
   "Brand": "Iyappaa",
@@ -1369,8 +1457,9 @@
   "Description": "Coconut Jaggery Powder is a natural, unrefined sweetener made from the sap of coconut palm trees, finely ground for easy use. Rich in iron, calcium, and essential minerals, it is a healthier alternative to refined sugar. With its unique earthy-sweet flavor and quick-dissolving texture, it blends perfectly in tea, coffee, milk, sweets, and traditional recipes. Convenient, nutritious, and delicious, Coconut Jaggery Powder is the perfect choice for families seeking natural and wholesome sweetness.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "coconut_jaggerypowder.png"
+},
  {
   "Product_id": "iy99co001",
   "Brand": "Iyappaa",

@@ -19,7 +19,7 @@ app.get('/' , (req,res)=>{
     res.send("Welcome to Suman!")
 })
 // Change to EXACTLY this:
-app.use('/images/Products', express.static(path.join(__dirname, 'Iyappaa/Products')));
+app.use('/images/Products', express.static(path.join(__dirname, 'Iyappaa/Product1')));
 // app.use('/uploads', express.static('uploads'))
 
 app.use( Approuter);

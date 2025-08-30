@@ -56,7 +56,7 @@ exports.importProducts = async (req, res) => {
     if (error.code === 'ENOENT') {
       return res.status(404).json({
         message: 'JSON file not found',
-        path: path.join(__dirname, '../Data/WEBSITE PRODUCT LIST FN2.json')
+        path: path.join(__dirname, '../Data/Product_data_final.json')
       });
     }
 
