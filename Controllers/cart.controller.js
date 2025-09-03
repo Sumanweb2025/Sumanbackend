@@ -1,5 +1,6 @@
 const Cart = require('../Models/cart.model');
 const Product = require('../Models/product.model');
+const User = require('../Models/user.model');
 const mongoose = require('mongoose');
 
 // Helper function to validate ObjectId
@@ -10,7 +11,7 @@ const isValidObjectId = (id) => {
 // Helper function to add imageUrl to product and ensure price is a number
 const addImageUrlToProduct = (product, req) => {
   if (!product) return product;
-  
+
   const productObj = product.toObject ? product.toObject() : product;
   return {
     ...productObj,
@@ -45,14 +46,14 @@ const calculateCartTotals = (cart) => {
 const getCart = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id || req.userId;
-    
+
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: 'User not authenticated'
       });
     }
-    
+
     const cart = await Cart.findOne({ userId })
       .populate({
         path: 'items.productId',
@@ -69,7 +70,7 @@ const getCart = async (req, res) => {
 
     // Filter out items where product is null (deleted products)
     const validItems = cart.items.filter(item => item.productId !== null);
-    
+
     // If we filtered out items, update the cart
     if (validItems.length !== cart.items.length) {
       cart.items = validItems;
@@ -111,10 +112,6 @@ const addToCart = async (req, res) => {
     const userId = req.user?.id || req.user?._id || req.userId;
     const { productId, quantity = 1 } = req.body;
 
-    // Debug logging
-    console.log('User object:', req.user);
-    console.log('User ID:', userId);
-    console.log('Product ID:', productId);
 
     if (!userId) {
       return res.status(401).json({
@@ -141,7 +138,7 @@ const addToCart = async (req, res) => {
     }
 
     let product;
-    
+
     // Check if productId is a valid ObjectId, if not search by custom field
     if (isValidObjectId(productId)) {
       product = await Product.findById(productId);
@@ -184,6 +181,18 @@ const addToCart = async (req, res) => {
     }
 
     await cart.save();
+
+    const user = await User.findById(userId);
+    const existingCartItem = user.cart.find(
+      (item) => item.product.toString() === actualProductId.toString()
+    );
+
+    if (existingCartItem) {
+      existingCartItem.quantity += validQuantity;
+    } else {
+      user.cart.push({ product: actualProductId, quantity: validQuantity });
+    }
+    await user.save();
     await cart.populate({
       path: 'items.productId',
       select: 'product_id name brand category price description gram piece rating review_count image'
@@ -240,7 +249,7 @@ const updateCartItem = async (req, res) => {
     }
 
     const cart = await Cart.findOne({ userId });
-    
+
     if (!cart) {
       return res.status(404).json({
         success: false,
@@ -256,14 +265,14 @@ const updateCartItem = async (req, res) => {
     } else {
       // Find the product first to get its ObjectId
       const product = await Product.findOne({ product_id: productId });
-      
+
       if (!product) {
         return res.status(404).json({
           success: false,
           message: 'Product not found'
         });
       }
-      
+
       actualProductId = product._id.toString();
     }
 
@@ -280,6 +289,11 @@ const updateCartItem = async (req, res) => {
 
     cart.items[itemIndex].quantity = validQuantity;
     await cart.save();
+
+    await User.updateOne(
+      { _id: userId, "cart.product": actualProductId },
+      { $set: { "cart.$.quantity": validQuantity } }
+    );
     await cart.populate({
       path: 'items.productId',
       select: 'product_id name brand category price description gram piece rating review_count image'
@@ -330,7 +344,7 @@ const removeFromCart = async (req, res) => {
     }
 
     const cart = await Cart.findOne({ userId });
-    
+
     if (!cart) {
       return res.status(404).json({
         success: false,
@@ -346,14 +360,14 @@ const removeFromCart = async (req, res) => {
     } else {
       // Find the product first to get its ObjectId
       const product = await Product.findOne({ product_id: productId });
-      
+
       if (!product) {
         return res.status(404).json({
           success: false,
           message: 'Product not found'
         });
       }
-      
+
       actualProductId = product._id.toString();
     }
 
@@ -362,6 +376,12 @@ const removeFromCart = async (req, res) => {
     );
 
     await cart.save();
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { cart: { product: actualProductId } } },
+      { new: true }
+    );
     await cart.populate({
       path: 'items.productId',
       select: 'product_id name brand category price description gram piece rating review_count image'
@@ -402,17 +422,23 @@ const removeFromCart = async (req, res) => {
 const clearCart = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id || req.userId;
-    
+
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: 'User not authenticated'
       });
     }
-    
+
     await Cart.findOneAndUpdate(
       { userId },
       { items: [], totalAmount: 0 },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $set: { cart: [] } },
       { new: true }
     );
 
@@ -435,14 +461,14 @@ const clearCart = async (req, res) => {
 const getCartCount = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id || req.userId;
-    
+
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: 'User not authenticated'
       });
     }
-    
+
     const cart = await Cart.findOne({ userId });
     const count = cart ? cart.items.reduce((total, item) => total + (parseInt(item.quantity) || 0), 0) : 0;
 

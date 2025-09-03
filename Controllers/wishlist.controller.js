@@ -1,5 +1,6 @@
 const Wishlist = require('../Models/wishlist.model');
 const Product = require('../Models/product.model');
+const User = require('../Models/user.model');
 const mongoose = require('mongoose');
 
 // Helper function to validate ObjectId
@@ -10,7 +11,7 @@ const isValidObjectId = (id) => {
 // Helper function to add imageUrl to product
 const addImageUrlToProduct = (product, req) => {
   if (!product) return product;
-  
+
   const productObj = product.toObject ? product.toObject() : product;
   return {
     ...productObj,
@@ -22,14 +23,14 @@ const addImageUrlToProduct = (product, req) => {
 const getWishlist = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id || req.userId;
-    
+
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: 'User not authenticated'
       });
     }
-    
+
     const wishlist = await Wishlist.findOne({ userId })
       .populate({
         path: 'products.productId',
@@ -74,10 +75,6 @@ const addToWishlist = async (req, res) => {
     const userId = req.user?.id || req.user?._id || req.userId;
     const { productId } = req.body;
 
-    // Debug logging
-    console.log('User object:', req.user);
-    console.log('User ID:', userId);
-
     if (!userId) {
       return res.status(401).json({
         success: false,
@@ -94,7 +91,7 @@ const addToWishlist = async (req, res) => {
     }
 
     let product;
-    
+
     // Check if productId is a valid ObjectId, if not search by custom field
     if (isValidObjectId(productId)) {
       product = await Product.findById(productId);
@@ -138,6 +135,12 @@ const addToWishlist = async (req, res) => {
     }
 
     await wishlist.save();
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $addToSet: { wishlist: actualProductId } }, // $addToSet → duplicate avoid
+      { new: true }
+    );
     await wishlist.populate({
       path: 'products.productId',
       select: 'name price image description category brand rating product_id piece'
@@ -180,7 +183,7 @@ const removeFromWishlist = async (req, res) => {
     }
 
     const wishlist = await Wishlist.findOne({ userId });
-    
+
     if (!wishlist) {
       return res.status(404).json({
         success: false,
@@ -196,14 +199,14 @@ const removeFromWishlist = async (req, res) => {
     } else {
       // Find the product first to get its ObjectId
       const product = await Product.findOne({ product_id: productId });
-      
+
       if (!product) {
         return res.status(404).json({
           success: false,
           message: 'Product not found'
         });
       }
-      
+
       actualProductId = product._id.toString();
     }
 
@@ -212,6 +215,11 @@ const removeFromWishlist = async (req, res) => {
     );
 
     await wishlist.save();
+    await User.findByIdAndUpdate(
+      userId,
+      { $pull: { wishlist: actualProductId } }, // Remove that product from user wishlist
+      { new: true }
+    );
     await wishlist.populate({
       path: 'products.productId',
       select: 'name price image description category brand rating product_id piece'
@@ -244,17 +252,23 @@ const removeFromWishlist = async (req, res) => {
 const clearWishlist = async (req, res) => {
   try {
     const userId = req.user?.id || req.user?._id || req.userId;
-    
+
     if (!userId) {
       return res.status(401).json({
         success: false,
         message: 'User not authenticated'
       });
     }
-    
+
     await Wishlist.findOneAndUpdate(
       { userId },
       { products: [] },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      userId,
+      { $set: { wishlist: [] } }, // Empty array
       { new: true }
     );
 

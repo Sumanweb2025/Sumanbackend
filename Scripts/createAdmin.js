@@ -5,7 +5,7 @@ require('dotenv').config();
 
 const createAdmin = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/your-db');
+    await mongoose.connect(process.env.MONGODB_URI);
     
     const adminExists = await User.findOne({ role: 'admin' });
     if (adminExists) {

@@ -32,9 +32,9 @@ exports.importProducts = async (req, res) => {
 
     let insertedCount = 0;
     for (const product of normalizedData) {
-      // Duplicate check (based on product_id or name)
+      // Duplicate check (based on product_id)
       const exists = await Product.findOne({
-        $or: [{ product_id: product.product_id }, { name: product.name }]
+        $or: [{ product_id: product.product_id }]
       });
 
       if (!exists) {
