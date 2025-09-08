@@ -25,8 +25,9 @@
   "Description": "Crispy corn flakes combined with nuts and spices make Surya Corn Mixture a flavorful and satisfying snack. Packed fresh with quality ingredients, it brings you the true taste of tradition in every crunchy bite.",
   "Piece": 10,
   "Rating" : 4.2,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "corn_mixture.png"
+},
  {
   "Product_id": "iy03mm500",
   "Brand": "Iyappaa",
@@ -136,8 +137,9 @@
   "Description": "Iyappaa Kerala Mixture combines the richness of coconut with the heat of spices to create a truly traditional snacking experience. Perfect with tea, during festivals, or as a quick munch, this mixture reflects the real taste of Kerala in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "kerala_mixture.png"
+},
  {
   "Product_id": "iy11rm500",
   "Brand": "Iyappaa",
@@ -148,8 +150,9 @@
   "Description": "Iyappaa Ragi Mixture is a wholesome and crunchy snack made with the goodness of ragi (finger millet). Blended with sev, roasted nuts, and authentic spices, this mixture not only delights your taste buds but also offers a healthier alternative to regular mixtures.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "ragi_mixture.png"
+},
  {
   "Product_id": "iy12bst400",
   "Brand": "Iyappaa",
@@ -328,7 +331,7 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ""
+   "image": "kuzhalappam_spicy.png"
 },
  {
   "Product_id": "iy22kst500",
@@ -342,8 +345,9 @@
   "Description": "Iyappaa Kuzhalappam Salt is a traditional Kerala-style snack, crafted from rice flour and coconut, rolled into hollow tubes and fried to a crisp golden texture. Lightly salted, it delivers a simple yet authentic taste with every crunchy bite. A favorite during tea-time and festive occasions, it is loved by both kids and adults for its unique shape and flavor. Free from artificial additives and preservatives, it captures the pure essence of homemade traditional snacks.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "kuzhalappam_salt.png"
+},
  {
   "Product_id": "iy23lrm350",
   "Brand": "Iyappaa",
@@ -469,7 +473,7 @@
   "Brand": "Iyappaa",
   "Name": "Pineapple Drops",
   "Gram": "225g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Hard Candy",
   "Price": 2.25,
   "Ingredients": "All Purpose Flour, Egg, Baking Powder, Sugar, Food Color & Flavour",
@@ -484,7 +488,7 @@
   "Brand": "Iyappaa",
   "Name": "Orange Drops",
   "Gram": "225g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Hard Candy",
   "Price": 0.7,
   "Ingredients": "All Purpose Flour, Egg, Orange Essence, Baking Powder, Sugar, Food Color & Flavour",
@@ -544,7 +548,7 @@
   "Brand": "Iyappaa",
   "Name": "Peanut Halwa Large",
   "Gram": "550g",
-  "Category": " Sweets",
+  "Category": "Sweets",
   "Sub-category": "Candy",
   "Price": 4.75,
   "Ingredients": "Jaggery, Peanut, Sugar, Glucose, Gardamom",
@@ -1220,7 +1224,7 @@
   "Name": "Sago Powder For Idly",
   "Gram": "1.5kg",
   "Category": "Grocery",
-  "Sub-category": "Sago \/ Tapioca Flour",
+  "Sub-category": "Sago / Tapioca Flour",
   "Ingredients": "Sago",
   "Description": "Sago Powder for Idly is a finely milled tapioca flour specially crafted to give soft, spongy, and fluffy idlies. It blends perfectly with rice and lentil batters, enhancing texture and fermentation for light and airy steamed cakes. Rich in easily digestible carbohydrates, it provides energy while maintaining a neutral taste that complements any savory or sweet accompaniment. Perfect for breakfast, snacks, and traditional South Indian dishes.",
   "Piece": 10,
@@ -1284,7 +1288,7 @@
   "Piece": 10,
   "Rating" : 3.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ""
+   "image": "jaggery_achu.png"
 },
  {
   "Product_id": "iy87jab001",
@@ -1311,8 +1315,9 @@
   "Description": "Jaggery Achu Small Yellow is traditional unrefined jaggery made from pure sugarcane juice, molded into small, easy-to-use discs with a natural golden-yellow color. Rich in iron and essential minerals, it is a healthier alternative to refined sugar. Its mild, caramel-like sweetness enhances desserts, beverages, and traditional recipes, making it convenient for daily cooking and festive treats. Perfect for families seeking natural, wholesome, and easy-to-use jaggery.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaggery_achu.png"
+},
  {
   "Product_id": "iy89jr400",
   "Brand": "Iyappaa",
@@ -1525,8 +1530,9 @@
   "Description": "Raw Rice is a staple grain, naturally processed without parboiling, preserving its original taste, aroma, and nutrients. Rich in carbohydrates and easy to digest, it provides instant energy and is ideal for preparing everyday meals like steamed rice, idli, dosa, pulao, and traditional South Indian dishes. With its soft texture and natural fragrance, Raw Rice is perfect for families seeking wholesome, versatile, and high-quality rice for daily cooking.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+"image": "rawrice.png"
+},
  {
   "Product_id": "iy104bvr98",
   "Brand": "Iyappaa",
@@ -1539,8 +1545,9 @@
   "Description": "Black Kavuni Rice, also known as the “Forbidden Rice,” is a traditional heritage rice variety celebrated for its rich nutritional profile and unique deep-purple color after cooking. Packed with antioxidants, iron, protein, and fiber, it supports heart health, improves immunity, and provides sustained energy. With its mildly sweet, nutty flavor and chewy texture, it is perfect for making desserts, payasam, porridge, idlis, and even salads. Highly valued in ancient royal kitchens, Black Kavuni Rice is an excellent choice for health-conscious families seeking both taste and nutrition.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "barnyard_milet.png"
+},
  {
   "Product_id": "iy105br908",
   "Brand": "Iyappaa",
@@ -1552,8 +1559,9 @@
   "Description": "Bridegroom Rice, traditionally known as Mapillai Samba Rice, is a heritage rice variety from Tamil Nadu, celebrated for its strength-boosting properties. Rich in iron, fiber, and antioxidants, it is believed to improve stamina, immunity, and overall vitality. With its earthy flavor and firm texture, Bridegroom Rice is ideal for preparing steamed rice, idlis, dosas, kanji (porridge), and traditional festive dishes. Once served to newlywed grooms to enhance energy and strength, this rice remains a symbol of natural health and wellness.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "bridegroom_rice.png"
+},
  {
   "Product_id": "iy106rf908",
   "Brand": "Iyappaa",
@@ -1565,8 +1573,9 @@
   "Description": "Rice Flour is a fine, gluten-free flour made from high-quality rice grains. Naturally light and easy to digest, it is rich in carbohydrates and ideal for preparing traditional dishes like idiyappam, puttu, dosa, appam, and snacks. Its smooth texture also makes it a perfect ingredient for baking, thickening sauces, and gluten-free recipes. Free from chemicals and preservatives, Rice Flour is a versatile kitchen essential for everyday cooking and healthy diets.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "riceflour.png"
+},
  {
   "Product_id": "iy107gf908",
   "Brand": "Iyappaa",
@@ -1578,8 +1587,10 @@
   "Description": "Gram Flour, also known as Besan, is a nutritious flour made from roasted or raw Bengal gram (chana dal). Rich in protein, fiber, and essential minerals, it is a healthy alternative to wheat flour. With its nutty flavor and smooth texture, Gram Flour is widely used in Indian cooking for preparing pakoras, cheelas, sweets like ladoos, and as a natural thickener in curries. Naturally gluten-free and versatile, it is an essential ingredient for both traditional and modern recipes.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "gramflour.png"
+
+},
  {
   "Product_id": "iy108be20",
   "Brand": "Iyappaa",
@@ -1681,8 +1692,9 @@
   "Description": "Asafoetida Cake is a solid block of pure hing, known for its intense aroma and strong flavor. Just a tiny piece adds rich taste and authentic fragrance to dals, curries, sambars, rasam, and other vegetarian dishes. Traditionally prized in Indian cooking, it also aids digestion and enhances appetite. Free from artificial additives, Asafoetida Cake is a natural, potent, and long-lasting spice essential for every kitchen.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "asafoetida_cake.png"
+},
  {
   "Product_id": "am01rm200",
   "Brand": "Amirth",
@@ -1695,8 +1707,9 @@
   "Description": "Amirth Rice Murukku is a crunchy and delicious South Indian traditional snack, crafted from finely ground rice flour and a blend of authentic spices. Fried to golden perfection, every bite offers the perfect balance of crispiness and flavor. Whether it’s for tea-time, festivals, or casual snacking, this homemade-style murukku brings the authentic taste of tradition straight to your plate.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "rice_murukku.png"
+},
  {
   "Product_id": "am02cm200",
   "Brand": "Amirth",
@@ -1709,8 +1722,9 @@
   "Description": "Straight from the heart of Chettinad, Amirth Chetti Nadu Murukku is a heritage snack cherished for generations. Its rich flavor comes from the perfect mix of rice flour, spices, and sesame, shaped into crunchy swirls and fried to golden crispness. A true classic that brings back the authentic village taste in every bite.",
   "Piece": 10,
   "Rating" : 4.6,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "chettinad_murukku.png"
+},
  {
   "Product_id": "am03gm200",
   "Brand": "Amirth",
@@ -1723,8 +1737,9 @@
   "Description": "Amirth Garlic Murukku is a traditional South Indian snack with a bold twist of garlic. Light, crispy, and bursting with flavor, it offers the perfect balance of spice and crunch. An irresistible treat for garlic lovers who enjoy authentic homemade-style snacks.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "garlic_murukku.png"
+},
  {
   "Product_id": "am04cs200",
   "Brand": "Amirth",
@@ -1737,83 +1752,90 @@
   "Description": "Amirth Cassava Spicy Chips bring you the authentic crunch of cassava with a punch of spices. Made from carefully selected cassava roots, thinly sliced and fried to perfection, these chips are seasoned to give a hot and flavorful bite. A unique, crunchy snack that’s both traditional and irresistibly tasty.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "cassavachips_spicy.png"
+},
  {
   "Product_id": "am05pmr10",
   "Brand": "Amirth",
   "Name": "Palakkadan Matta Rice",
   "Gram": "10KG",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 16.5,
   "Ingredients": "Matta Rice",
   "Description": "Amirth Palakkadan Matta Rice is a traditional Kerala staple known for its distinct reddish-brown grains and nutty flavor. Rich in fiber and nutrients, it supports a healthy diet while offering a unique taste and texture. Perfect for steamed rice, sambar, curries, and a variety of South Indian delicacies.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "palakadan_mattarice.png"
+},
  {
   "Product_id": "am06tpr10",
   "Brand": "Amirth",
   "Name": "Thanjavur  Ponni Rice",
   "Gram": "10KG",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 17.00,
   "Ingredients": "Ponni Rice",
   "Description": "Grown in the fertile fields of Thanjavur, Amirth Ponni Rice is renowned for its purity, soft grains, and delightful aroma. A healthy and versatile choice, it cooks into fluffy rice that pairs perfectly with curries, rasam, or curd. Naturally rich in nutrients, it’s the preferred rice for wholesome South Indian meals.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "thanjavur_ponnirice.png"
+},
  {
   "Product_id": "am07kir10",
   "Brand": "Amirth",
   "Name": " Kanchipuram Idly Rice",
   "Gram": "10KG",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 17.00,
   "Ingredients": "Idly Rice",
   "Description": "Amirth Kanchipuram Idly Rice is specially selected to give you soft and fluffy idlis every time. Its natural texture and balanced starch content make it easy to grind and perfect for smooth batter. A reliable choice for idlis, dosas, and everyday South Indian cooking.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "kanchipuram-idlyrice.png"
+},
  {
   "Product_id": "am08br10",
   "Brand": "Amirth",
   "Name": "Basmathi Rice",
   "Gram": "10KG",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Ingredients": "Basmati Rice",
   "Description": "Amirth Basmati Rice is a premium long-grain rice prized for its rich aroma, slender grains, and fluffy texture. Naturally aged for enhanced flavor, it cooks to perfection with each grain separate and non-sticky. Ideal for biryani, pulao, and festive dishes, it brings authentic taste and elegance to every meal.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "basmati_rice.png"
+},
  {
   "Product_id": "lk01rp10",
   "Brand": "Little Krishna",
   "Name": " Rajapogam Ponni",
   "Gram": "10KG",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 18,
   "Ingredients": "Ponni Rice",
   "Description": "Little Krishna Rajapogam Ponni is a premium quality rice prized for its slender, aromatic grains. With a naturally soft texture and light, fluffy finish when cooked, it enhances every meal with its authentic flavor. Ideal for daily consumption or special recipes, this rice is carefully processed to preserve its natural goodness and nutritional value, making it a healthy and tasty choice for your family.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "rajapogam_ponnirice.png"
+
+},
  {
   "Product_id": "ve01so750",
   "Brand": "Venba",
   "Name": "Sesame Oil",
   "Gram": "750ml",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Ingredients": "Sesame Seed, Jaggery",
   "Description": "Our pure Sesame Oil is extracted from high-quality sesame seeds using traditional cold-pressing methods. Full of natural nutrients and antioxidants, it adds a rich, nutty flavor to your meals. Perfect for cooking, seasoning, or drizzling, it’s a healthy and essential addition to any kitchen.",
@@ -1826,7 +1848,7 @@
   "Brand": "Venba",
   "Name": "Sesame Oil",
   "Gram": "1L",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Price": 8.25,
   "Ingredients": "Sesame Seed, Jaggery",
@@ -1840,7 +1862,7 @@
   "Brand": "Venba",
   "Name": "Sesame Oil",
   "Gram": "2L",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Ingredients": "Sesame Seed, Jaggery",
   "Description": "Our pure Sesame Oil is extracted from high-quality sesame seeds using traditional cold-pressing methods. Full of natural nutrients and antioxidants, it adds a rich, nutty flavor to your meals. Perfect for cooking, seasoning, or drizzling, it’s a healthy and essential addition to any kitchen.",
@@ -1853,7 +1875,7 @@
   "Brand": "Venba",
   "Name": "Groundnut Oil",
   "Gram": "1L",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Price": 6.5,
   "Ingredients": "Groundnut, Jaggery",
@@ -1867,7 +1889,7 @@
   "Brand": "Venba",
   "Name": "Groundnut Oil",
   "Gram": "2L",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Ingredients": "Groundnut, Jaggery",
   "Description": "Venba Groundnut Oil is a natural, cold-pressed oil extracted from premium peanuts. Its light texture and rich flavor make it perfect for frying, sautéing, and seasoning, while retaining essential nutrients for a healthy and flavorful cooking experience.",
@@ -1880,7 +1902,7 @@
   "Brand": "Venba",
   "Name": "Coconut Oil ",
   "Gram": "1L",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Price": 8.00,
   "Ingredients": "Coconut",
@@ -1894,7 +1916,7 @@
   "Brand": "Venba",
   "Name": "Neem Oil",
   "Gram": "100ml",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Ingredients": "Neem Seed",
   "Description": "Our pure Neem Oil is cold-pressed from high-quality neem seeds to preserve its natural potency. Known for its antibacterial, antifungal, and skin-soothing properties, it’s perfect for hair care, skincare, and natural remedies. Chemical-free and versatile, Neem Oil is an essential herbal solution for a healthier lifestyle.",
@@ -1907,7 +1929,7 @@
   "Brand": "Venba",
   "Name": "Neem Oil",
   "Gram": "200ml",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Oil",
   "Ingredients": "Neem Seed",
   "Description": "Our pure Neem Oil is cold-pressed from high-quality neem seeds to preserve its natural potency. Known for its antibacterial, antifungal, and skin-soothing properties, it’s perfect for hair care, skincare, and natural remedies. Chemical-free and versatile, Neem Oil is an essential herbal solution for a healthier lifestyle.",
@@ -1920,26 +1942,29 @@
   "Brand": "Venba",
   "Name": " Appalam",
   "Gram": "150gm",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Price": 1.00,
   "Ingredients": "-",
   "Description": "Venba Appalam is a traditional South Indian snack made from high-quality urad dal flour. Crispy, thin, and light, these wafers can be fried or roasted to add a crunchy texture to meals. Perfect for festive occasions, daily dining, or as a snack alongside curries and rice dishes, Venba Appalam brings authentic taste and texture to your table.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "apalam.png"
+
+},
  {
   "Product_id": "ve09ap250",
   "Brand": "Venba",
   "Name": " Appalam",
-  "Gram": "250gm",
-  "Category": "Groceries",
+  "Gram": "250 gm",
+  "Category": "Grocery",
   "Price": 1.5,
   "Description": "Venba Appalam is a traditional South Indian snack made from high-quality urad dal flour. Crispy, thin, and light, these wafers can be fried or roasted to add a crunchy texture to meals. Perfect for festive occasions, daily dining, or as a snack alongside curries and rice dishes, Venba Appalam brings authentic taste and texture to your table.",
   "Piece": 10,
   "Rating" : 4.9,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "apalam.png"
+},
  {
   "Product_id": "ve10ns750",
   "Brand": "Venba",
@@ -1952,8 +1977,9 @@
   "Description": "Venba Nannari Sharbath is a refreshing herbal drink made from natural Nannari (Indian sarsaparilla) roots. Known for its cooling properties, it helps beat the heat while offering a unique, sweet, and earthy flavor. Perfect for hot summer days or as a healthy beverage alternative, Venba Nannari Sharbath brings natural taste and wellness to every sip.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "nannari_sharbat.png"
+},
  {
   "Product_id": "ve11ic630",
   "Brand": "Venba",
@@ -1966,17 +1992,19 @@
   "Description": "Venba Imli Candy is a classic Indian treat made from premium tamarind. Sweet, tangy, and full of flavor, each bite delivers a delightful balance of sourness and sweetness. Perfect as a snack or to share with friends and family, it brings a nostalgic taste of traditional Indian candies.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "imili_candy.png"
+},
  {
   "Product_id": "ve12pv",
   "Brand": "Venba",
   "Name": "Payasam Vermicelli",
-  "Category": "Groceries",
+  "Category": "Grocery",
   "Sub-category": "Sweets",
   "Description": "Venba Payasam Vermicelli is a high-quality vermicelli designed for making soft and creamy South Indian payasam. Its fine strands cook quickly and evenly, blending perfectly with milk, jaggery, or sugar. Perfect for festivals, celebrations, or everyday desserts, it delivers traditional flavor and authentic texture in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- }
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "imili_candy.png"
+}
 ]
