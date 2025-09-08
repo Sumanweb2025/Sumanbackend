@@ -215,7 +215,7 @@ exports.googleAuth = async (req, res) => {
     const payload = ticket.getPayload();
     const { sub: googleId, email, name, picture } = payload;
 
-    console.log('Google payload:', { googleId, email, name, picture });
+    // console.log('Google payload:', { googleId, email, name, picture });
 
     // Check if user already exists (include profile image)
     let user = await User.findByEmailOrGoogleId(email, googleId).select('+profileImageBase64');
@@ -245,7 +245,7 @@ exports.googleAuth = async (req, res) => {
     const token = generateToken(user._id);
 
     const userData = formatUserData(user);
-    console.log('Final user data being sent:', userData);
+    // console.log('Final user data being sent:', userData);
 
     res.status(200).json({
       success: true,
@@ -277,7 +277,7 @@ exports.getProfile = async (req, res) => {
       });
     }
 
-    console.log('Profile data for user:', user.profileImageInfo);
+    // console.log('Profile data for user:', user.profileImageInfo);
 
     res.status(200).json({
       success: true,

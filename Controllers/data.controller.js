@@ -19,7 +19,7 @@ function normalizeKeys(obj) {
 exports.importProducts = async (req, res) => {
   try {
     // Resolve file path safely
-    const jsonFilePath = path.join(__dirname, '../Data/Product_data_final.json');
+    const jsonFilePath = path.join(__dirname, '../Data/website_data.json');
 
 
     // Read and parse JSON file
@@ -32,9 +32,9 @@ exports.importProducts = async (req, res) => {
 
     let insertedCount = 0;
     for (const product of normalizedData) {
-      // Duplicate check (based on product_id or name)
+      // Duplicate check (based on product_id)
       const exists = await Product.findOne({
-        $or: [{ product_id: product.product_id }, { name: product.name }]
+        $or: [{ product_id: product.product_id }]
       });
 
       if (!exists) {
@@ -56,7 +56,7 @@ exports.importProducts = async (req, res) => {
     if (error.code === 'ENOENT') {
       return res.status(404).json({
         message: 'JSON file not found',
-        path: path.join(__dirname, '../Data/Product_data_final.json')
+        path: path.join(__dirname, '../Data/website_data.json')
       });
     }
 
