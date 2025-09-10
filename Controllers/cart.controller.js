@@ -23,7 +23,7 @@ const addImageUrlToProduct = (product, req) => {
 // Helper function to calculate cart totals
 const calculateCartTotals = (cart) => {
   if (!cart || !cart.items || cart.items.length === 0) {
-    return { ...cart, totalAmount: 0 };
+    return { ...cart, totalAmount: 0, shipping: 0 };
   }
 
   const subtotal = cart.items.reduce((total, item) => {
@@ -32,13 +32,17 @@ const calculateCartTotals = (cart) => {
     return total + (price * quantity);
   }, 0);
 
-  const tax = subtotal * 0.13; // 13% Canadian tax
-  const shipping = subtotal > 75 ? 0 : 15; // $15 CAD shipping
+  const tax = subtotal * 0.13; // 13% HST (Canada)
+  const shipping = subtotal >= 75 ? 0 : 9.99;
+
   const totalAmount = subtotal + tax + shipping;
 
   return {
     ...cart,
-    totalAmount: parseFloat(totalAmount.toFixed(2))
+    subtotal: parseFloat(subtotal.toFixed(2)),
+    tax: parseFloat(tax.toFixed(2)),
+    shipping: parseFloat(shipping.toFixed(2)),
+    totalAmount: parseFloat(totalAmount.toFixed(2)),
   };
 };
 

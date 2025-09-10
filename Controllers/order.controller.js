@@ -63,7 +63,7 @@ const getCheckoutData = async (req, res) => {
 
     // Canadian tax and shipping rates
     const tax = subtotal * 0.13; // 13% HST for most Canadian provinces
-    const shipping = subtotal > 100 ? 0 : 15; // Free shipping over CAD $100
+    const shipping = subtotal >= 75 ? 0 : 9.99; // Free shipping over $75
     const total = subtotal + tax + shipping;
 
     res.status(200).json({
