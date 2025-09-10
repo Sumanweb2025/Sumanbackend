@@ -4,7 +4,7 @@
   "Product_id": "iy01mb500",
   "Brand": "Iyappaa",
   "Name": "Bombay Mixture",
-  "Gram": "500G",
+  "Gram": "500g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
   "Price": 4.75,
@@ -12,18 +12,19 @@
   "Description": "A crunchy and flavorful blend of sev, peanuts, and spices, Bombay Mixture is the perfect traditional snack for every occasion. Hygienically packed to lock in freshness and authentic taste.A true taste of India, crafted for moments of pure indulgence",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "bombay_mixture.png"
+},
  {
   "Product_id": "iy02mc500",
   "Brand": "Iyappaa",
   "Name": "Corn Mixture",
-  "Gram": "500G",
+  "Gram": "500g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
   "Price": 4.75,
   "Ingredients": "Refined Palm Oil, Basen Flour, Rice Flour, Corn Flour, Masoor Dhal, Peanuts, Cashew Nuts, Lentils, Food Color, Curry Leaves, Chilli Powder, Monosodium Glutamate, Asafoetida, Ajwain seed, Salt, Herbs & Spices.",
-  "Description": "Crispy corn flakes combined with nuts and spices make Surya Corn Mixture a flavorful and satisfying snack. Packed fresh with quality ingredients, it brings you the true taste of tradition in every crunchy bite.",
+  "Description": "Crispy corn flakes combined with nuts and spices make  Corn Mixture a flavorful and satisfying snack. Packed fresh with quality ingredients, it brings you the true taste of tradition in every crunchy bite.",
   "Piece": 10,
   "Rating" : 4.2,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
@@ -41,8 +42,9 @@
   "Description": "Mild Mixture is a traditional Indian namkeen crafted with a perfect balance of taste and lightness. Made from a mix of crunchy sev, roasted nuts, lentils, and crispy poha, it offers a gentle flavor with mild seasoning. This snack is ideal for those who enjoy a flavorful yet non-spicy option. Freshly prepared with quality ingredients, Mild Mixture makes a great companion for tea-time conversations, family gatherings, or as a quick bite anytime during the day.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "mild_mixture.png"
+},
  {
   "Product_id": "iy04mm250",
   "Brand": "Iyappaa",
@@ -55,8 +57,9 @@
   "Description": "Mild Mixture is a traditional Indian namkeen crafted with a perfect balance of taste and lightness. Made from a mix of crunchy sev, roasted nuts, lentils, and crispy poha, it offers a gentle flavor with mild seasoning. This snack is ideal for those who enjoy a flavorful yet non-spicy option. Freshly prepared with quality ingredients, Mild Mixture makes a great companion for tea-time conversations, family gatherings, or as a quick bite anytime during the day.",
   "Piece": 10,
   "Rating" : 4,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "mild_mixture.png"
+},
  {
   "Product_id": "iy05hm500",
   "Brand": "Iyappaa",
@@ -69,8 +72,9 @@
   "Description": "Iyappaa Hot Mixture is a fiery and crunchy South Indian snack made with a flavorful blend of fried sev, roasted peanuts, cashews, and curry leaves. Perfectly spiced with red chili powder and asafoetida, it delivers a bold, spicy kick in every bite. A true treat for spice lovers!",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "hot_mixture.png"
+},
  {
   "Product_id": "iy06hm250",
   "Brand": "Iyappaa",
@@ -83,26 +87,28 @@
   "Description": "Iyappaa Hot Mixture is a fiery and crunchy South Indian snack made with a flavorful blend of fried sev, roasted peanuts, cashews, and curry leaves. Perfectly spiced with red chili powder and asafoetida, it delivers a bold, spicy kick in every bite. A true treat for spice lovers!",
   "Piece": 10,
   "Rating" : 4.9,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "hot_mixture.png"
+},
  {
   "Product_id": "iy07jm500",
   "Brand": "Iyappaa",
   "Name": "Jaffna Mixture",
-  "Gram": "500G",
+  "Gram": "500g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
   "Ingredients": "Refined Palm Oil, Basen Flour, Rice Flour, Corn Flour, Peanuts, Cashew Nuts, Cassava, Chick Peas, Chana Dal, Dalia Split, Monosodium Glutamate, Food Color, Curry Leaves, Green Peas, Salt, Asafoetida, Ajwain Powder, Cumin Powder, Chilli Powder, Garlic, Herbs & Spices",
   "Description": "Iyappaa Jaffna Mixture brings you the perfect balance of crispiness and spice. Made with premium quality ingredients and seasoned with authentic Jaffna-style spices, it is the ideal companion for tea-time, gatherings, or just to satisfy your cravings for something bold and tasty.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaffana_mixture.png"
+},
  {
   "Product_id": "iy08jm600",
   "Brand": "Iyappaa",
   "Name": "Jaffna Mixture",
-  "Gram": "600G",
+  "Gram": "600g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
   "Price": 5.5,
@@ -110,13 +116,14 @@
   "Description": "Iyappaa Jaffna Mixture brings you the perfect balance of crispiness and spice. Made with premium quality ingredients and seasoned with authentic Jaffna-style spices, it is the ideal companion for tea-time, gatherings, or just to satisfy your cravings for something bold and tasty.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaffana_mixture.png"
+},
  {
   "Product_id": "iy09jm250",
   "Brand": "Iyappaa",
   "Name": "Jaffna Mixture",
-  "Gram": "250G",
+  "Gram": "250g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
   "Price": 2.25,
@@ -124,8 +131,9 @@
   "Description": "Iyappaa Jaffna Mixture brings you the perfect balance of crispiness and spice. Made with premium quality ingredients and seasoned with authentic Jaffna-style spices, it is the ideal companion for tea-time, gatherings, or just to satisfy your cravings for something bold and tasty.",
   "Piece": 10,
   "Rating" : 4,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "jaffana_mixture.png"
+},
  {
   "Product_id": "iy10km500",
   "Brand": "Iyappaa",
@@ -167,7 +175,7 @@
   "Piece": 10,
   "Rating" : 5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "bananachips _salt.png"
+  "image": "bananachips_salt.png"
 },
  {
   "Product_id": "iy12bst001",
@@ -182,7 +190,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "bananachips _salt.png"
+   "image": "bananachips_salt.png"
 },
  {
   "Product_id": "iy13bsy400",
@@ -197,7 +205,7 @@
   "Piece": 10,
   "Rating" : 3.9,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "banaba chips spicy.png"
+  "image": "banabachips_spicy.png"
 },
  {
   "Product_id": "iy13bsy001",
@@ -212,7 +220,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "banaba chips spicy.png"
+   "image": "banabachips_spicy.png"
 },
  {
   "Product_id": "iy14sb400",
@@ -1036,7 +1044,7 @@
   "Brand": "Iyappaa",
   "Name": "Curd Dried Chilli",
   "Gram": "50g",
-  "Category": "Snacks",
+  "Category": "Grocery",
   "Sub-category": "Spiced",
   "Ingredients": "Chilli, Yougurt, Salt",
   "Description": "Iyappaa Curd Dried Chilli is a beloved South Indian delicacy that combines the fiery punch of whole red chilies with the tangy richness of curd. These chilies are carefully stuffed with spiced thick yogurt, then sun-dried to perfection to preserve their intense flavor and slightly chewy texture.A versatile ingredient, they can be quickly fried in oil for a crispy, flavorful side dish or tempered into curries and rice dishes for an extra layer of heat and tang. Perfect as a condiment with meals or as a standalone snack, these dried chilies bring the authentic taste of Tamil Nadu kitchens to your home.",
@@ -1050,7 +1058,7 @@
   "Brand": "Iyappaa",
   "Name": "Dried Bitter Guard",
   "Gram": "100g",
-  "Category": "Snacks",
+  "Category": "Grocery",
   "Sub-category": "Savory Snacks",
   "Ingredients": "Bitter Guard, Yougurt, Salt",
   "Description": "Iyappaa Dried Bitter Gourd brings the unique bitter-sweet flavor and health benefits of this beloved vegetable to your pantry year-round. Carefully sliced and sun-dried to preserve its nutrients and intensify its distinct taste, it’s a staple in traditional South Indian and Ayurvedic cooking.Rich in antioxidants and known for its blood sugar-regulating properties, dried bitter gourd is perfect for adding depth to curries, stir-fries, and fries. Just soak and cook to enjoy its signature flavor and crispy texture in dishes like poriyal, sambar, or thoran.",
@@ -1246,7 +1254,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "sago_powder.png"
+  "image": "jaggery_round.png"
 },
  {
   "Product_id": "iy84ja001",
@@ -1504,8 +1512,9 @@
   "Description": "Neem Oil is a natural, medicinal oil extracted from the seeds of the neem tree, widely valued for its antibacterial, antifungal, and anti-inflammatory properties. Traditionally used in Ayurveda, it helps treat skin conditions, promotes healthy hair, and acts as a natural insect repellent. Neem Oil is also effective in gardening as a natural pesticide. Free from chemicals and additives, it is a versatile and eco-friendly solution for skin care, hair care, and home gardening needs.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "neemoil.png"
+},
  {
   "Product_id": "iy102no200",
   "Brand": "Iyappaa",
@@ -1517,8 +1526,9 @@
   "Description": "Neem Oil is a natural, medicinal oil extracted from the seeds of the neem tree, widely valued for its antibacterial, antifungal, and anti-inflammatory properties. Traditionally used in Ayurveda, it helps treat skin conditions, promotes healthy hair, and acts as a natural insect repellent. Neem Oil is also effective in gardening as a natural pesticide. Free from chemicals and additives, it is a versatile and eco-friendly solution for skin care, hair care, and home gardening needs.",
   "Piece": 10,
   "Rating" : 3.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "neemoil.png"
+},
  {
   "Product_id": "iy103rr181",
   "Brand": "Iyappaa",
@@ -1760,7 +1770,7 @@
   "Product_id": "am05pmr10",
   "Brand": "Amirth",
   "Name": "Palakkadan Matta Rice",
-  "Gram": "10KG",
+  "Gram": "10kg",
   "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 16.5,
@@ -1775,7 +1785,7 @@
   "Product_id": "am06tpr10",
   "Brand": "Amirth",
   "Name": "Thanjavur  Ponni Rice",
-  "Gram": "10KG",
+  "Gram": "10kg",
   "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 17.00,
@@ -1790,7 +1800,7 @@
   "Product_id": "am07kir10",
   "Brand": "Amirth",
   "Name": " Kanchipuram Idly Rice",
-  "Gram": "10KG",
+  "Gram": "10kg",
   "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 17.00,
@@ -1805,7 +1815,7 @@
   "Product_id": "am08br10",
   "Brand": "Amirth",
   "Name": "Basmathi Rice",
-  "Gram": "10KG",
+  "Gram": "10kg",
   "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Ingredients": "Basmati Rice",
@@ -1819,7 +1829,7 @@
   "Product_id": "lk01rp10",
   "Brand": "Little Krishna",
   "Name": " Rajapogam Ponni",
-  "Gram": "10KG",
+  "Gram": "10kg",
   "Category": "Grocery",
   "Sub-category": "Rice & Grains",
   "Price": 18,
@@ -1923,8 +1933,9 @@
   "Description": "Our pure Neem Oil is cold-pressed from high-quality neem seeds to preserve its natural potency. Known for its antibacterial, antifungal, and skin-soothing properties, it’s perfect for hair care, skincare, and natural remedies. Chemical-free and versatile, Neem Oil is an essential herbal solution for a healthier lifestyle.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "neemoil.png"
+},
  {
   "Product_id": "ve08no200",
   "Brand": "Venba",
@@ -1936,8 +1947,9 @@
   "Description": "Our pure Neem Oil is cold-pressed from high-quality neem seeds to preserve its natural potency. Known for its antibacterial, antifungal, and skin-soothing properties, it’s perfect for hair care, skincare, and natural remedies. Chemical-free and versatile, Neem Oil is an essential herbal solution for a healthier lifestyle.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "neemoil.png"
+},
  {
   "Product_id": "ve09ap150",
   "Brand": "Venba",
@@ -1957,7 +1969,7 @@
   "Product_id": "ve09ap250",
   "Brand": "Venba",
   "Name": " Appalam",
-  "Gram": "250 gm",
+  "Gram": "250g",
   "Category": "Grocery",
   "Price": 1.5,
   "Description": "Venba Appalam is a traditional South Indian snack made from high-quality urad dal flour. Crispy, thin, and light, these wafers can be fried or roasted to add a crunchy texture to meals. Perfect for festive occasions, daily dining, or as a snack alongside curries and rice dishes, Venba Appalam brings authentic taste and texture to your table.",
@@ -1985,7 +1997,7 @@
   "Product_id": "ve11ic630",
   "Brand": "Venba",
   "Name": "Imli Candy",
-  "Gram": "630 gm",
+  "Gram": "630g",
   "Category": "Snacks",
   "Sub-category": "Candies",
   "Price": 3.25,
@@ -2006,7 +2018,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "imili_candy.png"
+   "image": "Payasa_Vermicelli.png"
 }
 ]
 
