@@ -1,10 +1,10 @@
 const Order = require('../Models/order.model');
 const Cart = require('../Models/cart.model'); 
 const Coupon = require('../Models/coupon.model'); 
-const Payment = require('../Models/payment.model'); // ADD THIS
-const Refund = require('../Models/refund.model'); // ADD THIS
-const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY); // ADD THIS
-const EmailService = require('../Services/mailer.js'); // ADD THIS
+const Payment = require('../Models/payment.model'); 
+const Refund = require('../Models/refund.model'); 
+const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
+const EmailService = require('../Services/mailer.js'); 
 
 // Initialize email service - ADD THIS
 const emailService = new EmailService();
