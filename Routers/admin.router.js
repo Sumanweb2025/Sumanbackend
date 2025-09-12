@@ -53,6 +53,9 @@ router.get('/products/export',
 // Order Management  
 router.get('/orders/stats', adminController.getOrderManagementStats);
 
+// Invoice PDF routes
+router.get('/orders/:orderId/pdf/:type', adminController.downloadOrderPDF);
+
 // Payment Management
 router.get('/payments/stats', adminController.getPaymentStats);
 

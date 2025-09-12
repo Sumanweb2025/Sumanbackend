@@ -19,7 +19,7 @@ function normalizeKeys(obj) {
 exports.importProducts = async (req, res) => {
   try {
     // Resolve file path safely
-    const jsonFilePath = path.join(__dirname, '../Data/website_data.json');
+    const jsonFilePath = path.join(__dirname, '../Data/website_data_1.json');
 
 
     // Read and parse JSON file
@@ -56,7 +56,7 @@ exports.importProducts = async (req, res) => {
     if (error.code === 'ENOENT') {
       return res.status(404).json({
         message: 'JSON file not found',
-        path: path.join(__dirname, '../Data/website_data.json')
+        path: path.join(__dirname, '../Data/website_data_1.json')
       });
     }
 
