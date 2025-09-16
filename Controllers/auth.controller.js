@@ -437,5 +437,59 @@ exports.updateProfile = async (req, res) => {
   }
 };
 
+// Delete Account
+exports.deleteAccount = async (req, res) => {
+  try {
+    const userId = req.user.userId;
+    
+    // Find the user first
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ 
+        success: false, 
+        message: 'User not found' 
+      });
+    }
+
+    // Import required models
+    const Cart = require('../Models/cart.model');
+    const Wishlist = require('../Models/wishlist.model');
+    const Order = require('../Models/order.model');
+
+    // Delete user's cart
+    await Cart.deleteMany({ userId });
+
+    // Delete user's wishlist
+    await Wishlist.deleteMany({ userId });
+
+    // Mark orders as deleted user instead of deleting them (for record keeping)
+    await Order.updateMany(
+      { userId }, 
+      { 
+        $set: { 
+          userDeleted: true,
+          deletedAt: new Date()
+        } 
+      }
+    );
+
+    // Delete the user account
+    await User.findByIdAndDelete(userId);
+
+    res.json({ 
+      success: true, 
+      message: 'Account deleted successfully' 
+    });
+
+  } catch (error) {
+    console.error('Delete account error:', error);
+    res.status(500).json({ 
+      success: false, 
+      message: 'Error deleting account', 
+      error: error.message 
+    });
+  }
+};
+
 // Export multer upload middleware for use in routes
 exports.uploadMiddleware = upload.single('profileImage');
