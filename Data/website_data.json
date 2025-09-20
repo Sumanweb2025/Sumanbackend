@@ -1895,7 +1895,7 @@
   "Piece": 10,
   "Rating" : 4.8,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "groundnut_oil1l.jpg"
+   "image": "groundnut_oil.png"
 },
  {
   "Product_id": "ve05go002",
@@ -1908,7 +1908,8 @@
   "Description": "Venba Groundnut Oil is a natural, cold-pressed oil extracted from premium peanuts. Its light texture and rich flavor make it perfect for frying, sautéing, and seasoning, while retaining essential nutrients for a healthy and flavorful cooking experience.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "groundnut_oil.png"
  },
  {
   "Product_id": "ve06co001",
