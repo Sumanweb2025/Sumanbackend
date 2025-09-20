@@ -175,7 +175,7 @@
   "Piece": 10,
   "Rating" : 5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "bananachips_salt.png"
+   "image": "bananachips_salt.png"
 },
  {
   "Product_id": "iy12bst001",
@@ -205,7 +205,7 @@
   "Piece": 10,
   "Rating" : 3.9,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "banabachips_spicy.png"
+  "image": "bananachips_spicy.png"
 },
  {
   "Product_id": "iy13bsy001",
@@ -220,7 +220,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "banabachips_spicy.png"
+   "image": "bananachips_spicy.png"
 },
  {
   "Product_id": "iy14sb400",
@@ -280,7 +280,7 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "cassava_chip_salt.png"
+  "image": "cassavachips_salt.png"
 },
  {
   "Product_id": "iy18cfc150",
@@ -848,7 +848,7 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "himalaya_seasaltpowder.png"
+   "image": "himalayan_seasaltpowder.png"
 },
  {
   "Product_id": "iy56hsc001",
@@ -863,7 +863,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "himalaya_seasalt.png"
+  "image": "himalayan_seasalt.png"
 },
  {
   "Product_id": "iy57ud30",
@@ -1051,7 +1051,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "driedcurd_chilli.png"
+  "image": "dried_curdchilli.png"
 },
  {
   "Product_id": "iy70dbg100",
@@ -1065,7 +1065,7 @@
   "Piece": 10,
   "Rating" : 4.8,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "Dried_bitterguard.png"
+   "image": "dried_bitterguard.png"
 },
  {
   "Product_id": "iy71dtb150",
@@ -1079,7 +1079,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "Dried_turkeyberry.png"
+  "image": "dried_turkeyberry.png"
 },
  {
   "Product_id": "iy72rw001",
@@ -1167,7 +1167,7 @@
   "Piece": 10,
   "Rating" : 4.8,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "foxtail_milet.png"
+  "image": "foxtail_millet.png"
 },
  {
   "Product_id": "iy78bm001",
@@ -1181,7 +1181,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "barnyard_milet.png"
+  "image": "barnyarn_millet.png"
 },
  {
   "Product_id": "iy79wc908",
@@ -1195,7 +1195,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "whitecorn.png"
+  "image": "white_corn.png"
 },
  {
   "Product_id": "iy80ps400",
@@ -1557,7 +1557,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "barnyard_milet.png"
+   "image": "black_kavunirice.png"
 },
  {
   "Product_id": "iy105br908",
@@ -1719,7 +1719,7 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "rice_murukku.png"
+  "image": "rice murukku.png"
 },
  {
   "Product_id": "am02cm200",
@@ -1764,7 +1764,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "cassavachips_spicy.png"
+  "image": "cassavachips_spicy.png"
 },
  {
   "Product_id": "am05pmr10",
@@ -1866,8 +1866,9 @@
   "Description": "Our pure Sesame Oil is extracted from high-quality sesame seeds using traditional cold-pressing methods. Full of natural nutrients and antioxidants, it adds a rich, nutty flavor to your meals. Perfect for cooking, seasoning, or drizzling, it’s a healthy and essential addition to any kitchen.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "sesame_oil1l.png"
+},
  {
   "Product_id": "ve03so002",
   "Brand": "Venba",
@@ -1893,8 +1894,9 @@
   "Description": "Venba Groundnut Oil is a natural, cold-pressed oil extracted from premium peanuts. Its light texture and rich flavor make it perfect for frying, sautéing, and seasoning, while retaining essential nutrients for a healthy and flavorful cooking experience.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "groundnut_oil1l.jpg"
+},
  {
   "Product_id": "ve05go002",
   "Brand": "Venba",
