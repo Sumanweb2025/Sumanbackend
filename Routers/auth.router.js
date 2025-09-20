@@ -94,4 +94,7 @@ router.get('/profile-image-info', async (req, res) => {
   }
 });
 
+// DELETE /api/auth/account - Delete user account
+router.delete('/account', authMiddleware, authController.deleteAccount);
+
 module.exports = router;

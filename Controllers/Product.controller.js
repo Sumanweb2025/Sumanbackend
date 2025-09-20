@@ -299,6 +299,40 @@ const getAvailableFilters = async (req, res) => {
   }
 };
 
+// Get top-rated and best-selling products for home page
+const getFeaturedProducts = async (req, res) => {
+  try {
+    const limit = parseInt(req.query.limit) || 10;
+    
+    // Get products sorted by rating (descending) and sales quantity (descending)
+    // For now, we'll use a combination of rating and random selection since sales data might not be available
+    const products = await Product.find()
+      .sort({ 
+        rating: -1,           // Sort by rating first (highest first)
+        createdAt: -1         // Then by newest (as proxy for popularity)
+      })
+      .limit(limit);
+    
+    // Add full image URL to each product
+    const productsWithImageUrl = products.map(product => ({
+      ...product.toObject(),
+      imageUrl: product.image ? `${req.protocol}://${req.get('host')}/images/Products/${product.image}` : null
+    }));
+    
+    res.status(200).json({
+      success: true,
+      count: productsWithImageUrl.length,
+      data: productsWithImageUrl
+    });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: 'Error fetching featured products',
+      error: error.message
+    });
+  }
+};
+
 module.exports = {
   getAllProducts,
   getProductById,
@@ -307,6 +341,7 @@ module.exports = {
   deleteProduct,
   searchProducts,
   getAvailableFilters,
+  getFeaturedProducts,
   upload: multer({
     storage: storage,
     limits: { fileSize: 5 * 1024 * 1024 }, // 5MB limit

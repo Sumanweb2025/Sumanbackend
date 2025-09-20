@@ -8,6 +8,9 @@ router.get('/filters', productController.getAvailableFilters);
 // Search products with filters
 router.get('/search', productController.searchProducts);
 
+// Get featured products (top-rated and best-selling)
+router.get('/featured', productController.getFeaturedProducts);
+
 // Get one product by ID
 router.get('/:id', productController.getProductById);
 

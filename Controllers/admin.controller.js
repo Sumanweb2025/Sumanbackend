@@ -1044,11 +1044,12 @@ exports.deleteProduct = async (req, res) => {
 exports.bulkImportProducts = async (req, res) => {
   try {
     const { products } = req.body;
-
+    
+    
     if (!products || !Array.isArray(products) || products.length === 0) {
-      return res.status(400).json({
-        success: false,
-        message: 'Products array is required'
+      return res.status(400).json({ 
+        success: false, 
+        message: 'No products provided for import' 
       });
     }
 
@@ -1062,10 +1063,10 @@ exports.bulkImportProducts = async (req, res) => {
       try {
         // Validate required fields
         if (!productData.name || !productData.price || !productData.piece) {
-          errors.push({
-            row: i + 1,
-            error: 'Missing required fields: name, price, piece',
-            data: productData
+          skipped.push({ 
+            row: i + 1, 
+            reason: 'Missing required fields (name, price, piece)',
+            data: productData 
           });
           continue;
         }
@@ -1076,11 +1077,7 @@ exports.bulkImportProducts = async (req, res) => {
         // Check if product already exists
         const existingProduct = await Product.findOne({ product_id: finalProductId });
         if (existingProduct) {
-          skipped.push({
-            row: i + 1,
-            product_id: finalProductId,
-            reason: 'Product ID already exists'
-          });
+          skipped.push({ row: i + 1, product_id: finalProductId, reason: 'Product ID already exists' });
           continue;
         }
 
@@ -1095,7 +1092,10 @@ exports.bulkImportProducts = async (req, res) => {
           description: productData.description || productData.name,
           ingredients: productData.ingredients || '',
           storage_condition: productData.storage_condition || '',
-          gram: parseFloat(productData.gram) || 0,
+          gram: productData.gram || 0,
+          rating: productData.rating || 0,
+          sub_category: productData.sub_category || '',
+          image: productData.image || 'default-product.jpg', // Default image for bulk imports
           createdAt: new Date(),
           updatedAt: new Date()
         };
@@ -1115,15 +1115,18 @@ exports.bulkImportProducts = async (req, res) => {
     }
 
     // Return results
+    
     const response = {
       success: true,
-      message: `Import completed. ${importResults.length} products imported successfully`,
-      data: importResults,
-      summary: {
-        total: products.length,
+      message: `Import completed. ${importResults.length} products imported successfully.`,
+      data: {
         imported: importResults.length,
         errors: errors.length,
-        skipped: skipped.length
+        skipped: skipped.length,
+        total: products.length,
+        importedProducts: importResults,
+        errorDetails: errors,
+        skippedDetails: skipped
       }
     };
 
@@ -1292,5 +1295,43 @@ exports.updateProduct = async (req, res) => {
       message: 'Error updating product',
       error: process.env.NODE_ENV === 'development' ? error.message : undefined
     });
+  }
+};
+// Download Order PDF (Invoice/Bill)
+exports.downloadOrderPDF = async (req, res) => {
+  try {
+    const { orderId, type } = req.params;
+    
+    // Find the order
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: 'Order not found' });
+    }
+
+    // Get order items
+    const orderItems = order.items || order.orderItems || order.products || [];
+
+    let pdfBuffer;
+    let filename;
+
+    // Generate PDF based on type
+    if (type === 'invoice') {
+      pdfBuffer = await PDFGeneratorService.generateInvoicePDFBuffer(order, orderItems);
+      filename = `Invoice-${order.orderNumber}.pdf`;
+    } else if (type === 'bill') {
+      pdfBuffer = await PDFGeneratorService.generateBillPDFBuffer(order, orderItems);
+      filename = `Bill-${order.orderNumber}.pdf`;
+    } else {
+      return res.status(400).json({ message: 'Invalid PDF type. Use "invoice" or "bill"' });
+    }
+
+    // Set headers for PDF response
+    res.setHeader('Content-Type', 'application/pdf');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.send(pdfBuffer);
+
+  } catch (error) {
+    console.error('Error downloading order PDF:', error);
+    res.status(500).json({ message: 'Error generating PDF', error: error.message });
   }
 };
