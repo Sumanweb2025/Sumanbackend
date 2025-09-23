@@ -9,7 +9,7 @@ const {
   getUserBehaviorAnalytics,
   getTrendingProducts
 } = require('../Controllers/recommendation.controller');
-const { authenticateToken } = require('../Middleware/auth.middleware');
+const  authenticateToken  = require('../Middleware/auth.middleware');
 
 // Track user behavior (requires authentication)
 router.post('/track', authenticateToken, trackBehavior);

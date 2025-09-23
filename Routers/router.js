@@ -13,7 +13,7 @@ const subscriptionRouter =require("./subscription.router")
 const PaymentRouter = require("./payment.router")
 const DownloadInvoiceRouter = require("./download-invoice.router");
 const AdminRouter = require("./admin.router");
-const recommendationRoutes = require("../recommendation.router");
+const recommendationRoutes = require("./recommendation.router");
 //const testimonialRoutes = require("./testimonial.router");
 
 router.use("/api/auth", authRouter);
