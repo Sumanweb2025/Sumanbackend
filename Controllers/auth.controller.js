@@ -309,12 +309,12 @@ exports.uploadProfileImage = async (req, res) => {
       });
     }
 
-    console.log('Received file:', {
-      originalname: req.file.originalname,
-      mimetype: req.file.mimetype,
-      size: req.file.size,
-      bufferLength: req.file.buffer.length
-    });
+    // console.log('Received file:', {
+    //   originalname: req.file.originalname,
+    //   mimetype: req.file.mimetype,
+    //   size: req.file.size,
+    //   bufferLength: req.file.buffer.length
+    // });
 
     // Find user
     const user = await User.findById(userId);
@@ -330,11 +330,11 @@ exports.uploadProfileImage = async (req, res) => {
     
     await user.save();
 
-    console.log('Profile image saved to database:', {
-      type: user.profileImageType,
-      size: user.profileImageSize,
-      uploadDate: user.profileImageUploadDate
-    });
+    // console.log('Profile image saved to database:', {
+    //   type: user.profileImageType,
+    //   size: user.profileImageSize,
+    //   uploadDate: user.profileImageUploadDate
+    // });
 
     res.status(200).json({
       success: true,

@@ -30,7 +30,7 @@ exports.adminLogin = async (req, res) => {
       role: 'admin' 
     }).select('+password');
 
-    console.log('Admin found:', admin ? 'Yes' : 'No');
+    // console.log('Admin found:', admin ? 'Yes' : 'No');
     
     if (!admin) {
       return res.status(401).json({
@@ -39,13 +39,13 @@ exports.adminLogin = async (req, res) => {
       });
     }
 
-    console.log('Admin details:', {
-      email: admin.email,
-      role: admin.role,
-      authProvider: admin.authProvider,
-      hasPassword: !!admin.password,
-      isActive: admin.isActive
-    });
+    // console.log('Admin details:', {
+    //   email: admin.email,
+    //   role: admin.role,
+    //   authProvider: admin.authProvider,
+    //   hasPassword: !!admin.password,
+    //   isActive: admin.isActive
+    // });
 
     // Check if admin is active
     if (!admin.isActive) {
@@ -63,7 +63,7 @@ exports.adminLogin = async (req, res) => {
       isPasswordValid = await bcrypt.compare(password, admin.password);
     }
     
-    console.log('Password validation result:', isPasswordValid);
+    // console.log('Password validation result:', isPasswordValid);
 
     if (!isPasswordValid) {
       return res.status(401).json({
@@ -87,7 +87,7 @@ exports.adminLogin = async (req, res) => {
       { expiresIn: '24h' }
     );
 
-    console.log('Login successful for:', admin.email);
+    // console.log('Login successful for:', admin.email);
 
     res.status(200).json({
       success: true,

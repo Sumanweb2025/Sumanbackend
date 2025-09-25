@@ -3,6 +3,24 @@ const fs = require('fs');
 const path = require('path');
 const multer = require('multer');
 
+// Helper function to add image URLs to product
+const addImageUrls = (product, req) => {
+  const baseUrl = `${req.protocol}://${req.get('host')}/images/Products/`;
+  const images = product.image || [];
+  
+  return {
+    ...product.toObject(),
+    // Main image URL (first image in array)
+    imageUrl: images.length > 0 ? baseUrl + images[0] : null,
+    // Secondary/hover image URL (second image in array)
+    secondaryImageUrl: images.length > 1 ? baseUrl + images[1] : null,
+    // All image URLs array
+    imageUrls: images.map(img => baseUrl + img),
+    // For backward compatibility
+    hoverImageUrl: images.length > 1 ? baseUrl + images[1] : null
+  };
+};
+
 // Configure Multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -42,11 +60,8 @@ const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
     
-    // Add full image URL to each product
-    const productsWithImageUrl = products.map(product => ({
-      ...product.toObject(),
-      imageUrl: product.image ? `${req.protocol}://${req.get('host')}/images/Products/${product.image}` : null
-    }));
+    // Add full image URLs to each product using helper function
+    const productsWithImageUrl = products.map(product => addImageUrls(product, req));
     
     res.status(200).json({
       success: true,
@@ -74,11 +89,8 @@ const getProductById = async (req, res) => {
       });
     }
     
-    // Add full image URL
-    const productWithImageUrl = {
-      ...product.toObject(),
-      imageUrl: product.image ? `${req.protocol}://${req.get('host')}/images/Products/${product.image}` : null
-    };
+    // Add full image URLs using helper function
+    const productWithImageUrl = addImageUrls(product, req);
     
     res.status(200).json({
       success: true,
@@ -250,11 +262,8 @@ const searchProducts = async (req, res) => {
     
     const products = await Product.find(filter);
     
-    // Add full image URL to each product
-    const productsWithImageUrl = products.map(product => ({
-      ...product.toObject(),
-      imageUrl: product.image ? `${req.protocol}://${req.get('host')}/images/Products/${product.image}` : null
-    }));
+    // Add full image URLs to each product using helper function
+    const productsWithImageUrl = products.map(product => addImageUrls(product, req));
     
     res.status(200).json({
       success: true,
@@ -304,20 +313,15 @@ const getFeaturedProducts = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
     
-    // Get products sorted by rating (descending) and sales quantity (descending)
-    // For now, we'll use a combination of rating and random selection since sales data might not be available
     const products = await Product.find()
       .sort({ 
-        rating: -1,           // Sort by rating first (highest first)
-        createdAt: -1         // Then by newest (as proxy for popularity)
+        rating: -1,           
+        createdAt: -1         
       })
       .limit(limit);
     
-    // Add full image URL to each product
-    const productsWithImageUrl = products.map(product => ({
-      ...product.toObject(),
-      imageUrl: product.image ? `${req.protocol}://${req.get('host')}/images/Products/${product.image}` : null
-    }));
+    // Add full image URLs to each product using helper function
+    const productsWithImageUrl = products.map(product => addImageUrls(product, req));
     
     res.status(200).json({
       success: true,

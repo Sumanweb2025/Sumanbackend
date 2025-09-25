@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'sumanfoods');
     
-    console.log('Decoded token:', decoded); // Debug log
+    //console.log('Decoded token:', decoded); 
     
     const user = await User.findById(decoded.userId);
     if (!user || !user.isActive) {
@@ -34,7 +34,7 @@ const authMiddleware = async (req, res, next) => {
       ...decoded                 // Include all token data
     };
 
-    console.log('Attached user to req:', req.user); // Debug log
+    //console.log('Attached user to req:', req.user);
     
     next();
   } catch (error) {
