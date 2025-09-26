@@ -12,7 +12,8 @@ const contactRouter =require("./contact.router");
 const subscriptionRouter =require("./subscription.router")
 const PaymentRouter = require("./payment.router")
 const DownloadInvoiceRouter = require("./download-invoice.router");
-const AdminRouter = require("./admin.router")
+const AdminRouter = require("./admin.router");
+const recommendationRoutes = require("./recommendation.router");
 //const testimonialRoutes = require("./testimonial.router");
 
 router.use("/api/auth", authRouter);
@@ -28,6 +29,7 @@ router.use("/api/subscription", subscriptionRouter);
 router.use("/api/admin", AdminRouter);
 router.use("/api/payments", PaymentRouter);
 router.use("/api/invoices", DownloadInvoiceRouter);
+router.use("/api/recommendations", recommendationRoutes);
 //router.use("/api/testimonials", testimonialRoutes);
 
 module.exports = router;

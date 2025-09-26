@@ -163,8 +163,6 @@ const processOrderEmails = async (order, items, payment, req, isPaymentCompleted
       error.message,
       { orderNumber: order.orderNumber }
     );
-    
-    // Don't throw error to prevent order creation failure
   }
 };
 

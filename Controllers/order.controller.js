@@ -746,7 +746,7 @@ module.exports = {
   trackOrder,
   getAllOrders,
   getOrderStatistics,
-  cancelOrder, // Updated function
-  processStripeRefund, // New function
-  sendCancellationEmails // New function
+  cancelOrder, 
+  processStripeRefund, 
+  sendCancellationEmails 
 };
