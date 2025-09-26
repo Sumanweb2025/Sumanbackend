@@ -13,7 +13,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "bombay_mixture.png"
+  "image": ["bombay_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy02mc500",
@@ -28,7 +30,9 @@
   "Piece": 10,
   "Rating" : 4.2,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "corn_mixture.png"
+ "image": ["corn_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy03mm500",
@@ -43,7 +47,9 @@
   "Piece": 10,
   "Rating" : 3.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "mild_mixture.png"
+   "image": ["mild_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy04mm250",
@@ -58,7 +64,9 @@
   "Piece": 10,
   "Rating" : 4,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "mild_mixture.png"
+  "image": ["mild_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy05hm500",
@@ -73,7 +81,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "hot_mixture.png"
+  "image": ["hot_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy06hm250",
@@ -88,7 +98,9 @@
   "Piece": 10,
   "Rating" : 4.9,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "hot_mixture.png"
+  "image": ["hot_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy07jm500",
@@ -103,7 +115,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "jaffana_mixture.png"
+  "image": ["jaffana_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy08jm600",
@@ -118,7 +132,9 @@
   "Piece": 10,
   "Rating" : 3.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "jaffana_mixture.png"
+  "image": ["jaffana_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy09jm250",
@@ -133,7 +149,9 @@
   "Piece": 10,
   "Rating" : 4,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "jaffana_mixture.png"
+  "image": ["jaffana_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy10km500",
@@ -148,7 +166,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "kerala_mixture.png"
+   "image": ["kerala_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy11rm500",
@@ -162,7 +182,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "ragi_mixture.png"
+  "image": ["ragi_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy12bst400",
@@ -177,7 +199,9 @@
   "Piece": 10,
   "Rating" : 5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "bananachips_salt.png"
+  "image": ["bananachips_salt.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy12bst001",
@@ -192,7 +216,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "bananachips_salt.png"
+   "image": ["bananachips_salt.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy13bsy400",
@@ -207,7 +233,9 @@
   "Piece": 10,
   "Rating" : 3.9,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "banabachips_spicy.png"
+  "image": ["banabachips_spicy.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy13bsy001",
@@ -222,7 +250,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "banabachips_spicy.png"
+   "image": ["banabachips_spicy.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy14sb400",
@@ -237,7 +267,9 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "sweet_banana.png"
+  "image": ["sweet_banana.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy15sv350",
@@ -252,7 +284,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "sakkaravattu.png"
+   "image": ["sakkaravattu.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy16csy150",
@@ -267,7 +301,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "cassavachips_spicy.png"
+   "image": ["cassavachips_spicy.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy17cst150",
@@ -282,7 +318,9 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "cassava_chip_salt.png"
+  "image": ["cassava_chip_salt.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy18cfc150",
@@ -297,7 +335,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "cassavafinger_chips.png"
+   "image": ["cassavafinger_chips.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy19cls150",
@@ -312,7 +352,9 @@
   "Piece": 10,
   "Rating" : 4.8,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "cassava_long.png"
+   "image": ["cassava_long.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy20jc175",
@@ -327,7 +369,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "jackfruit_chips.png"
+   "image": ["jackfruit_chips.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy21ksy500",
@@ -342,7 +386,9 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "kuzhalappam_spicy.png"
+   "image": ["kuzhalappam_spicy.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy22kst500",
@@ -357,7 +403,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "kuzhalappam_salt.png"
+  "image": ["kuzhalappam_salt.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy23lrm350",
@@ -372,7 +420,9 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "largerice_murukku.png"
+   "image": ["largerice_murukku.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy24rm175",
@@ -387,7 +437,9 @@
   "Piece": 10,
   "Rating" : 3.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "rice_murukku.png"
+   "image": ["rice_murukku.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy25km175",
@@ -402,7 +454,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "kai_murukku.png"
+  "image": ["kai_murukku.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy26gm175",

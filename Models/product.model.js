@@ -50,10 +50,10 @@ const productSchema = new mongoose.Schema({
   },
   ingredients: { type: String },
   storage_condition: { type: String },
-  image: {
+  image: [{
     type: String,
     required: true
-  },
+  }],
   gram: {
     type: Number,
     required: true,

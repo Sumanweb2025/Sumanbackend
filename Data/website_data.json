@@ -13,7 +13,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "bombay_mixture.png"
+  "image": ["bombay_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy02mc500",
@@ -28,7 +30,9 @@
   "Piece": 10,
   "Rating" : 4.2,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "corn_mixture.png"
+  "image": ["corn_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy03mm500",
@@ -43,7 +47,9 @@
   "Piece": 10,
   "Rating" : 3.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "mild_mixture.png"
+  "image": ["mild_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy04mm250",
@@ -58,7 +64,9 @@
   "Piece": 10,
   "Rating" : 4,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "mild_mixture.png"
+   "image": ["mild_mixture.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy05hm500",
@@ -280,7 +288,9 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "cassavachips_salt.png"
+  "image": ["cassavachips_salt.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy18cfc150",
@@ -295,7 +305,9 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "cassavafinger_chips.png"
+   "image": ["cassavafinger_chips.png",
+  "peanut_halwa_hover.png"
+]
 },
  {
   "Product_id": "iy19cls150",

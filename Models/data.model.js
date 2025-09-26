@@ -56,10 +56,10 @@ const productSchema = new mongoose.Schema({
     type: String,
     trim: true
   },
-  image: {
-    type: String,
-    trim: true
-  },
+  image: [{
+  type: String,
+  trim: true
+}],
   gram: {
     type: String,
     trim: true
