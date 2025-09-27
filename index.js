@@ -3,7 +3,7 @@ const cors = require('cors')
 require('dotenv').config();
 const bodyparser = require('body-parser')
 const  connectDatabase  = require('./DB_Connection/db_connection');
-const PORT = process.env.PORT || 4000
+const PORT = process.env.PORT || 8000
 const Approuter = require('./Routers/router')
 const path = require('path');
 
@@ -43,5 +43,6 @@ async function startServer() {
   
   // Call the async function to start the server
   startServer();
+
 
 
