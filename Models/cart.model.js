@@ -4,8 +4,17 @@ const cartSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true,
-    unique: true
+    required: false, // Changed: Allow null for guest users
+    sparse: true // Allow multiple null values
+  },
+  sessionId: {
+    type: String, // For guest users
+    sparse: true,
+    index: true
+  },
+  isGuest: {
+    type: Boolean,
+    default: false
   },
   items: [{
     productId: {
@@ -27,6 +36,10 @@ const cartSchema = new mongoose.Schema({
   totalAmount: {
     type: Number,
     default: 0
+  },
+  expiresAt: {
+    type: Date,
+    default: () => new Date(+new Date() + 7*24*60*60*1000) // 7 days expiry for guest carts
   }
 }, {
   timestamps: true
@@ -36,11 +49,9 @@ const cartSchema = new mongoose.Schema({
 cartSchema.pre('save', async function(next) {
   if (this.isModified('items')) {
     try {
-      // Only populate if there are items
       if (this.items.length > 0) {
         await this.populate('items.productId', 'price');
         
-        // Filter out items where productId is null (deleted products)
         this.items = this.items.filter(item => item.productId !== null);
         
         this.totalAmount = this.items.reduce((total, item) => {
@@ -59,8 +70,10 @@ cartSchema.pre('save', async function(next) {
   next();
 });
 
-// Add index for better performance
+// Compound index for guest carts
+cartSchema.index({ sessionId: 1, isGuest: 1 });
 cartSchema.index({ userId: 1 });
 cartSchema.index({ 'items.productId': 1 });
+cartSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // Auto-delete expired carts
 
 module.exports = mongoose.model('Cart', cartSchema);

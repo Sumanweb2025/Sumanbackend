@@ -1,22 +1,36 @@
 const Order = require('../Models/order.model');
-const Cart = require('../Models/cart.model'); 
-const Coupon = require('../Models/coupon.model'); 
-const Payment = require('../Models/payment.model'); 
-const Refund = require('../Models/refund.model'); 
+const Cart = require('../Models/cart.model');
+const Coupon = require('../Models/coupon.model');
+const Payment = require('../Models/payment.model');
+const Refund = require('../Models/refund.model');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
-const EmailService = require('../Services/mailer.js'); 
+const EmailService = require('../Services/mailer.js');
+const { v4: uuidv4 } = require('uuid');
 
-// Initialize email service - ADD THIS
 const emailService = new EmailService();
 
-// Helper function to add imageUrl to product and ensure price is a number
+// Helper function to get session ID
+const getSessionId = (req) => {
+  return req.header('X-Session-ID') || req.body.sessionId;
+};
+
+// Helper function to add imageUrl to product
 const addImageUrlToProduct = (product, req) => {
   if (!product) return product;
-  
+
   const productObj = product.toObject ? product.toObject() : product;
+
+  // Fix: Handle image as array and extract first image
+  const imageValue = Array.isArray(productObj.image)
+    ? productObj.image[0]
+    : productObj.image;
+
   return {
     ...productObj,
-    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
+    image: imageValue, // Store single image string
+    imageUrl: imageValue
+      ? `${req.protocol}://${req.get('host')}/images/Products/${imageValue}`
+      : null,
     price: parseFloat(productObj.price) || 0
   };
 };
@@ -32,16 +46,32 @@ const safeParseInt = (value) => {
   return isNaN(parsed) ? 0 : parsed;
 };
 
-// Get order data for checkout
+// Get checkout data (supports guest users)
 const getCheckoutData = async (req, res) => {
   try {
-    const userId = req.user.id;
-    
-    const cart = await Cart.findOne({ userId }).populate({
-      path: 'items.productId',
-      select: 'name price image description category brand'
-    });
-    
+    const { isGuest, userId } = req.user;
+    let cart;
+
+    if (isGuest) {
+      const sessionId = getSessionId(req);
+      if (!sessionId) {
+        return res.status(400).json({
+          success: false,
+          message: 'Session ID required for guest checkout'
+        });
+      }
+
+      cart = await Cart.findOne({ sessionId, isGuest: true }).populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
+    } else {
+      cart = await Cart.findOne({ userId }).populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
+    }
+
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
         success: false,
@@ -61,10 +91,23 @@ const getCheckoutData = async (req, res) => {
       return total + (price * quantity);
     }, 0);
 
-    // Canadian tax and shipping rates
-    const tax = subtotal * 0.13; // 13% HST for most Canadian provinces
-    const shipping = subtotal >= 75 ? 0 : 9.99; // Free shipping over $75
-    const total = subtotal + tax + shipping;
+    const tax = subtotal * 0.13;
+    const shipping = subtotal >= 75 ? 0 : 9.99;
+    
+    // NEW: Check for first order discount
+    let firstOrderDiscount = 0;
+    if (userId && !isGuest) {
+      const previousOrders = await Order.countDocuments({ 
+        userId, 
+        paymentStatus: { $in: ['paid', 'pending'] } 
+      });
+      
+      if (previousOrders === 0) {
+        firstOrderDiscount = subtotal * 0.02; // 2% discount
+      }
+    }
+    
+    const total = subtotal + tax + shipping - firstOrderDiscount;
 
     res.status(200).json({
       success: true,
@@ -74,9 +117,11 @@ const getCheckoutData = async (req, res) => {
           subtotal: subtotal.toFixed(2),
           tax: tax.toFixed(2),
           shipping: shipping.toFixed(2),
+          firstOrderDiscount: firstOrderDiscount.toFixed(2), // NEW
           total: total.toFixed(2),
           currency: 'CAD'
-        }
+        },
+        sessionId: isGuest ? cart.sessionId : null
       }
     });
   } catch (error) {
@@ -88,11 +133,11 @@ const getCheckoutData = async (req, res) => {
   }
 };
 
-// Apply Coupon Function
+// Apply coupon (supports guest users)
 const applyCoupon = async (req, res) => {
   try {
     const { couponCode } = req.body;
-    const userId = req.user.id;
+    const { isGuest, userId } = req.user;
 
     if (!couponCode) {
       return res.status(400).json({
@@ -128,11 +173,20 @@ const applyCoupon = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId }).populate({
-      path: 'items.productId',
-      select: 'name price image description category brand'
-    });
-    
+    let cart;
+    if (isGuest) {
+      const sessionId = getSessionId(req);
+      cart = await Cart.findOne({ sessionId, isGuest: true }).populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
+    } else {
+      cart = await Cart.findOne({ userId }).populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
+    }
+
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({
         success: false,
@@ -188,10 +242,18 @@ const applyCoupon = async (req, res) => {
   }
 };
 
-// Get user orders
+// Get user orders (only for logged-in users)
 const getUserOrders = async (req, res) => {
   try {
-    const userId = req.user.id;
+    const { isGuest, userId } = req.user;
+
+    if (isGuest) {
+      return res.status(401).json({
+        success: false,
+        message: 'Please login to view your orders'
+      });
+    }
+
     const orders = await Order.find({ userId })
       .populate({
         path: 'items.productId',
@@ -203,12 +265,17 @@ const getUserOrders = async (req, res) => {
       const orderObj = order.toObject();
       return {
         ...orderObj,
-        items: orderObj.items.map(item => ({
-          ...item,
-          imageUrl: item.imageUrl || (item.image ? `${req.protocol}://${req.get('host')}/images/Products/${item.image}` : null),
-          price: safeParseFloat(item.price),
-          quantity: safeParseInt(item.quantity)
-        }))
+        items: orderObj.items.map(item => {
+          // Handle array image
+          const imageValue = Array.isArray(item.image) ? item.image[0] : item.image;
+          return {
+            ...item,
+            image: imageValue,
+            imageUrl: item.imageUrl || (imageValue ? `${req.protocol}://${req.get('host')}/images/Products/${imageValue}` : null),
+            price: safeParseFloat(item.price),
+            quantity: safeParseInt(item.quantity)
+          };
+        })
       };
     });
 
@@ -229,7 +296,14 @@ const getUserOrders = async (req, res) => {
 const getOrderById = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const userId = req.user.id;
+    const { isGuest, userId } = req.user;
+
+    if (isGuest) {
+      return res.status(401).json({
+        success: false,
+        message: 'Please login to view order details'
+      });
+    }
 
     const order = await Order.findOne({ _id: orderId, userId })
       .populate({
@@ -247,12 +321,17 @@ const getOrderById = async (req, res) => {
     const orderObj = order.toObject();
     const orderWithImageUrls = {
       ...orderObj,
-      items: orderObj.items.map(item => ({
-        ...item,
-        imageUrl: item.imageUrl || (item.image ? `${req.protocol}://${req.get('host')}/images/Products/${item.image}` : null),
-        price: safeParseFloat(item.price),
-        quantity: safeParseInt(item.quantity)
-      }))
+      items: orderObj.items.map(item => {
+        // Handle array image
+        const imageValue = Array.isArray(item.image) ? item.image[0] : item.image;
+        return {
+          ...item,
+          image: imageValue,
+          imageUrl: item.imageUrl || (imageValue ? `${req.protocol}://${req.get('host')}/images/Products/${imageValue}` : null),
+          price: safeParseFloat(item.price),
+          quantity: safeParseInt(item.quantity)
+        };
+      })
     };
 
     res.status(200).json({
@@ -278,7 +357,7 @@ const updateOrderStatus = async (req, res) => {
       path: 'items.productId',
       select: 'name price image description category brand'
     });
-    
+
     if (!order) {
       return res.status(404).json({
         success: false,
@@ -303,11 +382,11 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
-// Get all available coupons
+// Get available coupons
 const getAvailableCoupons = async (req, res) => {
   try {
     const currentDate = new Date();
-    
+
     const coupons = await Coupon.find({
       isActive: true,
       validFrom: { $lte: currentDate },
@@ -331,7 +410,7 @@ const getAvailableCoupons = async (req, res) => {
   }
 };
 
-// Track Order
+// Track order (public - supports guest orders)
 const trackOrder = async (req, res) => {
   try {
     const { orderId, email } = req.body;
@@ -343,9 +422,9 @@ const trackOrder = async (req, res) => {
       });
     }
 
-    const order = await Order.findOne({ 
-      orderNumber: orderId.trim(), 
-      'contactInfo.email': email.trim().toLowerCase() 
+    const order = await Order.findOne({
+      orderNumber: orderId.trim(),
+      'contactInfo.email': email.trim().toLowerCase()
     }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -359,12 +438,17 @@ const trackOrder = async (req, res) => {
     }
 
     const orderObj = order.toObject();
-    const itemsWithImageUrls = orderObj.items.map(item => ({
-      ...item,
-      imageUrl: item.imageUrl || (item.image ? `${req.protocol}://${req.get('host')}/images/Products/${item.image}` : null),
-      price: safeParseFloat(item.price),
-      quantity: safeParseInt(item.quantity)
-    }));
+    const itemsWithImageUrls = orderObj.items.map(item => {
+      // Handle array image
+      const imageValue = Array.isArray(item.image) ? item.image[0] : item.image;
+      return {
+        ...item,
+        image: imageValue,
+        imageUrl: item.imageUrl || (imageValue ? `${req.protocol}://${req.get('host')}/images/Products/${imageValue}` : null),
+        price: safeParseFloat(item.price),
+        quantity: safeParseInt(item.quantity)
+      };
+    });
 
     res.status(200).json({
       success: true,
@@ -384,6 +468,7 @@ const trackOrder = async (req, res) => {
         items: itemsWithImageUrls,
         contactInfo: order.contactInfo,
         billingAddress: order.billingAddress,
+        isGuestOrder: order.isGuestOrder || false,
         currency: 'CAD'
       }
     });
@@ -401,9 +486,9 @@ const trackOrder = async (req, res) => {
 const getAllOrders = async (req, res) => {
   try {
     const { page = 1, limit = 10, status, paymentStatus, search } = req.query;
-    
+
     const query = {};
-    
+
     if (status) query.status = status;
     if (paymentStatus) query.paymentStatus = paymentStatus;
     if (search) {
@@ -416,7 +501,7 @@ const getAllOrders = async (req, res) => {
     }
 
     const orders = await Order.find(query)
-      .populate('userId', 'firstName lastName email')
+      .populate('userId', 'name email')
       .populate({
         path: 'items.productId',
         select: 'name price image'
@@ -449,7 +534,7 @@ const getAllOrders = async (req, res) => {
 const getOrderStatistics = async (req, res) => {
   try {
     const { period = '30d' } = req.query;
-    
+
     let startDate = new Date();
     switch (period) {
       case '7d':
@@ -466,12 +551,10 @@ const getOrderStatistics = async (req, res) => {
         break;
     }
 
-    // Total orders
     const totalOrders = await Order.countDocuments({
       createdAt: { $gte: startDate }
     });
 
-    // Total revenue
     const totalRevenue = await Order.aggregate([
       {
         $match: {
@@ -487,7 +570,6 @@ const getOrderStatistics = async (req, res) => {
       }
     ]);
 
-    // Order status breakdown
     const statusStats = await Order.aggregate([
       {
         $match: {
@@ -502,7 +584,6 @@ const getOrderStatistics = async (req, res) => {
       }
     ]);
 
-    // Payment method breakdown
     const paymentMethodStats = await Order.aggregate([
       {
         $match: {
@@ -539,13 +620,20 @@ const getOrderStatistics = async (req, res) => {
   }
 };
 
+// Cancel order
 const cancelOrder = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { reason } = req.body; // Get reason from request body
-    const userId = req.user.id;
+    const { reason } = req.body;
+    const { isGuest, userId } = req.user;
 
-    // Find the order
+    if (isGuest) {
+      return res.status(401).json({
+        success: false,
+        message: 'Please login to cancel orders'
+      });
+    }
+
     const order = await Order.findOne({ _id: orderId, userId }).populate({
       path: 'items.productId',
       select: 'name price image description category brand'
@@ -558,7 +646,6 @@ const cancelOrder = async (req, res) => {
       });
     }
 
-    // Check if order can be cancelled
     const cancellationCheck = order.canBeCancelled();
     if (!cancellationCheck.canCancel) {
       return res.status(400).json({
@@ -567,7 +654,6 @@ const cancelOrder = async (req, res) => {
       });
     }
 
-    // Find corresponding payment record
     const payment = await Payment.findOne({ orderId: order._id });
     if (!payment) {
       return res.status(404).json({
@@ -580,7 +666,6 @@ const cancelOrder = async (req, res) => {
     let refund = null;
 
     try {
-      // Step 1: Update order status first
       await Order.findByIdAndUpdate(orderId, {
         status: 'cancelled',
         cancellationReason: reason || 'Customer requested cancellation',
@@ -588,12 +673,9 @@ const cancelOrder = async (req, res) => {
         cancelledBy: userId
       });
 
-      // Step 2: Handle refund if payment was online (card)
       if (order.paymentMethod === 'card' && order.paymentStatus === 'paid') {
-        // Process Stripe refund
         refundResult = await processStripeRefund(order, payment, reason);
-        
-        // Create refund record
+
         refund = new Refund({
           orderId: order._id,
           paymentId: payment._id,
@@ -615,25 +697,22 @@ const cancelOrder = async (req, res) => {
 
         await refund.save();
 
-        // Step 3: Update order with refund details
         await Order.findByIdAndUpdate(orderId, {
           refundStatus: refundResult.status,
           refundAmount: refundResult.amount,
           refundId: refund._id
         });
 
-        // Step 4: Update payment status
         await Payment.findByIdAndUpdate(payment._id, {
           paymentStatus: 'refunded'
         });
 
-        // Step 5: Log refund creation
         if (refund) {
           await refund.addRefundLog(
             'REFUND_INITIATED',
             refundResult.status.toUpperCase(),
             'Refund initiated due to order cancellation',
-            { 
+            {
               stripeRefundId: refundResult.refundId,
               amount: refundResult.amount
             }
@@ -641,10 +720,8 @@ const cancelOrder = async (req, res) => {
         }
       }
 
-      // Step 6: Send cancellation emails
       await sendCancellationEmails(order, refundResult, req.user);
 
-      // Step 7: Return success response
       res.status(200).json({
         success: true,
         message: 'Order cancelled successfully',
@@ -658,12 +735,10 @@ const cancelOrder = async (req, res) => {
 
     } catch (processingError) {
       console.error('Error during cancellation processing:', processingError);
-      
-      // If there was an error after updating order status, 
-      // we should revert the order status back
+
       try {
         await Order.findByIdAndUpdate(orderId, {
-          status: order.status, // Revert to original status
+          status: order.status,
           cancellationReason: null,
           cancelledAt: null,
           cancelledBy: null
@@ -684,12 +759,11 @@ const cancelOrder = async (req, res) => {
   }
 };
 
-// ADD THIS NEW HELPER FUNCTION
 const processStripeRefund = async (order, payment, reason) => {
   try {
     const refund = await stripe.refunds.create({
       payment_intent: payment.stripePaymentIntentId,
-      amount: Math.round(order.orderSummary.total * 100), // Convert to cents
+      amount: Math.round(order.orderSummary.total * 100),
       reason: 'requested_by_customer',
       metadata: {
         order_id: order._id.toString(),
@@ -716,23 +790,18 @@ const processStripeRefund = async (order, payment, reason) => {
   }
 };
 
-// ADD THIS NEW HELPER FUNCTION
 const sendCancellationEmails = async (order, refundInfo, user) => {
   try {
     if (order.paymentMethod === 'cod') {
-      // Send COD cancellation email
       await emailService.sendCODCancellationEmail(order, user);
     } else if (order.paymentMethod === 'card') {
-      // Send card cancellation with refund info email
       await emailService.sendCardCancellationEmail(order, refundInfo, user);
     }
 
-    // Send admin notification
     await emailService.sendAdminCancellationNotification(order, refundInfo, user);
-    
+
   } catch (emailError) {
     console.error('Error sending cancellation emails:', emailError);
-    // Don't throw error to prevent cancellation failure
   }
 };
 
@@ -746,7 +815,7 @@ module.exports = {
   trackOrder,
   getAllOrders,
   getOrderStatistics,
-  cancelOrder, 
-  processStripeRefund, 
-  sendCancellationEmails 
+  cancelOrder,
+  processStripeRefund,
+  sendCancellationEmails
 };
