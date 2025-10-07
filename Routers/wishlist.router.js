@@ -6,21 +6,12 @@ const {
   removeFromWishlist,
   clearWishlist
 } = require('../Controllers/wishlist.controller');
-const authMiddleware  = require('../Middleware/auth.middleware'); // Assuming you have auth middleware
+const { optionalAuth } = require('../Middleware/auth.middleware');
 
-// All routes require authentication
-router.use(authMiddleware);
-
-// GET /api/wishlist - Get user's wishlist
-router.get('/', getWishlist);
-
-// POST /api/wishlist - Add product to wishlist
-router.post('/', addToWishlist);
-
-// DELETE /api/wishlist/:productId - Remove specific product from wishlist
-router.delete('/:productId', removeFromWishlist);
-
-// DELETE /api/wishlist - Clear entire wishlist
-router.delete('/', clearWishlist);
+// Routes that support both guest and logged-in users
+router.get('/', optionalAuth, getWishlist);
+router.post('/', optionalAuth, addToWishlist);
+router.delete('/:productId', optionalAuth, removeFromWishlist);
+router.delete('/', optionalAuth, clearWishlist);
 
 module.exports = router;

@@ -4,11 +4,22 @@ const orderSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: false, // Changed: Allow null for guest orders
+    sparse: true
+  },
+  sessionId: {
+    type: String, // For guest orders
+    sparse: true,
+    index: true
+  },
+  isGuestOrder: {
+    type: Boolean,
+    default: false
   },
   orderNumber: {
     type: String,
-    unique: true
+    unique: true,
+    index: true
   },
   items: [{
     productId: {
@@ -30,14 +41,15 @@ const orderSchema = new mongoose.Schema({
       min: 1
     },
     image: String,
-    imageUrl: String, // Added for storing full image URL
+    imageUrl: String,
     brand: String,
     category: String
   }],
   contactInfo: {
     email: {
       type: String,
-      required: true
+      required: true,
+      index: true
     }
   },
   billingAddress: {
@@ -73,7 +85,6 @@ const orderSchema = new mongoose.Schema({
     },
     phone: String
   },
-  // Applied coupon information
   appliedCoupon: {
     code: String,
     description: String,
@@ -104,6 +115,10 @@ const orderSchema = new mongoose.Schema({
       type: Number,
       default: 0
     },
+    firstOrderDiscount: {  
+    type: Number,
+    default: 0
+    },
     total: {
       type: Number,
       required: true
@@ -112,19 +127,20 @@ const orderSchema = new mongoose.Schema({
   status: {
     type: String,
     enum: ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled'],
-    default: 'pending'
+    default: 'pending',
+    index: true
   },
   paymentStatus: {
     type: String,
     enum: ['pending', 'paid', 'failed', 'refunded'],
-    default: 'pending'
+    default: 'pending',
+    index: true
   },
   paymentMethod: {
     type: String,
     enum: ['card','cod'],
     default: 'cod'
   },
-  // NEW: Stripe payment integration fields
   stripePaymentId: {
     type: String,
     default: null
@@ -133,7 +149,6 @@ const orderSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  // Cancellation Fields - ADD THESE
   cancellationReason: {
     type: String,
     default: null
@@ -147,8 +162,6 @@ const orderSchema = new mongoose.Schema({
     ref: 'User',
     default: null
   },
-  
-  // Refund Fields - ADD THESE  
   refundStatus: {
     type: String,
     enum: ['none', 'pending', 'processing', 'completed', 'failed'],
@@ -163,7 +176,6 @@ const orderSchema = new mongoose.Schema({
     ref: 'Refund',
     default: null
   },
-  // Additional tracking fields
   trackingNumber: {
     type: String,
     default: null
@@ -209,11 +221,13 @@ orderSchema.methods.canBeCancelled = function() {
   return { canCancel: true, reason: null };
 };
 
-// Index for better query performance
+// Indexes for better query performance
 orderSchema.index({ userId: 1, createdAt: -1 });
+orderSchema.index({ sessionId: 1, isGuestOrder: 1 });
 orderSchema.index({ orderNumber: 1 });
 orderSchema.index({ 'contactInfo.email': 1 });
 orderSchema.index({ status: 1 });
 orderSchema.index({ paymentStatus: 1 });
+orderSchema.index({ createdAt: -1 });
 
 module.exports = mongoose.model('Order', orderSchema);

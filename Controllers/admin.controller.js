@@ -25,13 +25,13 @@ exports.adminLogin = async (req, res) => {
     }
 
     // Find admin user with password field
-    const admin = await User.findOne({ 
-      email, 
-      role: 'admin' 
+    const admin = await User.findOne({
+      email,
+      role: 'admin'
     }).select('+password');
 
     // console.log('Admin found:', admin ? 'Yes' : 'No');
-    
+
     if (!admin) {
       return res.status(401).json({
         success: false,
@@ -62,7 +62,7 @@ exports.adminLogin = async (req, res) => {
     } else {
       isPasswordValid = await bcrypt.compare(password, admin.password);
     }
-    
+
     // console.log('Password validation result:', isPasswordValid);
 
     if (!isPasswordValid) {
@@ -78,10 +78,10 @@ exports.adminLogin = async (req, res) => {
 
     // Generate JWT token
     const token = jwt.sign(
-      { 
-        userId: admin._id, 
+      {
+        userId: admin._id,
         role: admin.role,
-        email: admin.email 
+        email: admin.email
       },
       process.env.JWT_SECRET || 'fallback_jwt_secret',
       { expiresIn: '24h' }
@@ -120,7 +120,7 @@ exports.getDashboardOverview = async (req, res) => {
     const today = new Date();
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
     const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-    
+
     // FIXED: Changed 'user' to 'customer' in user count query
     const [totalOrders, totalUsers, totalProducts, todayOrders] = await Promise.all([
       Order.countDocuments().catch(err => {
@@ -151,8 +151,8 @@ exports.getDashboardOverview = async (req, res) => {
     });
 
     const todayRevenue = await Order.aggregate([
-      { 
-        $match: { 
+      {
+        $match: {
           paymentStatus: 'paid',
           createdAt: { $gte: todayStart }
         }
@@ -181,14 +181,14 @@ exports.getDashboardOverview = async (req, res) => {
       .populate('userId', 'name email')
       .sort({ createdAt: -1 })
       .limit(5)
-      .select('orderNumber status paymentStatus orderSummary.total createdAt')
+      .select('orderNumber status paymentStatus orderSummary createdAt userId isGuestOrder billingAddress contactInfo')
       .catch(err => {
         console.error('Error fetching recent orders:', err);
         return [];
       });
 
     // FIXED: Better top products aggregation with proper error handling
-   let topProducts = await Review.aggregate([
+    let topProducts = await Review.aggregate([
       {
         $group: {
           _id: '$product_id', // Using product_id string field
@@ -196,8 +196,8 @@ exports.getDashboardOverview = async (req, res) => {
           reviewCount: { $sum: 1 }
         }
       },
-      { 
-        $match: { 
+      {
+        $match: {
           reviewCount: { $gte: 2 }, // At least 2 reviews for reliability
           avgRating: { $gte: 4.5 }  // Only 4.5+ star products
         }
@@ -249,7 +249,7 @@ exports.getDashboardOverview = async (req, res) => {
     // Alternative approach: If no high-rated products exist, show highest rated products (3.5+ stars)
     let alternativeTopProducts = [];
     if (validTopProducts.length === 0) {
-      
+
       const fallbackProducts = await Review.aggregate([
         {
           $group: {
@@ -258,8 +258,8 @@ exports.getDashboardOverview = async (req, res) => {
             reviewCount: { $sum: 1 }
           }
         },
-        { 
-          $match: { 
+        {
+          $match: {
             reviewCount: { $gte: 1 },
             avgRating: { $gte: 3.5 }  // Fallback to 3.5+ stars
           }
@@ -306,7 +306,7 @@ exports.getDashboardOverview = async (req, res) => {
     // Final fallback: Latest products if no rated products exist
     let latestProducts = [];
     if (validTopProducts.length === 0 && alternativeTopProducts.length === 0) {
-      
+
       const latest = await Product.find()
         .sort({ createdAt: -1 })
         .limit(5)
@@ -379,7 +379,7 @@ exports.getDashboardOverview = async (req, res) => {
 exports.getAllUsers = async (req, res) => {
   try {
     const { page = 1, limit = 10, search } = req.query;
-    
+
     // FIXED: Changed 'user' to 'customer'
     const query = { role: 'customer' };
     if (search) {
@@ -440,7 +440,7 @@ exports.getUserFeedback = async (req, res) => {
 
     // First, get reviews without populating product_id (since it's a string, not ObjectId)
     const reviews = await Review.find()
-      .populate('user_id', 'name email') 
+      .populate('user_id', 'name email')
       .sort({ createdAt: -1 })
       .limit(limit * 1)
       .skip((page - 1) * limit)
@@ -470,25 +470,25 @@ exports.getUserFeedback = async (req, res) => {
 
           return {
             ...review.toObject(),
-            product_id: product || { 
-              name: 'Product Not Found', 
-              product_id: review.product_id 
+            product_id: product || {
+              name: 'Product Not Found',
+              product_id: review.product_id
             }
           };
         } catch (err) {
           console.error(`Error processing review ${review._id}:`, err);
           return {
             ...review.toObject(),
-            product_id: { 
-              name: 'Error Loading Product', 
-              product_id: review.product_id 
+            product_id: {
+              name: 'Error Loading Product',
+              product_id: review.product_id
             }
           };
         }
       })
     );
 
-   // console.log('Reviews with products processed:', reviewsWithProducts.length);
+    // console.log('Reviews with products processed:', reviewsWithProducts.length);
 
     res.status(200).json({
       success: true,
@@ -513,7 +513,7 @@ exports.getUserFeedback = async (req, res) => {
 exports.getProductStats = async (req, res) => {
   try {
     const totalProducts = await Product.countDocuments();
-    
+
     // Low stock products (assuming piece < 10 is low stock)
     const lowStockProducts = await Product.find({ piece: { $lt: 10 } })
       .select('name piece category');
@@ -565,13 +565,13 @@ exports.getOrderManagementStats = async (req, res) => {
     const todayStart = new Date(today.getFullYear(), today.getMonth(), today.getDate());
 
     const totalOrders = await Order.countDocuments();
-    const todayOrders = await Order.countDocuments({ 
-      createdAt: { $gte: todayStart } 
+    const todayOrders = await Order.countDocuments({
+      createdAt: { $gte: todayStart }
     });
     const cancelledOrders = await Order.countDocuments({ status: 'cancelled' });
     const pendingOrders = await Order.countDocuments({ status: 'pending' });
 
-    // Recent orders with full details
+    // Recent orders with full details - WITH GUEST USER SUPPORT
     const recentOrdersDetails = await Order.find()
       .populate('userId', 'name email')
       .populate({
@@ -581,6 +581,31 @@ exports.getOrderManagementStats = async (req, res) => {
       .sort({ createdAt: -1 })
       .limit(10);
 
+    // Format orders with guest user info
+    const formattedOrders = recentOrdersDetails.map(order => {
+      const orderObj = order.toObject();
+
+      if (orderObj.isGuestOrder || !orderObj.userId) {
+        return {
+          ...orderObj,
+          customerInfo: {
+            name: `${orderObj.billingAddress?.firstName} ${orderObj.billingAddress?.lastName}`,
+            email: orderObj.contactInfo?.email,
+            isGuest: true
+          }
+        };
+      }
+
+      return {
+        ...orderObj,
+        customerInfo: {
+          name: orderObj.userId?.name || 'Unknown',
+          email: orderObj.userId?.email || orderObj.contactInfo?.email,
+          isGuest: false
+        }
+      };
+    });
+
     res.status(200).json({
       success: true,
       data: {
@@ -588,7 +613,7 @@ exports.getOrderManagementStats = async (req, res) => {
         todayOrders,
         cancelledOrders,
         pendingOrders,
-        recentOrdersDetails
+        recentOrdersDetails: formattedOrders
       }
     });
   } catch (error) {
@@ -664,10 +689,10 @@ exports.getPaymentStats = async (req, res) => {
 exports.getAnalyticsData = async (req, res) => {
   try {
     const { period = '30d' } = req.query;
-    
+
     let startDate = new Date();
     let groupBy;
-    
+
     switch (period) {
       case '7d':
         startDate.setDate(startDate.getDate() - 7);
@@ -784,24 +809,119 @@ exports.getNotifications = async (req, res) => {
     const today = new Date();
     today.setHours(0, 0, 0, 0);
 
-    // Recent orders (today)
+    // Recent orders (today) - WITH FIRST ORDER DISCOUNT BADGE
     const newOrders = await Order.find({
       createdAt: { $gte: today }
     }).populate('userId', 'name').limit(5);
 
-    // Recent payments
+    const formattedNewOrders = newOrders.map(order => {
+      let customerName = 'Unknown Customer';
+
+      if (order.isGuestOrder || !order.userId) {
+        customerName = `${order.billingAddress?.firstName} ${order.billingAddress?.lastName} (Guest)`;
+      } else if (order.userId) {
+        customerName = order.userId.name;
+      }
+
+      // Check if first order discount applied
+      const hasFirstOrderDiscount = order.orderSummary?.firstOrderDiscount &&
+        parseFloat(order.orderSummary.firstOrderDiscount) > 0;
+
+      const firstOrderBadge = hasFirstOrderDiscount ? ' [First Order - 2% OFF]' : '';
+
+      return {
+        type: 'new_order',
+        title: order.paymentMethod === 'cod' ? 'New COD Order' : 'New Order Received',
+        message: order.paymentMethod === 'cod'
+          ? `COD Order ${order.orderNumber} from ${customerName}${firstOrderBadge} - Payment Pending ($${parseFloat(order.orderSummary?.total || 0).toFixed(2)})`
+          : `Order ${order.orderNumber} from ${customerName}${firstOrderBadge} ($${parseFloat(order.orderSummary?.total || 0).toFixed(2)})`,
+        time: order.createdAt,
+        orderId: order._id,
+        isGuest: order.isGuestOrder || !order.userId,
+        paymentMethod: order.paymentMethod,
+        isFirstOrder: hasFirstOrderDiscount
+      };
+    });
+
+    // Recent payments - ONLY FOR PAID ORDERS with proper amount formatting
     const newPayments = await Payment.find({
-      createdAt: { $gte: today }
+      createdAt: { $gte: today },
+      paymentStatus: 'paid'
     }).populate({
       path: 'orderId',
       populate: { path: 'userId', select: 'name' }
     }).limit(5);
+
+    const formattedPayments = newPayments.map(payment => {
+      let customerName = 'Unknown Customer';
+
+      if (payment.isGuestOrder || !payment.userId) {
+        customerName = `${payment.customerInfo?.firstName} ${payment.customerInfo?.lastName} (Guest)`;
+      } else if (payment.orderId?.userId) {
+        customerName = payment.orderId.userId.name;
+      }
+
+      // Check if first order discount
+      const hasFirstOrderDiscount = payment.transactionDetails?.firstOrderDiscount &&
+        parseFloat(payment.transactionDetails.firstOrderDiscount) > 0;
+      const firstOrderBadge = hasFirstOrderDiscount ? ' [First Order]' : '';
+
+      const title = payment.paymentMethod === 'cod' ? 'COD Payment Received' : 'Payment Received';
+      const formattedAmount = parseFloat(payment.amount || 0).toFixed(2);
+      const message = payment.paymentMethod === 'cod'
+        ? `COD Payment of $${formattedAmount} received from ${customerName}${firstOrderBadge}`
+        : `Payment of $${formattedAmount} from ${customerName}${firstOrderBadge}`;
+
+      return {
+        type: 'payment',
+        title,
+        message,
+        time: payment.createdAt,
+        orderId: payment.orderId?._id,
+        isGuest: payment.isGuestOrder || !payment.userId,
+        paymentMethod: payment.paymentMethod,
+        isFirstOrder: hasFirstOrderDiscount
+      };
+    });
+
+    // NEW: Recent user registrations
+    const newUsers = await User.find({
+      createdAt: { $gte: today },
+      role: 'customer'
+    }).select('name email createdAt').limit(5);
+
+    const formattedNewUsers = newUsers.map(user => ({
+      type: 'new_user',
+      title: 'New User Registered',
+      message: `${user.name} (${user.email}) just registered`,
+      time: user.createdAt,
+      userId: user._id
+    }));
 
     // Recent cancellations
     const cancelledOrders = await Order.find({
       status: 'cancelled',
       cancelledAt: { $gte: today }
     }).populate('userId', 'name').limit(5);
+
+    const formattedCancellations = cancelledOrders.map(order => {
+      let customerName = 'Unknown Customer';
+
+      if (order.isGuestOrder || !order.userId) {
+        customerName = `${order.billingAddress?.firstName} ${order.billingAddress?.lastName} (Guest)`;
+      } else if (order.userId) {
+        customerName = order.userId.name;
+      }
+
+      return {
+        type: 'cancellation',
+        title: 'Order Cancelled',
+        message: `Order ${order.orderNumber} cancelled by ${customerName}`,
+        time: order.cancelledAt,
+        orderId: order._id,
+        isGuest: order.isGuestOrder || !order.userId
+      };
+    });
 
     // Recent refunds
     const newRefunds = await Refund.find({
@@ -811,47 +931,47 @@ exports.getNotifications = async (req, res) => {
       populate: { path: 'userId', select: 'name' }
     }).limit(5);
 
+    const formattedRefunds = newRefunds.map(refund => {
+      let customerName = 'Unknown Customer';
+
+      if (refund.isGuestOrder || !refund.userId) {
+        customerName = `${refund.customerInfo?.firstName} ${refund.customerInfo?.lastName} (Guest)`;
+      } else if (refund.orderId?.userId) {
+        customerName = refund.orderId.userId.name;
+      }
+
+      const formattedAmount = parseFloat(refund.refundAmount || 0).toFixed(2);
+
+      return {
+        type: 'refund',
+        title: 'Refund Initiated',
+        message: `Refund of $${formattedAmount} for order ${refund.orderNumber}`,
+        time: refund.createdAt,
+        orderId: refund.orderId,
+        isGuest: refund.isGuestOrder || !refund.userId
+      };
+    });
+
     // Low stock alerts
     const lowStockProducts = await Product.find({
       piece: { $lt: 10 }
     }).select('name piece').limit(5);
 
+    const lowStockNotifications = lowStockProducts.map(product => ({
+      type: 'low_stock',
+      title: 'Low Stock Alert',
+      message: `${product.name} - Only ${product.piece} left`,
+      time: new Date(),
+      productId: product._id
+    }));
+
     const notifications = [
-      ...newOrders.map(order => ({
-        type: 'new_order',
-        title: 'New Order Received',
-        message: `Order ${order.orderNumber} from ${order.userId?.name}`,
-        time: order.createdAt,
-        orderId: order._id
-      })),
-      ...newPayments.map(payment => ({
-        type: 'payment',
-        title: 'Payment Received',
-        message: `Payment of $${payment.amount} from ${payment.orderId?.userId?.name}`,
-        time: payment.createdAt,
-        orderId: payment.orderId?._id
-      })),
-      ...cancelledOrders.map(order => ({
-        type: 'cancellation',
-        title: 'Order Cancelled',
-        message: `Order ${order.orderNumber} cancelled by ${order.userId?.name}`,
-        time: order.cancelledAt,
-        orderId: order._id
-      })),
-      ...newRefunds.map(refund => ({
-        type: 'refund',
-        title: 'Refund Initiated',
-        message: `Refund of $${refund.refundAmount} for order ${refund.orderNumber}`,
-        time: refund.createdAt,
-        orderId: refund.orderId
-      })),
-      ...lowStockProducts.map(product => ({
-        type: 'low_stock',
-        title: 'Low Stock Alert',
-        message: `${product.name} - Only ${product.piece} left`,
-        time: new Date(),
-        productId: product._id
-      }))
+      ...formattedNewOrders,
+      ...formattedPayments,
+      ...formattedNewUsers,
+      ...formattedCancellations,
+      ...formattedRefunds,
+      ...lowStockNotifications
     ];
 
     // Sort by time (newest first)
@@ -859,7 +979,7 @@ exports.getNotifications = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: notifications.slice(0, 20) // Limit to 20 notifications
+      data: notifications.slice(0, 20)
     });
   } catch (error) {
     console.error('Notifications error:', error);
@@ -893,6 +1013,71 @@ exports.getAdminProfile = async (req, res) => {
   }
 };
 
+// Update Admin Profile
+exports.updateAdminProfile = async (req, res) => {
+  try {
+    const { name, phone, address } = req.body;
+    const userId = req.user.userId;
+
+    // console.log('Updating admin profile for user:', userId);
+    // console.log('Update data received:', { name, phone, address });
+
+    // IMPORTANT: Include profileImageBase64 field in query
+    const admin = await User.findById(userId).select('+profileImageBase64');
+    if (!admin) {
+      return res.status(404).json({
+        success: false,
+        message: 'Admin not found'
+      });
+    }
+
+    // Update only text fields
+    if (name) admin.name = name;
+    if (phone) admin.phone = phone;
+    if (address) admin.address = { ...admin.address, ...address };
+
+    await admin.save();
+
+    console.log('Admin profile updated successfully');
+
+    // Return full user data with profile image
+    const updatedAdmin = {
+      id: admin._id,
+      name: admin.name,
+      email: admin.email,
+      phone: admin.phone,
+      countryCode: admin.countryCode,
+      fullPhoneNumber: admin.fullPhoneNumber,
+      address: admin.address,
+      role: admin.role,
+      lastLogin: admin.lastLogin,
+      authProvider: admin.authProvider,
+      profileImage: admin.displayImage,
+      picture: admin.picture,
+      googleProfileImage: admin.googleProfileImage,
+      profileImageInfo: admin.profileImageInfo,
+      emailVerified: admin.emailVerified,
+      phoneVerified: admin.phoneVerified,
+      createdAt: admin.createdAt,
+      updatedAt: admin.updatedAt
+    };
+
+    res.status(200).json({
+      success: true,
+      message: 'Admin profile updated successfully',
+      data: updatedAdmin
+    });
+  } catch (error) {
+    console.error('Update admin profile error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Error updating admin profile',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
+  }
+};
+
+
 // Configure multer for file uploads
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -904,7 +1089,7 @@ const storage = multer.diskStorage({
   }
 });
 
-const upload = multer({ 
+const upload = multer({
   storage: storage,
   limits: {
     fileSize: 5 * 1024 * 1024 // 5MB limit
@@ -1016,7 +1201,7 @@ exports.deleteProduct = async (req, res) => {
     const { productId } = req.params;
 
     const deletedProduct = await Product.findOneAndDelete({ product_id: productId });
-    
+
     if (!deletedProduct) {
       return res.status(404).json({
         success: false,
@@ -1044,12 +1229,12 @@ exports.deleteProduct = async (req, res) => {
 exports.bulkImportProducts = async (req, res) => {
   try {
     const { products } = req.body;
-    
-    
+
+
     if (!products || !Array.isArray(products) || products.length === 0) {
-      return res.status(400).json({ 
-        success: false, 
-        message: 'No products provided for import' 
+      return res.status(400).json({
+        success: false,
+        message: 'No products provided for import'
       });
     }
 
@@ -1059,14 +1244,14 @@ exports.bulkImportProducts = async (req, res) => {
 
     for (let i = 0; i < products.length; i++) {
       const productData = products[i];
-      
+
       try {
         // Validate required fields
         if (!productData.name || !productData.price || !productData.piece) {
-          skipped.push({ 
-            row: i + 1, 
+          skipped.push({
+            row: i + 1,
             reason: 'Missing required fields (name, price, piece)',
-            data: productData 
+            data: productData
           });
           continue;
         }
@@ -1115,7 +1300,7 @@ exports.bulkImportProducts = async (req, res) => {
     }
 
     // Return results
-    
+
     const response = {
       success: true,
       message: `Import completed. ${importResults.length} products imported successfully.`,
@@ -1157,7 +1342,7 @@ exports.getAllProducts = async (req, res) => {
 
     // Build query
     const query = {};
-    
+
     if (category) query.category = category;
     if (brand) query.brand = brand;
     if (search) {
@@ -1207,7 +1392,7 @@ exports.getAllProducts = async (req, res) => {
 exports.exportProducts = async (req, res) => {
   try {
     const { format = 'csv' } = req.query;
-    
+
     const products = await Product.find()
       .select('-_id -__v -createdAt -updatedAt')
       .lean();
@@ -1227,8 +1412,8 @@ exports.exportProducts = async (req, res) => {
     }
 
     const headers = Object.keys(products[0]).join(',');
-    const csvData = products.map(product => 
-      Object.values(product).map(value => 
+    const csvData = products.map(product =>
+      Object.values(product).map(value =>
         `"${String(value).replace(/"/g, '""')}"`
       ).join(',')
     ).join('\n');
@@ -1301,7 +1486,7 @@ exports.updateProduct = async (req, res) => {
 exports.downloadOrderPDF = async (req, res) => {
   try {
     const { orderId, type } = req.params;
-    
+
     // Find the order
     const order = await Order.findById(orderId);
     if (!order) {
@@ -1333,5 +1518,51 @@ exports.downloadOrderPDF = async (req, res) => {
   } catch (error) {
     console.error('Error downloading order PDF:', error);
     res.status(500).json({ message: 'Error generating PDF', error: error.message });
+  }
+};
+
+exports.getOrderDetails = async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    const order = await Order.findById(orderId)
+      .populate('userId', 'name email')
+      .populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
+
+    if (!order) {
+      return res.status(404).json({
+        success: false,
+        message: 'Order not found'
+      });
+    }
+
+    // Format with guest user support
+    const orderObj = order.toObject();
+    const formattedOrder = {
+      ...orderObj,
+      customerInfo: orderObj.isGuestOrder || !orderObj.userId ? {
+        name: `${orderObj.billingAddress?.firstName} ${orderObj.billingAddress?.lastName}`,
+        email: orderObj.contactInfo?.email,
+        isGuest: true
+      } : {
+        name: orderObj.userId?.name,
+        email: orderObj.userId?.email,
+        isGuest: false
+      }
+    };
+
+    res.status(200).json({
+      success: true,
+      data: formattedOrder
+    });
+  } catch (error) {
+    console.error('Error getting order details:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error'
+    });
   }
 };

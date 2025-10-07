@@ -52,6 +52,7 @@ router.get('/products/export',
 
 // Order Management  
 router.get('/orders/stats', adminController.getOrderManagementStats);
+router.get('/orders/:orderId', adminController.getOrderDetails);
 
 // Invoice PDF routes
 router.get('/orders/:orderId/pdf/:type', adminController.downloadOrderPDF);
@@ -67,5 +68,6 @@ router.get('/notifications', adminController.getNotifications);
 
 // Admin Profile
 router.get('/profile', adminController.getAdminProfile);
+router.put('/profile', adminController.updateAdminProfile);
 
 module.exports = router;

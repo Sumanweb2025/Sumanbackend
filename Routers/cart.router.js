@@ -8,27 +8,15 @@ const {
   clearCart,
   getCartCount
 } = require('../Controllers/cart.controller');
-const  authMiddleware  = require('../Middleware/auth.middleware'); // Assuming you have auth middleware
+const authMiddleware = require('../Middleware/auth.middleware');
+const { optionalAuth } = require('../Middleware/auth.middleware');
 
-// All routes require authentication
-router.use(authMiddleware);
-
-// GET /api/cart - Get user's cart
-router.get('/', getCart);
-
-// GET /api/cart/count - Get cart items count
-router.get('/count', getCartCount);
-
-// POST /api/cart - Add product to cart
-router.post('/', addToCart);
-
-// PUT /api/cart/:productId - Update cart item quantity
-router.put('/:productId', updateCartItem);
-
-// DELETE /api/cart/:productId - Remove specific product from cart
-router.delete('/:productId', removeFromCart);
-
-// DELETE /api/cart - Clear entire cart
-router.delete('/', clearCart);
+// Routes that support both guest and logged-in users (use optionalAuth)
+router.get('/', optionalAuth, getCart);
+router.get('/count', optionalAuth, getCartCount);
+router.post('/', optionalAuth, addToCart);
+router.put('/:productId', optionalAuth, updateCartItem);
+router.delete('/:productId', optionalAuth, removeFromCart);
+router.delete('/', optionalAuth, clearCart);
 
 module.exports = router;

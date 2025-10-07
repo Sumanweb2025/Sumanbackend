@@ -22,14 +22,28 @@ const userSchema = new mongoose.Schema({
     type: String,
     minlength: [6, 'Password must be at least 6 characters'],
     select: false,
-    required: function() {
+    required: function () {
       return this.authProvider === 'local';
     }
   },
   phone: {
     type: String,
     trim: true,
-    match: [/^\d{10}$/, 'Please enter a valid 10-digit phone number']
+    match: [/^\d{10,15}$/, 'Please enter a valid phone number']
+  },
+  countryCode: {
+    type: String,
+    trim: true,
+    default: '+1' // Default country code
+  },
+  fullPhoneNumber: {
+    type: String,
+    trim: true,
+    // This will store the complete number with country code for display
+  },
+  phoneVerified: {
+    type: Boolean,
+    default: false
   },
   address: {
     street: { type: String, trim: true },
@@ -75,46 +89,39 @@ const userSchema = new mongoose.Schema({
     enum: ['local', 'google'],
     default: 'local'
   },
-  
-  // ========== DATABASE-ONLY IMAGE STORAGE FIELDS ==========
   profileImageBase64: {
     type: String, // Store base64 encoded image data
     maxlength: 16 * 1024 * 1024, // ~16MB limit for base64 string
     select: false // Don't include by default (large field)
   },
   profileImageType: {
-    type: String, // Store image MIME type
+    type: String, 
     enum: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
   },
   profileImageSize: {
-    type: Number, // Store original file size in bytes
+    type: Number, 
     max: [5 * 1024 * 1024, 'Image size cannot exceed 5MB']
   },
   profileImageUploadDate: {
-    type: Date, // When the image was uploaded
+    type: Date, 
     default: Date.now
   },
-  // ========================================================
-  
-  // Legacy Profile Image fields (for backward compatibility)
   profileImage: {
-    type: String, // URL to custom uploaded profile image (legacy)
+    type: String, 
     trim: true
   },
   picture: {
-    type: String, // Google profile picture URL (current)
+    type: String, 
     trim: true
   },
   googleProfileImage: {
-    type: String, // Backup Google profile image URL
+    type: String, 
     trim: true
   },
-  
-  // Additional fields for better user management
   emailVerified: {
     type: Boolean,
-    default: function() {
-      return this.authProvider === 'google'; // Google users are pre-verified
+    default: function () {
+      return this.authProvider === 'google'; 
     }
   },
   emailVerificationToken: {
@@ -140,16 +147,16 @@ const userSchema = new mongoose.Schema({
 });
 
 // Virtual field for getting the best available profile image
-userSchema.virtual('displayImage').get(function() {
+userSchema.virtual('displayImage').get(function () {
   // Priority: Database stored image > Google current picture > Google backup image > Legacy profileImage
   if (this.profileImageBase64) {
-    return this.profileImageBase64; // This is a data URL (data:image/jpeg;base64,...)
+    return this.profileImageBase64; 
   }
   return this.picture || this.googleProfileImage || this.profileImage || null;
 });
 
 // Virtual field for full profile image URL (if using relative paths)
-userSchema.virtual('fullProfileImageUrl').get(function() {
+userSchema.virtual('fullProfileImageUrl').get(function () {
   if (this.profileImage && !this.profileImage.startsWith('http') && !this.profileImage.startsWith('data:')) {
     return `${process.env.BASE_URL || 'http://localhost:8000'}${this.profileImage}`;
   }
@@ -157,7 +164,7 @@ userSchema.virtual('fullProfileImageUrl').get(function() {
 });
 
 // Virtual field for profile image info (useful for debugging)
-userSchema.virtual('profileImageInfo').get(function() {
+userSchema.virtual('profileImageInfo').get(function () {
   return {
     hasBase64Image: !!this.profileImageBase64,
     hasGoogleImage: !!(this.picture || this.googleProfileImage),
@@ -173,12 +180,12 @@ userSchema.index({ email: 1 });
 userSchema.index({ googleId: 1 });
 userSchema.index({ authProvider: 1 });
 userSchema.index({ isActive: 1 });
-userSchema.index({ profileImageUploadDate: -1 }); // For finding recent uploads
+userSchema.index({ profileImageUploadDate: -1 }); 
 
 // Hash password before saving (only for local auth)
-userSchema.pre('save', async function(next) {
+userSchema.pre('save', async function (next) {
   if (!this.isModified('password') || this.authProvider !== 'local') return next();
-  
+
   try {
     const salt = await bcrypt.genSalt(12);
     this.password = await bcrypt.hash(this.password, salt);
@@ -188,8 +195,18 @@ userSchema.pre('save', async function(next) {
   }
 });
 
+// Add a pre-save hook to construct fullPhoneNumber
+userSchema.pre('save', function(next) {
+  if (this.isModified('phone') || this.isModified('countryCode')) {
+    if (this.phone && this.countryCode) {
+      this.fullPhoneNumber = `${this.countryCode}${this.phone}`;
+    }
+  }
+  next();
+});
+
 // Compare password method (only for local auth)
-userSchema.methods.comparePassword = async function(candidatePassword) {
+userSchema.methods.comparePassword = async function (candidatePassword) {
   if (this.authProvider !== 'local') {
     return false;
   }
@@ -197,7 +214,7 @@ userSchema.methods.comparePassword = async function(candidatePassword) {
 };
 
 // Method to get safe user data for API responses
-userSchema.methods.getSafeUserData = function() {
+userSchema.methods.getSafeUserData = function () {
   return {
     id: this._id,
     name: this.name,
@@ -208,12 +225,12 @@ userSchema.methods.getSafeUserData = function() {
     isActive: this.isActive,
     lastLogin: this.lastLogin,
     authProvider: this.authProvider,
-    profileImage: this.displayImage, // Use virtual field
+    profileImage: this.displayImage, 
     picture: this.picture,
     googleProfileImage: this.googleProfileImage,
     displayImage: this.displayImage,
     fullProfileImageUrl: this.fullProfileImageUrl,
-    profileImageInfo: this.profileImageInfo, // Include image info
+    profileImageInfo: this.profileImageInfo, 
     emailVerified: this.emailVerified,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
@@ -223,50 +240,50 @@ userSchema.methods.getSafeUserData = function() {
 };
 
 // Method to update Google profile information
-userSchema.methods.updateGoogleInfo = function(googleData) {
+userSchema.methods.updateGoogleInfo = function (googleData) {
   const { sub: googleId, name, email, picture } = googleData;
-  
+
   if (googleId) this.googleId = googleId;
-  if (name && !this.name) this.name = name; // Only update if current name is empty
-  if (email && !this.email) this.email = email; // Only update if current email is empty
+  if (name && !this.name) this.name = name; 
+  if (email && !this.email) this.email = email; 
   if (picture) {
     this.picture = picture;
-    this.googleProfileImage = picture; // Keep backup
+    this.googleProfileImage = picture; 
   }
-  
+
   this.lastLogin = new Date();
-  this.emailVerified = true; // Google users are verified
+  this.emailVerified = true; 
 };
 
 // Method to update profile image in database
-userSchema.methods.updateProfileImageBase64 = function(imageBuffer, mimeType, originalSize) {
+userSchema.methods.updateProfileImageBase64 = function (imageBuffer, mimeType, originalSize) {
   // Convert buffer to base64 data URL
   const base64String = imageBuffer.toString('base64');
   const dataURL = `data:${mimeType};base64,${base64String}`;
-  
+
   this.profileImageBase64 = dataURL;
   this.profileImageType = mimeType;
   this.profileImageSize = originalSize;
   this.profileImageUploadDate = new Date();
-  
+
   // Clear legacy fields when new image is uploaded
   this.profileImage = null;
-  
+
   console.log(`Profile image updated - Type: ${mimeType}, Size: ${originalSize} bytes`);
 };
 
 // Method to remove profile image from database
-userSchema.methods.removeProfileImage = function() {
+userSchema.methods.removeProfileImage = function () {
   this.profileImageBase64 = undefined;
   this.profileImageType = undefined;
   this.profileImageSize = undefined;
   this.profileImageUploadDate = undefined;
-  
+
   console.log('Profile image removed from database');
 };
 
 // Static method to find user by email or Google ID
-userSchema.statics.findByEmailOrGoogleId = function(email, googleId) {
+userSchema.statics.findByEmailOrGoogleId = function (email, googleId) {
   const query = {};
   if (email && googleId) {
     query.$or = [{ email: email }, { googleId: googleId }];
@@ -275,24 +292,24 @@ userSchema.statics.findByEmailOrGoogleId = function(email, googleId) {
   } else if (googleId) {
     query.googleId = googleId;
   }
-  
+
   return this.findOne(query);
 };
 
 // Static method to get active users only
-userSchema.statics.findActive = function(conditions = {}) {
+userSchema.statics.findActive = function (conditions = {}) {
   return this.find({ ...conditions, isActive: true });
 };
 
 // Static method to find user with profile image included
-userSchema.statics.findByIdWithProfileImage = function(userId) {
+userSchema.statics.findByIdWithProfileImage = function (userId) {
   return this.findById(userId).select('+profileImageBase64');
 };
 
 // Remove sensitive data from JSON output
-userSchema.methods.toJSON = function() {
+userSchema.methods.toJSON = function () {
   const user = this.toObject({ virtuals: true });
-  
+
   // Remove sensitive fields
   delete user.password;
   delete user.googleId; // Don't expose googleId in API responses
@@ -301,12 +318,12 @@ userSchema.methods.toJSON = function() {
   delete user.passwordResetToken;
   delete user.passwordResetExpires;
   // Note: profileImageBase64 is already excluded by select: false
-  
+
   return user;
 };
 
 // Pre-remove middleware to clean up related data
-userSchema.pre('remove', async function(next) {
+userSchema.pre('remove', async function (next) {
   try {
     // Here you can add cleanup logic for related data
     // For example, remove user's orders, reviews, etc.

@@ -6,6 +6,8 @@ const  connectDatabase  = require('./DB_Connection/db_connection');
 const PORT = process.env.PORT || 8000
 const Approuter = require('./Routers/router')
 const path = require('path');
+const { cleanupExpiredGuestData } = require('./Utils/guestMigration');
+const cron = require('node-cron');
 
 
 //Initialize the app
@@ -13,6 +15,21 @@ const app = express()
 app.use(cors());
 app.use(bodyparser.json());
 
+app.use(express.json({ limit: '50mb' }));
+app.use(express.urlencoded({ limit: '50mb', extended: true }));
+
+// Run cleanup every day at 2 AM
+cron.schedule('0 2 * * *', async () => {
+  console.log('Running guest data cleanup job...');
+  try {
+    const result = await cleanupExpiredGuestData();
+    console.log('Cleanup completed:', result);
+  } catch (error) {
+    console.error('Cleanup job failed:', error);
+  }
+});
+
+console.log('Guest data cleanup cron job scheduled (daily at 2 AM)');
 
 
 app.get('/' , (req,res)=>{
@@ -43,4 +60,6 @@ async function startServer() {
   
   // Call the async function to start the server
   startServer();
+
+
 

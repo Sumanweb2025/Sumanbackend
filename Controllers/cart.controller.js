@@ -2,6 +2,13 @@ const Cart = require('../Models/cart.model');
 const Product = require('../Models/product.model');
 const User = require('../Models/user.model');
 const mongoose = require('mongoose');
+const { v4: uuidv4 } = require('uuid');
+
+// Helper function to get or create session ID
+const getSessionId = (req) => {
+  // Check for session ID in header or generate new one
+  return req.header('X-Session-ID') || req.body.sessionId || uuidv4();
+};
 
 // Helper function to validate ObjectId
 const isValidObjectId = (id) => {
@@ -46,43 +53,53 @@ const calculateCartTotals = (cart) => {
   };
 };
 
-// Get user's cart
+// Get cart (supports both guest and logged-in users)
 const getCart = async (req, res) => {
   try {
-    const userId = req.user?.id || req.user?._id || req.userId;
+    const { isGuest, userId } = req.user;
+    let cart;
 
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated'
-      });
+    if (isGuest) {
+      // Guest user - use session ID
+      const sessionId = getSessionId(req);
+      cart = await Cart.findOne({ sessionId, isGuest: true })
+        .populate({
+          path: 'items.productId',
+          select: 'product_id name brand category price description gram piece rating review_count image'
+        });
+
+      // Return session ID for frontend to store
+      if (cart) {
+        res.set('X-Session-ID', sessionId);
+      }
+    } else {
+      // Logged-in user
+      cart = await Cart.findOne({ userId })
+        .populate({
+          path: 'items.productId',
+          select: 'product_id name brand category price description gram piece rating review_count image'
+        });
     }
-
-    const cart = await Cart.findOne({ userId })
-      .populate({
-        path: 'items.productId',
-        select: 'product_id name brand category price description gram piece rating review_count image'
-      });
 
     if (!cart) {
       return res.status(200).json({
         success: true,
-        data: { items: [], totalAmount: 0 },
+        data: { 
+          items: [], 
+          totalAmount: 0,
+          sessionId: isGuest ? getSessionId(req) : null
+        },
         message: 'Cart is empty'
       });
     }
 
-    // Filter out items where product is null (deleted products)
     const validItems = cart.items.filter(item => item.productId !== null);
 
-    // If we filtered out items, update the cart
     if (validItems.length !== cart.items.length) {
       cart.items = validItems;
       await cart.save();
-      console.log(`Removed ${cart.items.length - validItems.length} invalid items from cart`);
     }
 
-    // Add imageUrl to each product and ensure price is a number
     const cartWithImageUrls = {
       ...cart.toObject(),
       items: validItems.map(item => ({
@@ -92,12 +109,14 @@ const getCart = async (req, res) => {
       }))
     };
 
-    // Calculate and add total amount
     const cartWithTotals = calculateCartTotals(cartWithImageUrls);
 
     res.status(200).json({
       success: true,
-      data: cartWithTotals,
+      data: {
+        ...cartWithTotals,
+        sessionId: isGuest ? cart.sessionId : null
+      },
       message: 'Cart retrieved successfully'
     });
   } catch (error) {
@@ -113,18 +132,9 @@ const getCart = async (req, res) => {
 // Add product to cart
 const addToCart = async (req, res) => {
   try {
-    const userId = req.user?.id || req.user?._id || req.userId;
+    const { isGuest, userId } = req.user;
     const { productId, quantity = 1 } = req.body;
 
-
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated or user ID not found'
-      });
-    }
-
-    // Validate productId format
     if (!productId) {
       return res.status(400).json({
         success: false,
@@ -132,7 +142,6 @@ const addToCart = async (req, res) => {
       });
     }
 
-    // Ensure quantity is a valid number
     const validQuantity = parseInt(quantity) || 1;
     if (validQuantity < 1) {
       return res.status(400).json({
@@ -142,12 +151,9 @@ const addToCart = async (req, res) => {
     }
 
     let product;
-
-    // Check if productId is a valid ObjectId, if not search by custom field
     if (isValidObjectId(productId)) {
       product = await Product.findById(productId);
     } else {
-      // Search by your custom product_id field
       product = await Product.findOne({ product_id: productId });
     }
 
@@ -158,51 +164,79 @@ const addToCart = async (req, res) => {
       });
     }
 
-    // Use the actual MongoDB _id for cart operations
     const actualProductId = product._id;
+    let cart;
 
-    let cart = await Cart.findOne({ userId });
+    if (isGuest) {
+      // Guest user logic
+      const sessionId = getSessionId(req);
+      
+      cart = await Cart.findOne({ sessionId, isGuest: true });
 
-    if (!cart) {
-      // Create new cart
-      cart = new Cart({
-        userId,
-        items: [{ productId: actualProductId, quantity: validQuantity }]
-      });
+      if (!cart) {
+        cart = new Cart({
+          sessionId,
+          isGuest: true,
+          items: [{ productId: actualProductId, quantity: validQuantity }]
+        });
+      } else {
+        const existingItemIndex = cart.items.findIndex(
+          item => item.productId.toString() === actualProductId.toString()
+        );
+
+        if (existingItemIndex > -1) {
+          cart.items[existingItemIndex].quantity += validQuantity;
+        } else {
+          cart.items.push({ productId: actualProductId, quantity: validQuantity });
+        }
+      }
+
+      await cart.save();
+      res.set('X-Session-ID', sessionId); // Send session ID back
+
     } else {
-      // Check if product already in cart
-      const existingItemIndex = cart.items.findIndex(
-        item => item.productId.toString() === actualProductId.toString()
+      // Logged-in user logic
+      cart = await Cart.findOne({ userId });
+
+      if (!cart) {
+        cart = new Cart({
+          userId,
+          isGuest: false,
+          items: [{ productId: actualProductId, quantity: validQuantity }]
+        });
+      } else {
+        const existingItemIndex = cart.items.findIndex(
+          item => item.productId.toString() === actualProductId.toString()
+        );
+
+        if (existingItemIndex > -1) {
+          cart.items[existingItemIndex].quantity += validQuantity;
+        } else {
+          cart.items.push({ productId: actualProductId, quantity: validQuantity });
+        }
+      }
+
+      await cart.save();
+
+      // Update user's cart array
+      const user = await User.findById(userId);
+      const existingCartItem = user.cart.find(
+        (item) => item.product.toString() === actualProductId.toString()
       );
 
-      if (existingItemIndex > -1) {
-        // Update quantity
-        cart.items[existingItemIndex].quantity = parseInt(cart.items[existingItemIndex].quantity) + validQuantity;
+      if (existingCartItem) {
+        existingCartItem.quantity += validQuantity;
       } else {
-        // Add new item
-        cart.items.push({ productId: actualProductId, quantity: validQuantity });
+        user.cart.push({ product: actualProductId, quantity: validQuantity });
       }
+      await user.save();
     }
 
-    await cart.save();
-
-    const user = await User.findById(userId);
-    const existingCartItem = user.cart.find(
-      (item) => item.product.toString() === actualProductId.toString()
-    );
-
-    if (existingCartItem) {
-      existingCartItem.quantity += validQuantity;
-    } else {
-      user.cart.push({ product: actualProductId, quantity: validQuantity });
-    }
-    await user.save();
     await cart.populate({
       path: 'items.productId',
       select: 'product_id name brand category price description gram piece rating review_count image'
     });
 
-    // Add imageUrl to each product in the response and ensure proper data types
     const cartWithImageUrls = {
       ...cart.toObject(),
       items: cart.items.map(item => ({
@@ -212,12 +246,14 @@ const addToCart = async (req, res) => {
       }))
     };
 
-    // Calculate and add total amount
     const cartWithTotals = calculateCartTotals(cartWithImageUrls);
 
     res.status(200).json({
       success: true,
-      data: cartWithTotals,
+      data: {
+        ...cartWithTotals,
+        sessionId: isGuest ? cart.sessionId : null
+      },
       message: 'Product added to cart successfully'
     });
   } catch (error) {
@@ -233,16 +269,9 @@ const addToCart = async (req, res) => {
 // Update cart item quantity
 const updateCartItem = async (req, res) => {
   try {
-    const userId = req.user?.id || req.user?._id || req.userId;
+    const { isGuest, userId } = req.user;
     const { productId } = req.params;
     const { quantity } = req.body;
-
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated'
-      });
-    }
 
     const validQuantity = parseInt(quantity) || 1;
     if (validQuantity < 1) {
@@ -252,7 +281,14 @@ const updateCartItem = async (req, res) => {
       });
     }
 
-    const cart = await Cart.findOne({ userId });
+    let cart;
+    
+    if (isGuest) {
+      const sessionId = getSessionId(req);
+      cart = await Cart.findOne({ sessionId, isGuest: true });
+    } else {
+      cart = await Cart.findOne({ userId });
+    }
 
     if (!cart) {
       return res.status(404).json({
@@ -262,21 +298,16 @@ const updateCartItem = async (req, res) => {
     }
 
     let actualProductId;
-
-    // Handle both ObjectId and custom ID formats
     if (isValidObjectId(productId)) {
       actualProductId = productId;
     } else {
-      // Find the product first to get its ObjectId
       const product = await Product.findOne({ product_id: productId });
-
       if (!product) {
         return res.status(404).json({
           success: false,
           message: 'Product not found'
         });
       }
-
       actualProductId = product._id.toString();
     }
 
@@ -294,19 +325,21 @@ const updateCartItem = async (req, res) => {
     cart.items[itemIndex].quantity = validQuantity;
     await cart.save();
 
-    await User.updateOne(
-      { _id: userId, "cart.product": actualProductId },
-      { $set: { "cart.$.quantity": validQuantity } }
-    );
+    // Update user cart if logged in
+    if (!isGuest) {
+      await User.updateOne(
+        { _id: userId, "cart.product": actualProductId },
+        { $set: { "cart.$.quantity": validQuantity } }
+      );
+    }
+
     await cart.populate({
       path: 'items.productId',
       select: 'product_id name brand category price description gram piece rating review_count image'
     });
 
-    // Filter out null products after populate
     cart.items = cart.items.filter(item => item.productId !== null);
 
-    // Add imageUrl to each product in the response and ensure proper data types
     const cartWithImageUrls = {
       ...cart.toObject(),
       items: cart.items.map(item => ({
@@ -316,12 +349,14 @@ const updateCartItem = async (req, res) => {
       }))
     };
 
-    // Calculate and add total amount
     const cartWithTotals = calculateCartTotals(cartWithImageUrls);
 
     res.status(200).json({
       success: true,
-      data: cartWithTotals,
+      data: {
+        ...cartWithTotals,
+        sessionId: isGuest ? cart.sessionId : null
+      },
       message: 'Cart updated successfully'
     });
   } catch (error) {
@@ -334,20 +369,21 @@ const updateCartItem = async (req, res) => {
   }
 };
 
-// Remove product from cart
+// Remove from cart, clear cart - இதே pattern-ல implement பண்ணுங்க
+
 const removeFromCart = async (req, res) => {
   try {
-    const userId = req.user?.id || req.user?._id || req.userId;
+    const { isGuest, userId } = req.user;
     const { productId } = req.params;
 
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated'
-      });
+    let cart;
+    
+    if (isGuest) {
+      const sessionId = getSessionId(req);
+      cart = await Cart.findOne({ sessionId, isGuest: true });
+    } else {
+      cart = await Cart.findOne({ userId });
     }
-
-    const cart = await Cart.findOne({ userId });
 
     if (!cart) {
       return res.status(404).json({
@@ -357,21 +393,16 @@ const removeFromCart = async (req, res) => {
     }
 
     let actualProductId;
-
-    // Handle both ObjectId and custom ID formats
     if (isValidObjectId(productId)) {
       actualProductId = productId;
     } else {
-      // Find the product first to get its ObjectId
       const product = await Product.findOne({ product_id: productId });
-
       if (!product) {
         return res.status(404).json({
           success: false,
           message: 'Product not found'
         });
       }
-
       actualProductId = product._id.toString();
     }
 
@@ -381,20 +412,21 @@ const removeFromCart = async (req, res) => {
 
     await cart.save();
 
-    await User.findByIdAndUpdate(
-      userId,
-      { $pull: { cart: { product: actualProductId } } },
-      { new: true }
-    );
+    if (!isGuest) {
+      await User.findByIdAndUpdate(
+        userId,
+        { $pull: { cart: { product: actualProductId } } },
+        { new: true }
+      );
+    }
+
     await cart.populate({
       path: 'items.productId',
       select: 'product_id name brand category price description gram piece rating review_count image'
     });
 
-    // Filter out null products after populate
     cart.items = cart.items.filter(item => item.productId !== null);
 
-    // Add imageUrl to each product in the response and ensure proper data types
     const cartWithImageUrls = {
       ...cart.toObject(),
       items: cart.items.map(item => ({
@@ -404,12 +436,14 @@ const removeFromCart = async (req, res) => {
       }))
     };
 
-    // Calculate and add total amount
     const cartWithTotals = calculateCartTotals(cartWithImageUrls);
 
     res.status(200).json({
       success: true,
-      data: cartWithTotals,
+      data: {
+        ...cartWithTotals,
+        sessionId: isGuest ? cart.sessionId : null
+      },
       message: 'Product removed from cart successfully'
     });
   } catch (error) {
@@ -422,33 +456,38 @@ const removeFromCart = async (req, res) => {
   }
 };
 
-// Clear entire cart
 const clearCart = async (req, res) => {
   try {
-    const userId = req.user?.id || req.user?._id || req.userId;
+    const { isGuest, userId } = req.user;
 
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated'
-      });
+    if (isGuest) {
+      const sessionId = getSessionId(req);
+      await Cart.findOneAndUpdate(
+        { sessionId, isGuest: true },
+        { items: [], totalAmount: 0 },
+        { new: true }
+      );
+    } else {
+      await Cart.findOneAndUpdate(
+        { userId },
+        { items: [], totalAmount: 0 },
+        { new: true }
+      );
+
+      await User.findByIdAndUpdate(
+        userId,
+        { $set: { cart: [] } },
+        { new: true }
+      );
     }
-
-    await Cart.findOneAndUpdate(
-      { userId },
-      { items: [], totalAmount: 0 },
-      { new: true }
-    );
-
-    await User.findByIdAndUpdate(
-      userId,
-      { $set: { cart: [] } },
-      { new: true }
-    );
 
     res.status(200).json({
       success: true,
-      data: { items: [], totalAmount: 0 },
+      data: { 
+        items: [], 
+        totalAmount: 0,
+        sessionId: isGuest ? getSessionId(req) : null
+      },
       message: 'Cart cleared successfully'
     });
   } catch (error) {
@@ -464,16 +503,16 @@ const clearCart = async (req, res) => {
 // Get cart count
 const getCartCount = async (req, res) => {
   try {
-    const userId = req.user?.id || req.user?._id || req.userId;
+    const { isGuest, userId } = req.user;
+    let cart;
 
-    if (!userId) {
-      return res.status(401).json({
-        success: false,
-        message: 'User not authenticated'
-      });
+    if (isGuest) {
+      const sessionId = getSessionId(req);
+      cart = await Cart.findOne({ sessionId, isGuest: true });
+    } else {
+      cart = await Cart.findOne({ userId });
     }
 
-    const cart = await Cart.findOne({ userId });
     const count = cart ? cart.items.reduce((total, item) => total + (parseInt(item.quantity) || 0), 0) : 0;
 
     res.status(200).json({

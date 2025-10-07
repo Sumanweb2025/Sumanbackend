@@ -9,17 +9,26 @@ const paymentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: true
+    required: false, // Changed: Allow null for guest orders
+    sparse: true
+  },
+  sessionId: {
+    type: String,
+    sparse: true,
+    index: true
+  },
+  isGuestOrder: {
+    type: Boolean,
+    default: false
   },
   orderNumber: {
     type: String,
     required: true
   },
-  // Add a unique payment identifier for all orders
   paymentId: {
     type: String,
     required: true,
-    unique: true // This will be our main unique identifier
+    unique: true
   },
   paymentMethod: {
     type: String,
@@ -39,7 +48,6 @@ const paymentSchema = new mongoose.Schema({
     type: String,
     default: 'CAD'
   },
-  // Stripe payment details (only for card payments)
   stripePaymentId: {
     type: String,
     default: null
@@ -48,7 +56,6 @@ const paymentSchema = new mongoose.Schema({
     type: String,
     default: null
   },
-  // PDF storage
   pdfs: {
     orderConfirmation: {
       filename: String,
@@ -87,7 +94,6 @@ const paymentSchema = new mongoose.Schema({
       }
     }
   },
-  // Transaction details
   transactionDetails: {
     subtotal: Number,
     tax: Number,
@@ -96,9 +102,12 @@ const paymentSchema = new mongoose.Schema({
       type: Number,
       default: 0
     },
+    firstOrderDiscount: {  
+    type: Number,
+    default: 0
+    },
     total: Number
   },
-  // Customer information
   customerInfo: {
     email: String,
     firstName: String,
@@ -116,7 +125,6 @@ const paymentSchema = new mongoose.Schema({
       }
     }
   },
-  // Applied coupon
   appliedCoupon: {
     code: String,
     description: String,
@@ -130,7 +138,6 @@ const paymentSchema = new mongoose.Schema({
       default: 0
     }
   },
-  // Payment processing logs
   paymentLogs: [{
     action: String,
     status: String,
@@ -141,7 +148,6 @@ const paymentSchema = new mongoose.Schema({
     },
     metadata: mongoose.Schema.Types.Mixed
   }],
-  // Email delivery status
   emailStatus: {
     orderConfirmationSent: {
       type: Boolean,
@@ -166,16 +172,16 @@ const paymentSchema = new mongoose.Schema({
   timestamps: true
 });
 
-// Indexes for better query performance (removed unique from stripePaymentId)
+// Indexes
 paymentSchema.index({ orderId: 1 });
 paymentSchema.index({ userId: 1 });
+paymentSchema.index({ sessionId: 1 });
 paymentSchema.index({ orderNumber: 1 });
-paymentSchema.index({ paymentId: 1 }, { unique: true }); // Main unique identifier
-paymentSchema.index({ stripePaymentId: 1 }); // Removed unique constraint
+paymentSchema.index({ paymentId: 1 }, { unique: true });
+paymentSchema.index({ stripePaymentId: 1 });
 paymentSchema.index({ paymentStatus: 1 });
 paymentSchema.index({ createdAt: -1 });
 
-// Create partial unique index for stripePaymentId (only when not null)
 paymentSchema.index(
   { stripePaymentId: 1 }, 
   { 
@@ -184,7 +190,6 @@ paymentSchema.index(
   }
 );
 
-// Method to generate unique payment ID
 paymentSchema.statics.generatePaymentId = function(paymentMethod) {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substr(2, 9);
@@ -196,7 +201,6 @@ paymentSchema.statics.generatePaymentId = function(paymentMethod) {
   }
 };
 
-// Pre-save hook to generate paymentId if not provided
 paymentSchema.pre('save', function(next) {
   if (!this.paymentId) {
     this.paymentId = this.constructor.generatePaymentId(this.paymentMethod);
@@ -204,7 +208,6 @@ paymentSchema.pre('save', function(next) {
   next();
 });
 
-// Method to store PDF in database
 paymentSchema.methods.storePDF = function(pdfType, filename, buffer) {
   if (!this.pdfs) {
     this.pdfs = {};
@@ -220,7 +223,6 @@ paymentSchema.methods.storePDF = function(pdfType, filename, buffer) {
   return this.save();
 };
 
-// Method to get PDF from database
 paymentSchema.methods.getPDF = function(pdfType) {
   if (this.pdfs && this.pdfs[pdfType]) {
     return {
@@ -232,7 +234,6 @@ paymentSchema.methods.getPDF = function(pdfType) {
   return null;
 };
 
-// Method to add payment log
 paymentSchema.methods.addPaymentLog = function(action, status, message, metadata = {}) {
   this.paymentLogs.push({
     action,
@@ -244,7 +245,6 @@ paymentSchema.methods.addPaymentLog = function(action, status, message, metadata
   return this.save();
 };
 
-// Method to update email status
 paymentSchema.methods.updateEmailStatus = function(emailType, sent, error = null) {
   if (!this.emailStatus) {
     this.emailStatus = {};
