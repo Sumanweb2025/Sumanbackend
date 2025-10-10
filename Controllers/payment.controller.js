@@ -211,7 +211,7 @@ const createPaymentIntent = async (req, res) => {
     }, 0);
 
     const tax = subtotal * 0.13;
-    const shipping = subtotal > 100 ? 0 : 15;
+    const shipping = subtotal >= 75 ? 0 : 9.99;
 
     let discount = 0;
     let firstOrderDiscount = 0;
@@ -552,7 +552,7 @@ const createCODOrder = async (req, res) => {
     }, 0);
 
     const tax = subtotal * 0.13;
-    const shipping = subtotal > 100 ? 0 : 15;
+    const shipping = subtotal >= 75 ? 0 : 9.99;
 
     let discount = 0;
     let firstOrderDiscount = 0;
@@ -654,6 +654,7 @@ const createCODOrder = async (req, res) => {
         tax,
         shipping,
         discount,
+        firstOrderDiscount,
         total
       }
     });
@@ -677,6 +678,7 @@ const createCODOrder = async (req, res) => {
         tax,
         shipping,
         discount,
+        firstOrderDiscount,
         total
       },
       customerInfo: {

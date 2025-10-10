@@ -150,6 +150,33 @@ const profileUpdateValidation = [
     .withMessage('Please provide a valid 6-digit pincode')
 ];
 
+// Password reset routes (public)
+router.post('/forgot-password',
+  authRateLimit,
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please provide a valid email'),
+  authController.forgotPassword
+);
+
+router.post('/reset-password',
+  authRateLimit,
+  body('email')
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Please provide a valid email'),
+  body('token')
+    .notEmpty()
+    .withMessage('Reset token is required'),
+  body('newPassword')
+    .isLength({ min: 6, max: 128 })
+    .withMessage('Password must be between 6 and 128 characters')
+    .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)/)
+    .withMessage('Password must contain at least one uppercase letter, one lowercase letter, and one number'),
+  authController.resetPassword
+);
+
 // Apply general rate limiting to all routes
 router.use(generalRateLimit);
 

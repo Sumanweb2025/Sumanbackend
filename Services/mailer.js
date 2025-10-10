@@ -19,7 +19,10 @@ class EmailService {
       const emailHTML = this.generateOrderConfirmationHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Order Confirmation - ${order.orderNumber}`,
         html: emailHTML,
@@ -46,7 +49,10 @@ class EmailService {
       const emailHTML = this.generateInvoiceEmailHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Invoice - ${order.orderNumber}`,
         html: emailHTML,
@@ -73,7 +79,10 @@ class EmailService {
       const emailHTML = this.generateBillEmailHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Order Bill - ${order.orderNumber}`,
         html: emailHTML,
@@ -100,7 +109,10 @@ class EmailService {
       const emailHTML = this.generateAdminNotificationHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
         subject: `New Order Received - ${order.orderNumber}`,
         html: emailHTML,
@@ -121,7 +133,10 @@ class EmailService {
       const emailHTML = this.generatePaymentConfirmationHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Payment Confirmed - Invoice ${order.orderNumber}`,
         html: emailHTML,
@@ -474,7 +489,10 @@ class EmailService {
       const emailHTML = this.generateOrderConfirmationHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Order Confirmation - ${order.orderNumber}`,
         html: emailHTML,
@@ -500,7 +518,10 @@ class EmailService {
       const emailHTML = this.generateInvoiceEmailHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+       from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Invoice - ${order.orderNumber}`,
         html: emailHTML,
@@ -526,7 +547,10 @@ class EmailService {
       const emailHTML = this.generateBillEmailHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Order Bill - ${order.orderNumber}`,
         html: emailHTML,
@@ -552,7 +576,10 @@ class EmailService {
       const emailHTML = this.generateAdminNotificationHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: process.env.ADMIN_EMAIL || process.env.EMAIL_USER,
         subject: `New Order Received - ${order.orderNumber}`,
         html: emailHTML,
@@ -572,7 +599,10 @@ class EmailService {
       const emailHTML = this.generatePaymentConfirmationHTML(order, items);
 
       const mailOptions = {
-        from: process.env.EMAIL_USER,
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
         to: order.contactInfo.email,
         subject: `Payment Confirmed - Invoice ${order.orderNumber}`,
         html: emailHTML,
@@ -668,7 +698,10 @@ async sendCODCancellationEmail(order, user) {
     `;
 
     await this.transporter.sendMail({
-      from: this.fromEmail,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: order.contactInfo.email,
       subject: subject,
       html: html
@@ -762,7 +795,10 @@ async sendCardCancellationEmail(order, refundInfo, user) {
     `;
 
     await this.transporter.sendMail({
-      from: this.fromEmail,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: order.contactInfo.email,
       subject: subject,
       html: html
@@ -837,7 +873,10 @@ async sendRefundCompletionEmail(order, refund, user) {
     `;
 
     await this.transporter.sendMail({
-      from: this.fromEmail,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: refund.customerInfo.email,
       subject: subject,
       html: html
@@ -948,7 +987,10 @@ async sendAdminCancellationNotification(order, refundInfo, user) {
     const adminEmail = process.env.ADMIN_EMAIL || 'admin@yourdomain.com';
     
     await this.transporter.sendMail({
-      from: this.fromEmail,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: adminEmail,
       subject: subject,
       html: html
@@ -957,6 +999,215 @@ async sendAdminCancellationNotification(order, refundInfo, user) {
     console.log(`Admin cancellation notification sent for order ${order.orderNumber}`);
   } catch (error) {
     console.error('Error sending admin cancellation notification:', error);
+    throw error;
+  }
+}
+// Password Reset Email
+async sendPasswordResetEmail(user, resetUrl, token) {
+  try {
+    const subject = 'Password Reset Request - Iyappaa Sweets & Snacks';
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Password Reset</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); overflow: hidden;">
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 30px 20px; text-align: center;">
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">🔐 Password Reset</h1>
+          </div>
+
+          <!-- Content -->
+          <div style="padding: 40px 30px;">
+            <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Dear ${user.name},</p>
+            
+            <p style="font-size: 15px; color: #555; line-height: 1.8; margin-bottom: 25px;">
+              We received a request to reset your password for your Iyappaa Sweets & Snacks account. 
+              If you made this request, please click the button below to set a new password.
+            </p>
+
+            <!-- Reset Button -->
+            <div style="text-align: center; margin: 35px 0;">
+              <a href="${resetUrl}" 
+                 style="display: inline-block; padding: 14px 40px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); 
+                        color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; 
+                        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3); transition: all 0.3s ease;">
+                Reset Password
+              </a>
+            </div>
+
+            <!-- Security Info Box -->
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 30px 0; border-radius: 6px;">
+              <p style="margin: 0; color: #856404; font-size: 14px; line-height: 1.6;">
+                <strong>⚠️ Security Notice:</strong><br>
+                This password reset link will expire in <strong>1 hour</strong> for your security.
+                If you didn't request this reset, please ignore this email or contact our support team immediately.
+              </p>
+            </div>
+
+            <!-- Alternative Link -->
+            <div style="background-color: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 25px;">
+              <p style="margin: 0 0 10px 0; color: #666; font-size: 13px;">
+                <strong>Button not working?</strong> Copy and paste this link into your browser:
+              </p>
+              <p style="margin: 0; word-break: break-all; color: #4CAF50; font-size: 12px;">
+                ${resetUrl}
+              </p>
+            </div>
+
+            <!-- Help Section -->
+            <div style="margin-top: 30px; padding-top: 25px; border-top: 1px solid #e1e5e9;">
+              <p style="color: #666; font-size: 14px; margin: 0 0 10px 0;">
+                <strong>Need help?</strong>
+              </p>
+              <p style="color: #999; font-size: 13px; margin: 0; line-height: 1.6;">
+                If you're having trouble resetting your password or didn't request this change, 
+                please contact our support team. We're here to help!
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="background-color: #f8f9fa; padding: 25px 30px; text-align: center; border-top: 1px solid #e1e5e9;">
+            <p style="margin: 0 0 10px 0; color: #333; font-size: 15px; font-weight: 600;">
+              Iyappaa Sweets & Snacks
+            </p>
+            <p style="margin: 0; color: #999; font-size: 12px; line-height: 1.5;">
+              Traditional Indian Snacks & Sweets<br>
+              This is an automated email. Please do not reply to this message.
+            </p>
+            <p style="margin: 15px 0 0 0; color: #ccc; font-size: 11px;">
+              © ${new Date().getFullYear()} Iyappaa Sweets & Snacks. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    await this.transporter.sendMail({
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
+      to: user.email,
+      subject: subject,
+      html: html
+    });
+
+    console.log(`Password reset email sent to ${user.email}`);
+  } catch (error) {
+    console.error('Error sending password reset email:', error);
+    throw error;
+  }
+}
+
+// Password Change Confirmation Email
+async sendPasswordChangeConfirmationEmail(user) {
+  try {
+    const subject = 'Password Changed Successfully - Iyappaa Sweets & Snacks';
+    
+    const html = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Password Changed</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); overflow: hidden;">
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 30px 20px; text-align: center;">
+            <div style="font-size: 50px; margin-bottom: 10px;">✓</div>
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">Password Changed</h1>
+          </div>
+
+          <!-- Content -->
+          <div style="padding: 40px 30px;">
+            <p style="font-size: 16px; color: #333; margin-bottom: 20px;">Dear ${user.name},</p>
+            
+            <div style="background-color: #d4edda; border-left: 4px solid #28a745; padding: 20px; margin: 25px 0; border-radius: 6px;">
+              <p style="margin: 0; color: #155724; font-size: 15px; line-height: 1.6;">
+                <strong>✅ Success!</strong><br>
+                Your password has been changed successfully. You can now sign in to your account using your new password.
+              </p>
+            </div>
+
+            <p style="font-size: 15px; color: #555; line-height: 1.8; margin: 25px 0;">
+              This email confirms that your password was recently changed on <strong>${new Date().toLocaleString('en-US', { 
+                dateStyle: 'full', 
+                timeStyle: 'short' 
+              })}</strong>.
+            </p>
+
+            <!-- Security Alert Box -->
+            <div style="background-color: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; margin: 30px 0; border-radius: 6px;">
+              <p style="margin: 0; color: #856404; font-size: 14px; line-height: 1.6;">
+                <strong>⚠️ Didn't make this change?</strong><br>
+                If you did not authorize this password change, please contact our support team immediately. 
+                Your account security is important to us.
+              </p>
+            </div>
+
+            <!-- Quick Actions -->
+            <div style="text-align: center; margin: 35px 0;">
+              <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/signin" 
+                 style="display: inline-block; padding: 14px 40px; background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); 
+                        color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; 
+                        box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);">
+                Sign In Now
+              </a>
+            </div>
+
+            <!-- Security Tips -->
+            <div style="background-color: #f0f9ff; padding: 20px; border-radius: 8px; margin-top: 30px;">
+              <p style="margin: 0 0 15px 0; color: #333; font-size: 14px; font-weight: 600;">
+                🔒 Security Tips:
+              </p>
+              <ul style="margin: 0; padding-left: 20px; color: #666; font-size: 13px; line-height: 1.8;">
+                <li>Never share your password with anyone</li>
+                <li>Use a unique password for each online account</li>
+                <li>Enable two-factor authentication when available</li>
+                <li>Change your password regularly</li>
+              </ul>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="background-color: #f8f9fa; padding: 25px 30px; text-align: center; border-top: 1px solid #e1e5e9;">
+            <p style="margin: 0 0 10px 0; color: #333; font-size: 15px; font-weight: 600;">
+              Iyappaa Sweets & Snacks
+            </p>
+            <p style="margin: 0; color: #999; font-size: 12px; line-height: 1.5;">
+              Traditional Indian Snacks & Sweets<br>
+              This is an automated email. Please do not reply to this message.
+            </p>
+            <p style="margin: 15px 0 0 0; color: #ccc; font-size: 11px;">
+              © ${new Date().getFullYear()} Iyappaa Sweets & Snacks. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    await this.transporter.sendMail({
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
+      to: user.email,
+      subject: subject,
+      html: html
+    });
+
+    console.log(`Password change confirmation email sent to ${user.email}`);
+  } catch (error) {
+    console.error('Error sending password change confirmation email:', error);
     throw error;
   }
 }

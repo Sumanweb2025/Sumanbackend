@@ -20,9 +20,28 @@ const addImageUrlToProduct = (product, req) => {
   if (!product) return product;
 
   const productObj = product.toObject ? product.toObject() : product;
+
+  let imageUrl = null;
+  let imageUrls = [];
+  
+  if (productObj.image) {
+    if (Array.isArray(productObj.image)) {
+      // Handle array of images
+      imageUrls = productObj.image.map(img => 
+        `${req.protocol}://${req.get('host')}/images/Products/${img}`
+      );
+      imageUrl = imageUrls[0]; // First image as primary
+    } else {
+      // Handle single image string
+      imageUrl = `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}`;
+      imageUrls = [imageUrl];
+    }
+  }
+
   return {
     ...productObj,
-    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null,
+    imageUrl,
+    imageUrls,
     price: parseFloat(productObj.price) || 0 // Ensure price is always a number
   };
 };

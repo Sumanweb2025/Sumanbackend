@@ -934,6 +934,160 @@ exports.deleteAccount = async (req, res) => {
   }
 };
 
+// Forgot Password - Send Reset Email
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+
+    if (!email) {
+      return res.status(400).json({
+        success: false,
+        message: 'Email is required'
+      });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase().trim() });
+
+    if (!user) {
+      // Don't reveal if user exists or not for security
+      return res.status(200).json({
+        success: true,
+        message: 'If an account exists with this email, you will receive a password reset link shortly.'
+      });
+    }
+
+    if (user.authProvider === 'google') {
+      return res.status(400).json({
+        success: false,
+        message: 'This account uses Google Sign-In. Please sign in with Google instead.'
+      });
+    }
+
+    if (!user.isActive) {
+      return res.status(400).json({
+        success: false,
+        message: 'Account is deactivated. Please contact support.'
+      });
+    }
+
+    // Generate secure reset token
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const hashedToken = crypto.createHash('sha256').update(resetToken).digest('hex');
+
+    // Set token and expiry (1 hour)
+    user.passwordResetToken = hashedToken;
+    user.passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1 hour
+    await user.save();
+
+    // Send reset email
+    try {
+      const emailService = require('../Services/mailer');
+      const mailer = new emailService();
+      
+      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
+      
+      await mailer.sendPasswordResetEmail(user, resetUrl, resetToken);
+
+      res.status(200).json({
+        success: true,
+        message: 'Password reset link has been sent to your email address.'
+      });
+    } catch (emailError) {
+      console.error('Email sending failed:', emailError);
+      
+      // Clear reset token if email fails
+      user.passwordResetToken = undefined;
+      user.passwordResetExpires = undefined;
+      await user.save();
+
+      return res.status(500).json({
+        success: false,
+        message: 'Failed to send reset email. Please try again later.'
+      });
+    }
+
+  } catch (error) {
+    console.error('Forgot password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error. Please try again later.'
+    });
+  }
+};
+
+// Reset Password - Verify Token and Update Password
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, email, newPassword } = req.body;
+
+    if (!token || !email || !newPassword) {
+      return res.status(400).json({
+        success: false,
+        message: 'Token, email, and new password are required'
+      });
+    }
+
+    if (newPassword.length < 6) {
+      return res.status(400).json({
+        success: false,
+        message: 'Password must be at least 6 characters long'
+      });
+    }
+
+    // Hash the token to compare with database
+    const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Find user with valid token
+    const user = await User.findOne({
+      email: email.toLowerCase().trim(),
+      passwordResetToken: hashedToken,
+      passwordResetExpires: { $gt: Date.now() }
+    }).select('+passwordResetToken +passwordResetExpires');
+
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: 'Invalid or expired reset token. Please request a new password reset link.'
+      });
+    }
+
+    if (user.authProvider === 'google') {
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot reset password for Google accounts.'
+      });
+    }
+
+    // Update password
+    user.password = newPassword;
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save();
+
+    // Send confirmation email
+    try {
+      const emailService = require('../Services/mailer');
+      const mailer = new emailService();
+      await mailer.sendPasswordChangeConfirmationEmail(user);
+    } catch (emailError) {
+      console.error('Confirmation email failed:', emailError);
+      // Continue even if email fails
+    }
+
+    res.status(200).json({
+      success: true,
+      message: 'Password has been reset successfully. You can now sign in with your new password.'
+    });
+
+  } catch (error) {
+    console.error('Reset password error:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error. Please try again later.'
+    });
+  }
+};
+
 // Export multer upload middleware
 exports.uploadMiddleware = upload.single('profileImage');
 
