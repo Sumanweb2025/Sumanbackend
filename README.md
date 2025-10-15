@@ -157,13 +157,68 @@ Sumanbackend/
 │
 ├── Scripts/                    # Utility scripts
 ├── Data/                       # JSON data files
-│   ├── website_data.json       # 130KB
-│   └── website_data_1.json     # 131KB
+│   ├── website_data.json       
+│   └── website_data_1.json     
 │
 ├── Iyappaa/Product1/           # Product images 
 ├── public/                     # Public assets
 └── uploads/                    # User uploads
 ```
+
+---
+
+## Database Schema
+
+### Complete Schema Overview
+The backend uses **16 MongoDB collections** with Mongoose ODM:
+
+1. **User** - User accounts (auth, profiles, addresses)
+2. **Product** - Product catalog (items, pricing, inventory)
+3. **Order** - Customer orders (items, addresses, status)
+4. **Payment** - Payment records (transactions, PDFs, logs)
+5. **Cart** - Shopping carts (user + guest carts)
+6. **Wishlist** - Saved products (user + guest wishlists)
+7. **Review** - Product reviews and ratings
+8. **Coupon** - Discount coupons
+9. **Offer** - Special offers and promotions
+10. **Subscription** - Newsletter subscribers
+11. **Contact** - Contact form submissions
+12. **Testimonial** - Customer testimonials
+13. **Recommendation** - AI-powered product recommendations
+14. **UserBehavior** - User activity tracking
+15. **Refund** - Refund requests and processing
+16. **Data** - Static configuration data
+
+### Key Schema Features
+
+#### User Schema Highlights
+- Dual authentication (local + Google OAuth)
+- Base64 image storage in MongoDB (max 16MB)
+- Phone number with country code support
+- Password reset with OTP
+- Email verification
+- Profile image management with fallbacks
+
+#### Order Schema Highlights
+- Guest order support (sessionId)
+- Auto-generated order numbers (ORD{timestamp}{random})
+- Cancellation system (48-hour window)
+- Refund tracking
+- Multiple payment methods (card, COD)
+- Applied coupon tracking
+
+#### Payment Schema Highlights
+- PDF storage in MongoDB (Buffer)
+- Payment logs for audit trail
+- Email delivery status tracking
+- Stripe payment integration
+- Auto-generated payment IDs
+
+#### Cart & Wishlist Schema Highlights
+- Guest session support
+- Auto-expiration for guest data (7 days)
+- TTL indexes for automatic cleanup
+- Total amount auto-calculation
 
 ---
 
@@ -361,6 +416,31 @@ optionalAuthMiddleware()
 ---
 
 ## Environment Setup
+
+---
+
+### Setup Instructions
+
+#### 1. Gmail App Password
+- Enable 2FA on Google Account
+- Generate App Password: Security → App passwords
+- Use generated password as EMAIL_PASSWORD
+
+#### 2. Twilio SMS
+- Sign up at https://www.twilio.com
+- Get Account SID, Auth Token from console
+- Buy phone number
+
+#### 3. Stripe Integration
+- Create account at https://stripe.com
+- Get API keys from Developers → API keys
+- Setup webhook for `/api/payments/stripe-webhook`
+
+#### 4. MongoDB Atlas
+- Create cluster at https://www.mongodb.com/cloud/atlas
+- Create database user
+- Whitelist IP or use 0.0.0.0/0 for all IPs
+- Copy connection string
 
 ---
 
