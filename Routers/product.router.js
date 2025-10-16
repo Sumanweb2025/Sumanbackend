@@ -4,7 +4,7 @@ const productController = require('../Controllers/Product.controller');
 
 // Get all products
 router.get('/', productController.getAllProducts);
-router.get('/filters', productController.getAvailableFilters); 
+router.get('/filters', productController.getAvailableFilters);
 // Search products with filters
 router.get('/search', productController.searchProducts);
 

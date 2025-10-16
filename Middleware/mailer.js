@@ -23,8 +23,8 @@ exports.sendWelcomeEmail = async (email, name, userId) => {
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`✅ Verification email sent to ${email}`);
+    console.log(`Verification email sent to ${email}`);
   } catch (error) {
-    console.error("❌ Email sending error:", error);
+    console.error("Email sending error:", error);
   }
 };

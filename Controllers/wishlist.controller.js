@@ -22,11 +22,11 @@ const addImageUrlToProduct = (product, req) => {
 
   let imageUrl = null;
   let imageUrls = [];
-  
+
   if (productObj.image) {
     if (Array.isArray(productObj.image)) {
       // Handle array of images
-      imageUrls = productObj.image.map(img => 
+      imageUrls = productObj.image.map(img =>
         `${req.protocol}://${req.get('host')}/images/Products/${img}`
       );
       imageUrl = imageUrls[0]; // First image as primary
@@ -74,7 +74,7 @@ const getWishlist = async (req, res) => {
     if (!wishlist) {
       return res.status(200).json({
         success: true,
-        data: { 
+        data: {
           products: [],
           sessionId: isGuest ? getSessionId(req) : null
         },
@@ -142,7 +142,7 @@ const addToWishlist = async (req, res) => {
     if (isGuest) {
       // Guest user logic
       const sessionId = getSessionId(req);
-      
+
       wishlist = await Wishlist.findOne({ sessionId, isGuest: true });
 
       if (!wishlist) {
@@ -242,7 +242,7 @@ const removeFromWishlist = async (req, res) => {
     const { productId } = req.params;
 
     let wishlist;
-    
+
     if (isGuest) {
       const sessionId = getSessionId(req);
       wishlist = await Wishlist.findOne({ sessionId, isGuest: true });

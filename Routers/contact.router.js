@@ -29,7 +29,7 @@ const contactFormLimiter = rateLimit({
 const requireAuth = (req, res, next) => {
   // Check if user is authenticated
   const token = req.header('Authorization')?.replace('Bearer ', '');
-  
+
   if (!token) {
     return res.status(401).json({
       success: false,
@@ -67,7 +67,7 @@ const requireAdmin = (req, res, next) => {
 // Input validation middleware
 const validateContactForm = (req, res, next) => {
   const { name, email, subject, message } = req.body;
-  
+
   // Basic validation
   if (!name || name.trim().length < 2) {
     return res.status(400).json({
@@ -75,68 +75,44 @@ const validateContactForm = (req, res, next) => {
       message: 'Name must be at least 2 characters long'
     });
   }
-  
+
   if (!email || !email.includes('@')) {
     return res.status(400).json({
       success: false,
       message: 'Valid email is required'
     });
   }
-  
+
   if (!subject || subject.trim().length < 5) {
     return res.status(400).json({
       success: false,
       message: 'Subject must be at least 5 characters long'
     });
   }
-  
+
   if (!message || message.trim().length < 10) {
     return res.status(400).json({
       success: false,
       message: 'Message must be at least 10 characters long'
     });
   }
-  
+
   next();
 };
 
 // PUBLIC ROUTES (No authentication required)
-
-// @route   POST /api/contact
-// @desc    Submit contact form
-// @access  Public
 router.post('/', contactFormLimiter, validateContactForm, submitContactForm);
 
 // ADMIN ROUTES (Authentication required)
-
-// @route   GET /api/contact/admin/all
-// @desc    Get all contacts with pagination and filtering
-// @access  Admin only
 router.get('/admin/all', requireAuth, requireAdmin, getAllContacts);
 
-// @route   GET /api/contact/admin/stats
-// @desc    Get contact statistics for admin dashboard
-// @access  Admin only
 router.get('/admin/stats', requireAuth, requireAdmin, getContactStats);
 
-// @route   GET /api/contact/admin/:id
-// @desc    Get single contact by ID
-// @access  Admin only
 router.get('/admin/:id', requireAuth, requireAdmin, getContactById);
 
-// @route   POST /api/contact/admin/:id/reply
-// @desc    Reply to a contact
-// @access  Admin only
 router.post('/admin/reply/:name', requireAuth, requireAdmin, replyToContact);
-
-// @route   PUT /api/contact/admin/:id/status
-// @desc    Update contact status or priority
-// @access  Admin only
 router.put('/admin/:id/status', requireAuth, requireAdmin, updateContactStatus);
 
-// @route   DELETE /api/contact/admin/:id
-// @desc    Delete a contact
-// @access  Admin only
 router.delete('/admin/:id', requireAuth, requireAdmin, deleteContact);
 
 // Error handling middleware for this router

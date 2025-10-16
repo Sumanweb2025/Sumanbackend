@@ -1,4 +1,5 @@
 const Offer = require('../Models/offer.model');
+const Product = require('../Models/product.model');
 
 // Get active offer (for frontend)
 exports.getActiveOffer = async (req, res) => {
@@ -9,13 +10,15 @@ exports.getActiveOffer = async (req, res) => {
       startDate: { $lte: now },
       endDate: { $gte: now },
       isActive: true
-    }).sort({ createdAt: -1 });
+    })
+      .populate('applicableProducts', 'product_id name price category brand gram')
+      .sort({ createdAt: -1 });
 
     if (!offer) {
-      return res.json({ 
+      return res.json({
         success: true,
         message: "No active offer.",
-        data: null 
+        data: null
       });
     }
 
@@ -25,9 +28,9 @@ exports.getActiveOffer = async (req, res) => {
     });
   } catch (error) {
     console.error('Error fetching active offer:', error);
-    res.status(500).json({ 
+    res.status(500).json({
       success: false,
-      message: "Server error." 
+      message: "Server error."
     });
   }
 };
@@ -35,8 +38,10 @@ exports.getActiveOffer = async (req, res) => {
 // Get all offers (for admin)
 exports.getAllOffers = async (req, res) => {
   try {
-    const offers = await Offer.find().sort({ createdAt: -1 });
-    
+    const offers = await Offer.find()
+      .populate('applicableProducts', 'product_id name price category brand gram')
+      .sort({ createdAt: -1 });
+
     res.status(200).json({
       success: true,
       count: offers.length,
@@ -89,6 +94,7 @@ exports.createOffer = async (req, res) => {
       endDate,
       isActive,
       applicableCategories,
+      applicableProducts,
       minimumOrderAmount
     } = req.body;
 
@@ -118,13 +124,18 @@ exports.createOffer = async (req, res) => {
       endDate,
       isActive: isActive !== undefined ? isActive : true,
       applicableCategories: applicableCategories || [],
+      applicableProducts: applicableProducts || [],
       minimumOrderAmount: minimumOrderAmount || 0
     });
+
+    // Populate products for response
+    const populatedOffer = await Offer.findById(newOffer._id)
+      .populate('applicableProducts', 'product_id name brand category price gram');
 
     res.status(201).json({
       success: true,
       message: 'Offer created successfully',
-      data: newOffer
+      data: populatedOffer
     });
   } catch (error) {
     console.error('Error creating offer:', error);
@@ -162,7 +173,7 @@ exports.updateOffer = async (req, res) => {
       req.params.id,
       req.body,
       { new: true, runValidators: true }
-    );
+    ).populate('applicableProducts', 'product_id name brand category price gram');
 
     res.status(200).json({
       success: true,
@@ -238,7 +249,7 @@ exports.toggleOfferStatus = async (req, res) => {
 exports.getOfferStats = async (req, res) => {
   try {
     const now = new Date();
-    
+
     const totalOffers = await Offer.countDocuments();
     const activeOffers = await Offer.countDocuments({
       isActive: true,
@@ -269,3 +280,75 @@ exports.getOfferStats = async (req, res) => {
     });
   }
 };
+
+// Get products by category and brand for offer management
+exports.getProductsByCategory = async (req, res) => {
+  try {
+    const { category, brand } = req.query;
+
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        message: 'Category is required'
+      });
+    }
+
+    // Build query filter
+    const filter = {
+      category: { $regex: new RegExp(category, 'i') }
+    };
+
+    // Add brand filter if provided
+    if (brand) {
+      filter.brand = { $regex: new RegExp(brand, 'i') };
+    }
+
+    const products = await Product.find(filter)
+      .select('product_id name brand category price gram image')
+      .sort({ name: 1 });
+
+    res.status(200).json({
+      success: true,
+      count: products.length,
+      data: products
+    });
+  } catch (error) {
+    console.error('Error fetching products by category:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching products'
+    });
+  }
+};
+
+// Get all brands by category
+exports.getBrandsByCategory = async (req, res) => {
+  try {
+    const { category } = req.query;
+
+    if (!category) {
+      return res.status(400).json({
+        success: false,
+        message: 'Category is required'
+      });
+    }
+
+    const brands = await Product.distinct('brand', {
+      category: { $regex: new RegExp(category, 'i') }
+    });
+
+    res.status(200).json({
+      success: true,
+      count: brands.length,
+      data: brands.filter(Boolean).sort()
+    });
+  } catch (error) {
+    console.error('Error fetching brands:', error);
+    res.status(500).json({
+      success: false,
+      message: 'Server error while fetching brands'
+    });
+  }
+};
+
+

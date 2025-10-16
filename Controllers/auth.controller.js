@@ -6,6 +6,7 @@ const multer = require('multer');
 const crypto = require('crypto');
 const rateLimit = require('express-rate-limit');
 const { migrateGuestDataToUser } = require('../Utils/guestMigration');
+const SMSService = require('../Services/sms.service');
 
 // Initialize Google OAuth client
 const googleClient = new OAuth2Client(
@@ -58,15 +59,15 @@ class SecureOTPStorage {
   isIPBlocked(ip) {
     const attempts = this.ipAttempts.get(ip);
     if (!attempts) return false;
-    
+
     const timeDiff = new Date() - attempts.lastAttempt;
     const cooldownPeriod = 15 * 60 * 1000; // 15 minutes
-    
+
     if (timeDiff > cooldownPeriod) {
       this.ipAttempts.delete(ip);
       return false;
     }
-    
+
     return attempts.count >= 10; // Max 10 attempts per IP per 15 minutes
   }
 
@@ -74,36 +75,36 @@ class SecureOTPStorage {
   isPhoneBlocked(phone) {
     const attempts = this.phoneAttempts.get(phone);
     if (!attempts) return false;
-    
+
     const timeDiff = new Date() - attempts.lastAttempt;
     const cooldownPeriod = 30 * 60 * 1000; // 30 minutes
-    
+
     if (timeDiff > cooldownPeriod) {
       this.phoneAttempts.delete(phone);
       return false;
     }
-    
+
     return attempts.count >= 5; // Max 5 attempts per phone per 30 minutes
   }
 
   // Clean up expired data
   cleanup() {
     const now = new Date();
-    
+
     // Clean OTP storage
     for (const [key, data] of this.storage.entries()) {
       if (now > data.expiresAt) {
         this.storage.delete(key);
       }
     }
-    
+
     // Clean IP attempts
     for (const [ip, data] of this.ipAttempts.entries()) {
       if (now - data.lastAttempt > 15 * 60 * 1000) {
         this.ipAttempts.delete(ip);
       }
     }
-    
+
     // Clean phone attempts
     for (const [phone, data] of this.phoneAttempts.entries()) {
       if (now - data.lastAttempt > 30 * 60 * 1000) {
@@ -164,42 +165,18 @@ const generateToken = (userId) => {
   });
 };
 
+// Initialize SMS Service
+const smsService = new SMSService();
+
 // Enhanced SMS sending with retry logic
 const sendSMSOTP = async (fullPhoneNumber, otp, retries = 3) => {
-  for (let i = 0; i < retries; i++) {
-    try {
-      console.log(`[SMS] Attempt ${i + 1}: Sending OTP ${otp} to ${fullPhoneNumber}`);
-      
-      // Implement your SMS provider here
-      // Example with different providers:
-      
-      // For MSG91:
-      // const response = await axios.post('https://api.msg91.com/api/v5/otp', {
-      //   template_id: process.env.MSG91_TEMPLATE_ID,
-      //   mobile: `91${phone}`,
-      //   authkey: process.env.MSG91_AUTHKEY,
-      //   otp: otp
-      // });
-      
-      // For Fast2SMS:
-      // const response = await axios.get(`https://www.fast2sms.com/dev/bulkV2`, {
-      //   params: {
-      //     authorization: process.env.FAST2SMS_API_KEY,
-      //     variables_values: otp,
-      //     route: 'otp',
-      //     numbers: phone
-      //   }
-      // });
-      
-      // For now, simulate success (remove this in production)
-      await new Promise(resolve => setTimeout(resolve, 100));
-      
-      return { success: true };
-    } catch (error) {
-      console.error(`SMS sending attempt ${i + 1} failed:`, error.message);
-      if (i === retries - 1) throw error;
-      await new Promise(resolve => setTimeout(resolve, 1000 * (i + 1))); // Exponential backoff
-    }
+  try {
+    // Use the SMS service to send OTP to user's phone
+    const result = await smsService.sendOTP(fullPhoneNumber, otp, retries);
+    return result;
+  } catch (error) {
+    console.error('Failed to send OTP SMS:', error.message);
+    throw error;
   }
 };
 
@@ -233,7 +210,7 @@ const formatUserData = (user) => {
 exports.signup = [signupRateLimit, async (req, res) => {
   try {
     const clientIP = req.ip || req.connection.remoteAddress;
-    
+
     if (otpStorage.isIPBlocked(clientIP)) {
       return res.status(429).json({
         success: false,
@@ -261,13 +238,13 @@ exports.signup = [signupRateLimit, async (req, res) => {
     }
 
     // Check if user already exists with this phone number
-    const existingUser = await User.findOne({ 
+    const existingUser = await User.findOne({
       $or: [
-        { email }, 
+        { email },
         { phone: phone, countryCode: countryCode }
-      ] 
+      ]
     });
-    
+
     if (existingUser) {
       let field = 'email';
       if (existingUser.phone === phone && existingUser.countryCode === countryCode) {
@@ -314,7 +291,7 @@ exports.signup = [signupRateLimit, async (req, res) => {
     try {
       // Send OTP via SMS with full number
       await sendSMSOTP(fullPhoneNumber, otp);
-      
+
       res.status(200).json({
         success: true,
         message: 'OTP sent successfully',
@@ -328,7 +305,7 @@ exports.signup = [signupRateLimit, async (req, res) => {
     } catch (smsError) {
       console.error('SMS sending failed:', smsError);
       otpStorage.delete(tempUserId);
-      
+
       res.status(500).json({
         success: false,
         message: 'Failed to send OTP. Please try again.'
@@ -365,7 +342,7 @@ exports.verifyOtp = [otpRateLimit, async (req, res) => {
     }
 
     const otpData = otpStorage.get(tempUserId);
-    
+
     if (!otpData) {
       return res.status(404).json({
         success: false,
@@ -402,16 +379,16 @@ exports.verifyOtp = [otpRateLimit, async (req, res) => {
       Buffer.from(otpData.otp),
       Buffer.from(otp)
     );
-    
+
     const isValidPhone = otpData.phone === phone && otpData.countryCode === countryCode;
 
     if (!isValidOTP || !isValidPhone) {
       otpData.attempts += 1;
       otpStorage.set(tempUserId, otpData);
       otpStorage.trackIPAttempt(clientIP);
-      
+
       const remainingAttempts = otpData.maxAttempts - otpData.attempts;
-      
+
       return res.status(400).json({
         success: false,
         message: 'Invalid OTP. Please try again.',
@@ -420,14 +397,14 @@ exports.verifyOtp = [otpRateLimit, async (req, res) => {
     }
 
     const { userData } = otpData;
-    
-    const existingUser = await User.findOne({ 
+
+    const existingUser = await User.findOne({
       $or: [
-        { email: userData.email }, 
+        { email: userData.email },
         { phone: userData.phone, countryCode: userData.countryCode }
-      ] 
+      ]
     });
-    
+
     if (existingUser) {
       otpStorage.delete(tempUserId);
       return res.status(409).json({
@@ -506,7 +483,7 @@ exports.resendOtp = [otpRateLimit, async (req, res) => {
     }
 
     const otpData = otpStorage.get(tempUserId);
-    
+
     if (!otpData) {
       return res.status(404).json({
         success: false,
@@ -535,7 +512,7 @@ exports.resendOtp = [otpRateLimit, async (req, res) => {
 
     try {
       await sendSMSOTP(fullPhoneNumber, newOtp);
-      
+
       res.status(200).json({
         success: true,
         message: 'New OTP sent successfully',
@@ -608,7 +585,7 @@ exports.login = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    // ⭐ IMPORTANT: Migrate guest data if sessionId provided
+    // IMPORTANT: Migrate guest data if sessionId provided
     if (sessionId) {
       try {
         const migrationResult = await migrateGuestDataToUser(user._id, sessionId);
@@ -681,11 +658,11 @@ exports.googleAuth = async (req, res) => {
 
     const token = generateToken(user._id);
 
-    // ⭐ IMPORTANT: Migrate guest data if sessionId provided
+    // IMPORTANT: Migrate guest data if sessionId provided
     if (sessionId) {
       try {
         const migrationResult = await migrateGuestDataToUser(user._id, sessionId);
-        console.log('Guest data migration result:', migrationResult);
+        //console.log('Guest data migration result:', migrationResult);
       } catch (migrationError) {
         console.error('Migration error (non-fatal):', migrationError);
       }
@@ -744,7 +721,7 @@ exports.getProfile = async (req, res) => {
 exports.uploadProfileImage = async (req, res) => {
   try {
     const userId = req.user.userId;
-    
+
     if (!req.file) {
       return res.status(400).json({
         success: false,
@@ -769,12 +746,12 @@ exports.uploadProfileImage = async (req, res) => {
 
     // Update profile image in database using base64
     user.updateProfileImageBase64(req.file.buffer, req.file.mimetype, req.file.size);
-    
+
     // CRITICAL FIX: Also update the profileImage field
     const base64String = req.file.buffer.toString('base64');
     const dataURL = `data:${req.file.mimetype};base64,${base64String}`;
-    user.profileImage = dataURL;  
-    
+    user.profileImage = dataURL;
+
     await user.save();
 
     //console.log('Profile image saved successfully');
@@ -803,7 +780,7 @@ exports.uploadProfileImage = async (req, res) => {
 exports.removeProfileImage = async (req, res) => {
   try {
     const userId = req.user.userId;
-    
+
     const user = await User.findById(userId);
     if (!user) {
       return res.status(404).json({
@@ -815,7 +792,7 @@ exports.removeProfileImage = async (req, res) => {
     // Remove profile image from database
     user.removeProfileImage();
     user.profileImage = null; // Also clear profileImage field
-    
+
     await user.save();
 
     //console.log('Profile image removed successfully for user:', userId);
@@ -855,7 +832,7 @@ exports.updateProfile = async (req, res) => {
 
     // Update fields only if provided
     if (name) user.name = name;
-    
+
     if (phone !== undefined) {
       if (phone && phone !== user.phone) {
         user.phone = phone;
@@ -864,7 +841,7 @@ exports.updateProfile = async (req, res) => {
         user.phone = undefined;
       }
     }
-    
+
     if (address) {
       user.address = { ...user.address, ...address };
     }
@@ -892,12 +869,12 @@ exports.updateProfile = async (req, res) => {
 exports.deleteAccount = async (req, res) => {
   try {
     const userId = req.user.userId;
-    
+
     const user = await User.findById(userId);
     if (!user) {
-      return res.status(404).json({ 
-        success: false, 
-        message: 'User not found' 
+      return res.status(404).json({
+        success: false,
+        message: 'User not found'
       });
     }
 
@@ -908,28 +885,28 @@ exports.deleteAccount = async (req, res) => {
     await Cart.deleteMany({ userId });
     await Wishlist.deleteMany({ userId });
     await Order.updateMany(
-      { userId }, 
-      { 
-        $set: { 
+      { userId },
+      {
+        $set: {
           userDeleted: true,
           deletedAt: new Date()
-        } 
+        }
       }
     );
 
     await User.findByIdAndDelete(userId);
 
-    res.json({ 
-      success: true, 
-      message: 'Account deleted successfully' 
+    res.json({
+      success: true,
+      message: 'Account deleted successfully'
     });
 
   } catch (error) {
     console.error('Delete account error:', error);
-    res.status(500).json({ 
-      success: false, 
-      message: 'Error deleting account', 
-      error: error.message 
+    res.status(500).json({
+      success: false,
+      message: 'Error deleting account',
+      error: error.message
     });
   }
 };
@@ -983,9 +960,9 @@ exports.forgotPassword = async (req, res) => {
     try {
       const emailService = require('../Services/mailer');
       const mailer = new emailService();
-      
-      const resetUrl = `${process.env.FRONTEND_URL || 'http://localhost:5173'}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
-      
+
+      const resetUrl = `${process.env.FRONTEND_URL}/reset-password?token=${resetToken}&email=${encodeURIComponent(user.email)}`;
+
       await mailer.sendPasswordResetEmail(user, resetUrl, resetToken);
 
       res.status(200).json({
@@ -994,7 +971,7 @@ exports.forgotPassword = async (req, res) => {
       });
     } catch (emailError) {
       console.error('Email sending failed:', emailError);
-      
+
       // Clear reset token if email fails
       user.passwordResetToken = undefined;
       user.passwordResetExpires = undefined;

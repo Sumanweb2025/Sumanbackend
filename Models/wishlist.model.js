@@ -29,7 +29,7 @@ const wishlistSchema = new mongoose.Schema({
   }],
   expiresAt: {
     type: Date,
-    default: () => new Date(+new Date() + 7*24*60*60*1000) // 7 days expiry
+    default: () => new Date(+new Date() + 7 * 24 * 60 * 60 * 1000) // 7 days expiry
   }
 }, {
   timestamps: true

@@ -36,7 +36,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Order confirmation email sent successfully with PDF attachment');
+      //console.log('Order confirmation email sent successfully with PDF attachment');
     } catch (error) {
       console.error('Error sending order confirmation email:', error);
       throw error;
@@ -66,7 +66,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Invoice email sent successfully with PDF attachment');
+      //console.log('Invoice email sent successfully with PDF attachment');
     } catch (error) {
       console.error('Error sending invoice email:', error);
       throw error;
@@ -96,7 +96,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Bill email sent successfully with PDF attachment');
+      //console.log('Bill email sent successfully with PDF attachment');
     } catch (error) {
       console.error('Error sending bill email:', error);
       throw error;
@@ -150,7 +150,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Payment confirmation email sent successfully with invoice');
+      //console.log('Payment confirmation email sent successfully with invoice');
     } catch (error) {
       console.error('Error sending payment confirmation email:', error);
       throw error;
@@ -159,7 +159,7 @@ class EmailService {
 
   // Generate Order Confirmation Email HTML (Updated for CAD)
   generateOrderConfirmationHTML(order, items) {
-    const itemsList = items.map(item => 
+    const itemsList = items.map(item =>
       `<tr>
         <td style="padding: 10px; border-bottom: 1px solid #ddd;">${item.name}</td>
         <td style="padding: 10px; border-bottom: 1px solid #ddd; text-align: center;">${item.quantity}</td>
@@ -329,7 +329,7 @@ class EmailService {
 
   // Generate Admin Notification HTML (Updated for CAD)
   generateAdminNotificationHTML(order, items) {
-    const itemsList = items.map(item => 
+    const itemsList = items.map(item =>
       `<tr>
         <td style="padding: 8px; border-bottom: 1px solid #ddd;">${item.name}</td>
         <td style="padding: 8px; border-bottom: 1px solid #ddd; text-align: center;">${item.quantity}</td>
@@ -392,11 +392,12 @@ class EmailService {
           <p>Subtotal: $${order.orderSummary.subtotal.toFixed(2)}</p>
           <p>Tax (HST): $${order.orderSummary.tax.toFixed(2)}</p>
           <p>Shipping: $${order.orderSummary.shipping.toFixed(2)}</p>
-          ${order.orderSummary.discount > 0 ? `<p style="color: green;">Discount: -$${order.orderSummary.discount.toFixed(2)}</p>` : ''}
+          ${(order.orderSummary.discount && order.orderSummary.discount > 0) ? `<p style="color: green;">Discount: -$${order.orderSummary.discount.toFixed(2)}</p>` : ''}
+          ${(order.orderSummary.firstOrderDiscount && order.orderSummary.firstOrderDiscount > 0) ? `<p style="color: green;">First Order Discount: -$${order.orderSummary.firstOrderDiscount.toFixed(2)}</p>` : ''}
           <p><strong>Total: $${order.orderSummary.total.toFixed(2)} CAD</strong></p>
         </div>
 
-        ${order.appliedCoupon ? `
+        ${(order.appliedCoupon && order.appliedCoupon.code && order.appliedCoupon.discount != null) ? `
         <div style="background: #ecfdf5; padding: 15px; margin: 20px 0; border-radius: 5px;">
           <h3 style="margin: 0 0 10px 0; color: #059669;">Applied Coupon</h3>
           <p><strong>Code:</strong> ${order.appliedCoupon.code}</p>
@@ -408,11 +409,11 @@ class EmailService {
           <h3 style="margin: 0 0 10px 0; color: ${order.paymentMethod === 'cod' ? '#92400e' : '#1e40af'};">
             ${order.paymentMethod === 'cod' ? '💰 Cash on Delivery' : '💳 Card Payment'}
           </h3>
-          ${order.paymentMethod === 'cod' 
-            ? '<p><strong>Action Required:</strong> Prepare for COD delivery and collection</p>'
-            : `<p><strong>Payment Status:</strong> ${order.paymentStatus.toUpperCase()}</p>
+          ${order.paymentMethod === 'cod'
+        ? '<p><strong>Action Required:</strong> Prepare for COD delivery and collection</p>'
+        : `<p><strong>Payment Status:</strong> ${order.paymentStatus.toUpperCase()}</p>
                ${order.stripePaymentId ? `<p><strong>Payment ID:</strong> ${order.stripePaymentId}</p>` : ''}`
-          }
+      }
         </div>
 
         <div style="background: #fee2e2; padding: 15px; margin: 20px 0; border-radius: 5px; border-left: 4px solid #dc2626;">
@@ -506,7 +507,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Order confirmation email sent successfully with PDF attachment');
+      //console.log('Order confirmation email sent successfully with PDF attachment');
     } catch (error) {
       console.error('Error sending order confirmation email:', error);
       throw error;
@@ -518,7 +519,7 @@ class EmailService {
       const emailHTML = this.generateInvoiceEmailHTML(order, items);
 
       const mailOptions = {
-       from: {
+        from: {
           name: 'Iyappaa Sweets & Snacks',
           address: process.env.EMAIL_USER
         },
@@ -535,7 +536,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Invoice email sent successfully with PDF attachment');
+      //console.log('Invoice email sent successfully with PDF attachment');
     } catch (error) {
       console.error('Error sending invoice email:', error);
       throw error;
@@ -564,7 +565,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Bill email sent successfully with PDF attachment');
+      //console.log('Bill email sent successfully with PDF attachment');
     } catch (error) {
       console.error('Error sending bill email:', error);
       throw error;
@@ -587,7 +588,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Admin notification email sent successfully');
+      //console.log('Admin notification email sent successfully');
     } catch (error) {
       console.error('Error sending admin notification email:', error);
       throw error;
@@ -616,7 +617,7 @@ class EmailService {
       };
 
       await this.transporter.sendMail(mailOptions);
-      console.log('Payment confirmation email sent successfully with invoice');
+      //console.log('Payment confirmation email sent successfully with invoice');
     } catch (error) {
       console.error('Error sending payment confirmation email:', error);
       throw error;
@@ -638,11 +639,11 @@ class EmailService {
   }
 
   // COD Order Cancellation Email
-async sendCODCancellationEmail(order, user) {
-  try {
-    const subject = `Order Cancelled - ${order.orderNumber}`;
-    
-    const html = `
+  async sendCODCancellationEmail(order, user) {
+    try {
+      const subject = `Order Cancelled - ${order.orderNumber}`;
+
+      const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
           <h1 style="color: #dc2626; margin: 0;">Order Cancelled</h1>
@@ -697,29 +698,29 @@ async sendCODCancellationEmail(order, user) {
       </div>
     `;
 
-    await this.transporter.sendMail({
-      from: {
-        name: 'Iyappaa Sweets & Snacks',
-        address: process.env.EMAIL_USER
-      },
-      to: order.contactInfo.email,
-      subject: subject,
-      html: html
-    });
+      await this.transporter.sendMail({
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
+        to: order.contactInfo.email,
+        subject: subject,
+        html: html
+      });
 
-    console.log(`COD cancellation email sent for order ${order.orderNumber}`);
-  } catch (error) {
-    console.error('Error sending COD cancellation email:', error);
-    throw error;
+      //console.log(`COD cancellation email sent for order ${order.orderNumber}`);
+    } catch (error) {
+      console.error('Error sending COD cancellation email:', error);
+      throw error;
+    }
   }
-}
 
-// Card Order Cancellation with Refund Email
-async sendCardCancellationEmail(order, refundInfo, user) {
-  try {
-    const subject = `Order Cancelled & Refund Initiated - ${order.orderNumber}`;
-    
-    const html = `
+  // Card Order Cancellation with Refund Email
+  async sendCardCancellationEmail(order, refundInfo, user) {
+    try {
+      const subject = `Order Cancelled & Refund Initiated - ${order.orderNumber}`;
+
+      const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
           <h1 style="color: #dc2626; margin: 0;">Order Cancelled</h1>
@@ -794,29 +795,29 @@ async sendCardCancellationEmail(order, refundInfo, user) {
       </div>
     `;
 
-    await this.transporter.sendMail({
-      from: {
-        name: 'Iyappaa Sweets & Snacks',
-        address: process.env.EMAIL_USER
-      },
-      to: order.contactInfo.email,
-      subject: subject,
-      html: html
-    });
+      await this.transporter.sendMail({
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
+        to: order.contactInfo.email,
+        subject: subject,
+        html: html
+      });
 
-    console.log(`Card cancellation email sent for order ${order.orderNumber}`);
-  } catch (error) {
-    console.error('Error sending card cancellation email:', error);
-    throw error;
+      //console.log(`Card cancellation email sent for order ${order.orderNumber}`);
+    } catch (error) {
+      console.error('Error sending card cancellation email:', error);
+      throw error;
+    }
   }
-}
 
-// Refund Completion Email
-async sendRefundCompletionEmail(order, refund, user) {
-  try {
-    const subject = `Refund Completed - ${order.orderNumber}`;
-    
-    const html = `
+  // Refund Completion Email
+  async sendRefundCompletionEmail(order, refund, user) {
+    try {
+      const subject = `Refund Completed - ${order.orderNumber}`;
+
+      const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
           <h1 style="color: #16a34a; margin: 0;">Refund Completed</h1>
@@ -872,29 +873,29 @@ async sendRefundCompletionEmail(order, refund, user) {
       </div>
     `;
 
-    await this.transporter.sendMail({
-      from: {
-        name: 'Iyappaa Sweets & Snacks',
-        address: process.env.EMAIL_USER
-      },
-      to: refund.customerInfo.email,
-      subject: subject,
-      html: html
-    });
+      await this.transporter.sendMail({
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
+        to: refund.customerInfo.email,
+        subject: subject,
+        html: html
+      });
 
-    console.log(`Refund completion email sent for order ${order.orderNumber}`);
-  } catch (error) {
-    console.error('Error sending refund completion email:', error);
-    throw error;
+      //console.log(`Refund completion email sent for order ${order.orderNumber}`);
+    } catch (error) {
+      console.error('Error sending refund completion email:', error);
+      throw error;
+    }
   }
-}
 
-// Admin Cancellation Notification
-async sendAdminCancellationNotification(order, refundInfo, user) {
-  try {
-    const subject = `Order Cancellation Alert - ${order.orderNumber}`;
-    
-    const html = `
+  // Admin Cancellation Notification
+  async sendAdminCancellationNotification(order, refundInfo, user) {
+    try {
+      const subject = `Order Cancellation Alert - ${order.orderNumber}`;
+
+      const html = `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="text-align: center; margin-bottom: 30px;">
           <h1 style="color: #dc2626; margin: 0;">Order Cancellation Alert</h1>
@@ -983,31 +984,31 @@ async sendAdminCancellationNotification(order, refundInfo, user) {
       </div>
     `;
 
-    // Send to admin email (you should have this in your environment variables)
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@yourdomain.com';
-    
-    await this.transporter.sendMail({
-      from: {
-        name: 'Iyappaa Sweets & Snacks',
-        address: process.env.EMAIL_USER
-      },
-      to: adminEmail,
-      subject: subject,
-      html: html
-    });
+      // Send to admin email (you should have this in your environment variables)
+      const adminEmail = process.env.ADMIN_EMAIL || 'admin@yourdomain.com';
 
-    console.log(`Admin cancellation notification sent for order ${order.orderNumber}`);
-  } catch (error) {
-    console.error('Error sending admin cancellation notification:', error);
-    throw error;
+      await this.transporter.sendMail({
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
+        to: adminEmail,
+        subject: subject,
+        html: html
+      });
+
+      //console.log(`Admin cancellation notification sent for order ${order.orderNumber}`);
+    } catch (error) {
+      console.error('Error sending admin cancellation notification:', error);
+      throw error;
+    }
   }
-}
-// Password Reset Email
-async sendPasswordResetEmail(user, resetUrl, token) {
-  try {
-    const subject = 'Password Reset Request - Iyappaa Sweets & Snacks';
-    
-    const html = `
+  // Password Reset Email
+  async sendPasswordResetEmail(user, resetUrl, token) {
+    try {
+      const subject = 'Password Reset Request - Iyappaa Sweets & Snacks';
+
+      const html = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -1089,29 +1090,29 @@ async sendPasswordResetEmail(user, resetUrl, token) {
       </html>
     `;
 
-    await this.transporter.sendMail({
-      from: {
-        name: 'Iyappaa Sweets & Snacks',
-        address: process.env.EMAIL_USER
-      },
-      to: user.email,
-      subject: subject,
-      html: html
-    });
+      await this.transporter.sendMail({
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
+        to: user.email,
+        subject: subject,
+        html: html
+      });
 
-    console.log(`Password reset email sent to ${user.email}`);
-  } catch (error) {
-    console.error('Error sending password reset email:', error);
-    throw error;
+      //console.log(`Password reset email sent to ${user.email}`);
+    } catch (error) {
+      console.error('Error sending password reset email:', error);
+      throw error;
+    }
   }
-}
 
-// Password Change Confirmation Email
-async sendPasswordChangeConfirmationEmail(user) {
-  try {
-    const subject = 'Password Changed Successfully - Iyappaa Sweets & Snacks';
-    
-    const html = `
+  // Password Change Confirmation Email
+  async sendPasswordChangeConfirmationEmail(user) {
+    try {
+      const subject = 'Password Changed Successfully - Iyappaa Sweets & Snacks';
+
+      const html = `
       <!DOCTYPE html>
       <html>
       <head>
@@ -1138,10 +1139,10 @@ async sendPasswordChangeConfirmationEmail(user) {
             </div>
 
             <p style="font-size: 15px; color: #555; line-height: 1.8; margin: 25px 0;">
-              This email confirms that your password was recently changed on <strong>${new Date().toLocaleString('en-US', { 
-                dateStyle: 'full', 
-                timeStyle: 'short' 
-              })}</strong>.
+              This email confirms that your password was recently changed on <strong>${new Date().toLocaleString('en-US', {
+        dateStyle: 'full',
+        timeStyle: 'short'
+      })}</strong>.
             </p>
 
             <!-- Security Alert Box -->
@@ -1195,22 +1196,22 @@ async sendPasswordChangeConfirmationEmail(user) {
       </html>
     `;
 
-    await this.transporter.sendMail({
-      from: {
-        name: 'Iyappaa Sweets & Snacks',
-        address: process.env.EMAIL_USER
-      },
-      to: user.email,
-      subject: subject,
-      html: html
-    });
+      await this.transporter.sendMail({
+        from: {
+          name: 'Iyappaa Sweets & Snacks',
+          address: process.env.EMAIL_USER
+        },
+        to: user.email,
+        subject: subject,
+        html: html
+      });
 
-    console.log(`Password change confirmation email sent to ${user.email}`);
-  } catch (error) {
-    console.error('Error sending password change confirmation email:', error);
-    throw error;
+      //console.log(`Password change confirmation email sent to ${user.email}`);
+    } catch (error) {
+      console.error('Error sending password change confirmation email:', error);
+      throw error;
+    }
   }
-}
 }
 
 module.exports = EmailService;

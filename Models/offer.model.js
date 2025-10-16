@@ -40,6 +40,10 @@ const offerSchema = new mongoose.Schema({
   applicableCategories: [{
     type: String
   }],
+  applicableProducts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Product'
+  }],
   minimumOrderAmount: {
     type: Number,
     default: 0

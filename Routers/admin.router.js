@@ -24,29 +24,27 @@ router.get('/users/feedback', adminController.getUserFeedback);
 router.get('/products/stats', adminController.getProductStats);
 
 // Product CRUD Operations
-// If you added methods to admin.controller.js, use adminController
-// If you created separate product.controller.js, use productController
-router.post('/products', 
-  adminController.uploadProductImage, 
+router.post('/products',
+  adminController.uploadProductImage,
   adminController.createProduct
 );
 
-router.put('/products/:productId', 
-  adminController.uploadProductImage, 
+router.put('/products/:productId',
+  adminController.uploadProductImage,
   adminController.updateProduct
 );
 
-router.delete('/products/:productId', 
+router.delete('/products/:productId',
   adminController.deleteProduct
 );
 
 // Bulk Import
-router.post('/products/bulk-import', 
+router.post('/products/bulk-import',
   adminController.bulkImportProducts
 );
 
 // Export (optional - can be handled frontend only)
-router.get('/products/export', 
+router.get('/products/export',
   adminController.exportProducts
 );
 

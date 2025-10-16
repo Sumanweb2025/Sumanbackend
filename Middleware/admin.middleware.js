@@ -12,7 +12,7 @@ const adminMiddleware = async (req, res, next) => {
 
     // Get user details
     const user = await User.findById(req.user.userId);
-    
+
     if (!user) {
       return res.status(404).json({
         success: false,

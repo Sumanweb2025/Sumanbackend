@@ -3,6 +3,8 @@ const Cart = require('../Models/cart.model');
 const Coupon = require('../Models/coupon.model');
 const Payment = require('../Models/payment.model');
 const Refund = require('../Models/refund.model');
+const Product = require('../Models/product.model');
+const Offer = require('../Models/offer.model');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const EmailService = require('../Services/mailer.js');
 const { v4: uuidv4 } = require('uuid');
@@ -12,6 +14,56 @@ const emailService = new EmailService();
 // Helper function to get session ID
 const getSessionId = (req) => {
   return req.header('X-Session-ID') || req.body.sessionId;
+};
+
+// Helper function to check if product is eligible for offer
+const isProductEligibleForOffer = (offer, product) => {
+  if (!offer || !product) return false;
+
+  const productId = product._id || product.product_id;
+
+  // Check if offer is active and within date range
+  const now = new Date();
+  const startDate = new Date(offer.startDate);
+  const endDate = new Date(offer.endDate);
+
+  if (!offer.isActive || now < startDate || now > endDate) {
+    return false;
+  }
+
+  // Priority 1: Check specific products
+  if (offer.applicableProducts && offer.applicableProducts.length > 0) {
+    return offer.applicableProducts.some(p => {
+      const offerProductId = typeof p === 'object' ? (p.product_id || p._id) : p;
+      return String(offerProductId) === String(productId);
+    });
+  }
+
+  // Priority 2: Check categories
+  if (offer.applicableCategories && offer.applicableCategories.length > 0) {
+    return offer.applicableCategories.some(
+      cat => cat.toLowerCase() === (product.category || '').toLowerCase()
+    );
+  }
+
+  // Priority 3: Apply to all
+  return true;
+};
+
+// Helper function to calculate discounted price
+const calculateDiscountedPrice = (offer, originalPrice) => {
+  if (!offer || !originalPrice) return originalPrice;
+
+  let discountedPrice = originalPrice;
+
+  if (offer.discountType === 'percentage') {
+    const discountAmount = (originalPrice * offer.discount) / 100;
+    discountedPrice = originalPrice - discountAmount;
+  } else if (offer.discountType === 'fixed') {
+    discountedPrice = originalPrice - offer.discount;
+  }
+
+  return Math.max(0, discountedPrice);
 };
 
 // Helper function to add imageUrl to product
@@ -46,6 +98,43 @@ const safeParseInt = (value) => {
   return isNaN(parsed) ? 0 : parsed;
 };
 
+// Helper function to restore inventory stock when order is cancelled
+const restoreInventoryStock = async (orderItems) => {
+  const stockRestorations = [];
+
+  try {
+    for (const item of orderItems) {
+      const product = await Product.findById(item.productId);
+
+      if (!product) {
+        console.warn(`⚠️ Product ${item.name} not found in inventory during cancellation. Skipping stock restoration.`);
+        continue;
+      }
+
+      // Restore stock
+      const oldStock = product.piece;
+      product.piece += item.quantity;
+      await product.save();
+
+      stockRestorations.push({
+        productId: product._id,
+        productName: product.name,
+        oldStock,
+        newStock: product.piece,
+        restoredBy: item.quantity
+      });
+
+      //console.log(`Stock restored for ${product.name}: ${oldStock} → ${product.piece} (Returned: ${item.quantity})`);
+    }
+
+    return { success: true, restorations: stockRestorations };
+
+  } catch (error) {
+    console.error('Error restoring inventory during cancellation:', error);
+    throw error;
+  }
+};
+
 // Get checkout data (supports guest users)
 const getCheckoutData = async (req, res) => {
   try {
@@ -63,12 +152,12 @@ const getCheckoutData = async (req, res) => {
 
       cart = await Cart.findOne({ sessionId, isGuest: true }).populate({
         path: 'items.productId',
-        select: 'name price image description category brand'
+        select: 'name price image description category brand product_id _id'
       });
     } else {
       cart = await Cart.findOne({ userId }).populate({
         path: 'items.productId',
-        select: 'name price image description category brand'
+        select: 'name price image description category brand product_id _id'
       });
     }
 
@@ -79,34 +168,56 @@ const getCheckoutData = async (req, res) => {
       });
     }
 
+    // Fetch active offer
+    let activeOffer = null;
+    try {
+      activeOffer = await Offer.findOne({
+        isActive: true,
+        startDate: { $lte: new Date() },
+        endDate: { $gte: new Date() }
+      });
+    } catch (offerError) {
+      console.log('No active offer found:', offerError);
+    }
+
     const cartItemsWithImageUrls = cart.items.map(item => ({
       ...item.toObject(),
       quantity: safeParseInt(item.quantity),
       productId: addImageUrlToProduct(item.productId, req)
     }));
 
+
+    // Calculate subtotal WITH offer discounts
+    let offerSavings = 0;
     const subtotal = cartItemsWithImageUrls.reduce((total, item) => {
       const price = safeParseFloat(item.productId.price);
       const quantity = safeParseInt(item.quantity);
+      // Check if product is eligible for offer
+      if (activeOffer && isProductEligibleForOffer(activeOffer, item.productId)) {
+        const discountedPrice = calculateDiscountedPrice(activeOffer, price);
+        const savedAmount = (price - discountedPrice) * quantity;
+        offerSavings += savedAmount;
+        return total + (discountedPrice * quantity);
+      }
       return total + (price * quantity);
     }, 0);
 
     const tax = subtotal * 0.13;
     const shipping = subtotal >= 75 ? 0 : 9.99;
-    
-    // NEW: Check for first order discount
+
+    // Check for first order discount
     let firstOrderDiscount = 0;
     if (userId && !isGuest) {
-      const previousOrders = await Order.countDocuments({ 
-        userId, 
-        paymentStatus: { $in: ['paid', 'pending'] } 
+      const previousOrders = await Order.countDocuments({
+        userId,
+        paymentStatus: { $in: ['paid', 'pending'] }
       });
-      
+
       if (previousOrders === 0) {
         firstOrderDiscount = subtotal * 0.02; // 2% discount
       }
     }
-    
+
     const total = subtotal + tax + shipping - firstOrderDiscount;
 
     res.status(200).json({
@@ -117,10 +228,12 @@ const getCheckoutData = async (req, res) => {
           subtotal: subtotal.toFixed(2),
           tax: tax.toFixed(2),
           shipping: shipping.toFixed(2),
-          firstOrderDiscount: firstOrderDiscount.toFixed(2), // NEW
+          offerSavings: offerSavings.toFixed(2),
+          firstOrderDiscount: firstOrderDiscount.toFixed(2),
           total: total.toFixed(2),
           currency: 'CAD'
         },
+        activeOffer: activeOffer,
         sessionId: isGuest ? cart.sessionId : null
       }
     });
@@ -718,9 +831,46 @@ const cancelOrder = async (req, res) => {
             }
           );
         }
+      } else if (order.paymentMethod === 'cod') {
+        // Update payment status to cancelled for COD orders
+        await Payment.findByIdAndUpdate(payment._id, {
+          paymentStatus: 'cancelled'
+        });
       }
 
-      await sendCancellationEmails(order, refundResult, req.user);
+      // Restore inventory stock for cancelled order items
+      try {
+        const stockRestoration = await restoreInventoryStock(order.items);
+        //console.log(`Inventory restored successfully for cancelled order ${order.orderNumber}:`, stockRestoration.restorations.length, 'products updated');
+
+        // Update order with stock restoration info
+        await Order.findByIdAndUpdate(orderId, {
+          $set: {
+            notes: order.notes
+              ? `${order.notes}\n\nStock restored: ${stockRestoration.restorations.length} products returned to inventory.`
+              : `Stock restored: ${stockRestoration.restorations.length} products returned to inventory.`
+          }
+        });
+      } catch (stockError) {
+        console.error('Error restoring inventory for cancelled order:', stockError);
+        // Don't fail the cancellation if stock restoration fails
+        // Log it for manual review
+        await Order.findByIdAndUpdate(orderId, {
+          $set: {
+            notes: order.notes
+              ? `${order.notes}\n\nWARNING: Stock restoration failed. Please manually restore inventory. Error: ${stockError.message}`
+              : `WARNING: Stock restoration failed. Please manually restore inventory. Error: ${stockError.message}`
+          }
+        });
+      }
+
+      // Fetch the updated order with cancelledAt field for email
+      const updatedOrder = await Order.findById(orderId).populate({
+        path: 'items.productId',
+        select: 'name price image description category brand'
+      });
+
+      await sendCancellationEmails(updatedOrder, refundResult, req.user);
 
       res.status(200).json({
         success: true,

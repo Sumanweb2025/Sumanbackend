@@ -23,11 +23,11 @@ const addImageUrlToProduct = (product, req) => {
 
   let imageUrl = null;
   let imageUrls = [];
-  
+
   if (productObj.image) {
     if (Array.isArray(productObj.image)) {
       // Handle array of images
-      imageUrls = productObj.image.map(img => 
+      imageUrls = productObj.image.map(img =>
         `${req.protocol}://${req.get('host')}/images/Products/${img}`
       );
       imageUrl = imageUrls[0]; // First image as primary
@@ -58,7 +58,7 @@ const calculateCartTotals = (cart) => {
     return total + (price * quantity);
   }, 0);
 
-  const tax = subtotal * 0.13; // 13% HST (Canada)
+  const tax = subtotal * 0.13; // 13% HST 
   const shipping = subtotal >= 75 ? 0 : 9.99;
 
   const totalAmount = subtotal + tax + shipping;
@@ -103,8 +103,8 @@ const getCart = async (req, res) => {
     if (!cart) {
       return res.status(200).json({
         success: true,
-        data: { 
-          items: [], 
+        data: {
+          items: [],
           totalAmount: 0,
           sessionId: isGuest ? getSessionId(req) : null
         },
@@ -189,7 +189,7 @@ const addToCart = async (req, res) => {
     if (isGuest) {
       // Guest user logic
       const sessionId = getSessionId(req);
-      
+
       cart = await Cart.findOne({ sessionId, isGuest: true });
 
       if (!cart) {
@@ -301,7 +301,7 @@ const updateCartItem = async (req, res) => {
     }
 
     let cart;
-    
+
     if (isGuest) {
       const sessionId = getSessionId(req);
       cart = await Cart.findOne({ sessionId, isGuest: true });
@@ -396,7 +396,7 @@ const removeFromCart = async (req, res) => {
     const { productId } = req.params;
 
     let cart;
-    
+
     if (isGuest) {
       const sessionId = getSessionId(req);
       cart = await Cart.findOne({ sessionId, isGuest: true });
@@ -502,8 +502,8 @@ const clearCart = async (req, res) => {
 
     res.status(200).json({
       success: true,
-      data: { 
-        items: [], 
+      data: {
+        items: [],
         totalAmount: 0,
         sessionId: isGuest ? getSessionId(req) : null
       },

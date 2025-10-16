@@ -37,10 +37,10 @@ exports.subscribe = async (req, res) => {
       });
     }
 
-    const { 
-      email, 
-      name, 
-      phone, 
+    const {
+      email,
+      name,
+      phone,
       subscriptionType = 'newsletter',
       preferences = {},
       source = 'website',
@@ -62,7 +62,7 @@ exports.subscribe = async (req, res) => {
       } else if (existingSubscription.status === 'unsubscribed') {
         // Reactivate subscription
         await existingSubscription.resubscribe();
-        
+
         return res.status(200).json({
           success: true,
           message: 'Successfully resubscribed!',
@@ -133,7 +133,7 @@ exports.subscribe = async (req, res) => {
         message: 'Email is already subscribed to this subscription type'
       });
     }
-    
+
     res.status(500).json({
       success: false,
       message: 'Server error during subscription'
@@ -193,7 +193,7 @@ exports.unsubscribe = async (req, res) => {
     const { token, email } = req.query;
 
     let subscription;
-    
+
     if (token) {
       // Unsubscribe via token (from email link)
       subscription = await Subscription.findOne({
@@ -309,10 +309,10 @@ exports.updatePreferences = async (req, res) => {
 // Admin: Get all subscriptions
 exports.getAllSubscriptions = async (req, res) => {
   try {
-    const { 
-      page = 1, 
-      limit = 10, 
-      status = 'all', 
+    const {
+      page = 1,
+      limit = 10,
+      status = 'all',
       userType = 'all',
       search = ''
     } = req.query;
@@ -372,17 +372,17 @@ exports.getAllSubscriptions = async (req, res) => {
 exports.getSubscriptionStats = async (req, res) => {
   try {
     const stats = await Subscription.getSubscriptionStats();
-    
+
     // Additional stats by subscription type
     const typeStats = await Subscription.aggregate([
       {
         $group: {
           _id: '$subscriptionType',
           count: { $sum: 1 },
-          active: { 
-            $sum: { 
-              $cond: [{ $eq: ['$status', 'active'] }, 1, 0] 
-            } 
+          active: {
+            $sum: {
+              $cond: [{ $eq: ['$status', 'active'] }, 1, 0]
+            }
           }
         }
       }

@@ -128,11 +128,11 @@ exports.updateCoupon = async (req, res) => {
 
     // If code is being updated, check if new code already exists
     if (req.body.code && req.body.code.toUpperCase() !== coupon.code) {
-      const existingCoupon = await Coupon.findOne({ 
+      const existingCoupon = await Coupon.findOne({
         code: req.body.code.toUpperCase(),
         _id: { $ne: req.params.id }
       });
-      
+
       if (existingCoupon) {
         return res.status(400).json({
           success: false,
@@ -224,8 +224,8 @@ exports.getCouponStats = async (req, res) => {
   try {
     const totalCoupons = await Coupon.countDocuments();
     const activeCoupons = await Coupon.countDocuments({ isActive: true });
-    const expiredCoupons = await Coupon.countDocuments({ 
-      validUntil: { $lt: new Date() } 
+    const expiredCoupons = await Coupon.countDocuments({
+      validUntil: { $lt: new Date() }
     });
 
     const mostUsedCoupons = await Coupon.find()
