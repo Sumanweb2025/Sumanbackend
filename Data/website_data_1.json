@@ -13,8 +13,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["bombay_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["bombay_mixture.png"
 ]
 },
  {
@@ -30,8 +29,7 @@
   "Piece": 10,
   "Rating" : 4.2,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
- "image": ["corn_mixture.png",
-  "peanut_halwa_hover.png"
+ "image": ["corn_mixture.png"
 ]
 },
  {
@@ -64,8 +62,7 @@
   "Piece": 10,
   "Rating" : 4,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["mild_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["mild_mixture.png"
 ]
 },
  {
@@ -81,8 +78,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["hot_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["hot_mixture.png"
 ]
 },
  {
@@ -98,8 +94,7 @@
   "Piece": 10,
   "Rating" : 4.9,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["hot_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["hot_mixture.png"
 ]
 },
  {
@@ -109,14 +104,13 @@
   "Gram": "500g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
-  "Price": 0,
+  "Price": 5.99,
   "Ingredients": "Refined Palm Oil, Basen Flour, Rice Flour, Corn Flour, Peanuts, Cashew Nuts, Cassava, Chick Peas, Chana Dal, Dalia Split, Monosodium Glutamate, Food Color, Curry Leaves, Green Peas, Salt, Asafoetida, Ajwain Powder, Cumin Powder, Chilli Powder, Garlic, Herbs & Spices",
   "Description": "Iyappaa Jaffna Mixture brings you the perfect balance of crispiness and spice. Made with premium quality ingredients and seasoned with authentic Jaffna-style spices, it is the ideal companion for tea-time, gatherings, or just to satisfy your cravings for something bold and tasty.",
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["jaffana_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["jaffana_mixture.png"
 ]
 },
  {
@@ -132,8 +126,7 @@
   "Piece": 10,
   "Rating" : 3.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["jaffana_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["jaffana_mixture.png"
 ]
 },
  {
@@ -149,8 +142,7 @@
   "Piece": 10,
   "Rating" : 4,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["jaffana_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["jaffana_mixture.png"
 ]
 },
  {
@@ -166,8 +158,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["kerala_mixture.png",
-  "peanut_halwa_hover.png"
+   "image": ["kerala_mixture.png"
 ]
 },
  {
@@ -177,13 +168,12 @@
   "Gram": "500g",
   "Category": "Snacks",
   "Sub-category": "Mixture",
-  "Price": 0,
+  "Price": 6.90,
   "Description": "Iyappaa Ragi Mixture is a wholesome and crunchy snack made with the goodness of ragi (finger millet). Blended with sev, roasted nuts, and authentic spices, this mixture not only delights your taste buds but also offers a healthier alternative to regular mixtures.",
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["ragi_mixture.png",
-  "peanut_halwa_hover.png"
+  "image": ["ragi_mixture.png"
 ]
 },
  {
@@ -199,8 +189,7 @@
   "Piece": 10,
   "Rating" : 5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["bananachips_salt.png",
-  "peanut_halwa_hover.png"
+  "image": ["bananachips_salt.png"
 ]
 },
  {
@@ -216,8 +205,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["bananachips_salt.png",
-  "peanut_halwa_hover.png"
+   "image": ["bananachips_salt.png"
 ]
 },
  {
@@ -233,8 +221,7 @@
   "Piece": 10,
   "Rating" : 3.9,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["banabachips_spicy.png",
-  "peanut_halwa_hover.png"
+  "image": ["bananachips_spicy.png"
 ]
 },
  {
@@ -250,8 +237,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["banabachips_spicy.png",
-  "peanut_halwa_hover.png"
+   "image": ["banabachips_spicy.png"
 ]
 },
  {
@@ -267,8 +253,7 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["sweet_banana.png",
-  "peanut_halwa_hover.png"
+  "image": ["sweet_banana.png"
 ]
 },
  {
@@ -284,8 +269,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["sakkaravattu.png",
-  "peanut_halwa_hover.png"
+   "image": ["sakkaravattu.png"
 ]
 },
  {
@@ -301,8 +285,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["cassavachips_spicy.png",
-  "peanut_halwa_hover.png"
+   "image": ["cassavachips_spicy.png"
 ]
 },
  {
@@ -318,8 +301,7 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["cassava_chip_salt.png",
-  "peanut_halwa_hover.png"
+  "image": ["cassavachips_salt.png"
 ]
 },
  {
@@ -335,8 +317,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["cassavafinger_chips.png",
-  "peanut_halwa_hover.png"
+   "image": ["cassavafinger_chips.png"
 ]
 },
  {
@@ -352,8 +333,7 @@
   "Piece": 10,
   "Rating" : 4.8,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["cassava_long.png",
-  "peanut_halwa_hover.png"
+   "image": ["cassava_long.png"
 ]
 },
  {
@@ -369,8 +349,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["jackfruit_chips.png",
-  "peanut_halwa_hover.png"
+   "image": ["jackfruit_chips.png"
 ]
 },
  {
@@ -386,8 +365,7 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["kuzhalappam_spicy.png",
-  "peanut_halwa_hover.png"
+   "image": ["kuzhalappam_spicy.png"
 ]
 },
  {
@@ -403,8 +381,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["kuzhalappam_salt.png",
-  "peanut_halwa_hover.png"
+  "image": ["kuzhalappam_salt.png"
 ]
 },
  {
@@ -420,8 +397,7 @@
   "Piece": 10,
   "Rating" : 4.3,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["largerice_murukku.png",
-  "peanut_halwa_hover.png"
+   "image": ["largerice_murukku.png"
 ]
 },
  {
@@ -437,8 +413,7 @@
   "Piece": 10,
   "Rating" : 3.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": ["rice_murukku.png",
-  "peanut_halwa_hover.png"
+   "image": ["rice_murukku.png"
 ]
 },
  {
@@ -454,8 +429,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": ["kai_murukku.png",
-  "peanut_halwa_hover.png"
+  "image": ["kai_murukku.png"
 ]
 },
  {
@@ -840,7 +814,7 @@
   "Gram": "630g",
   "Category": "Snacks",
   "Sub-category": "Candy",
-  "Price": 0,
+  "Price": 4.49,
   "Ingredients": "Tamarind, Sugar, Water, Salt, Spices",
   "Description": "Savor the perfect balance of tangy and sweet with Iyappaa Imli—a classic Indian treat made from ripe tamarind pulp, slow-cooked with jaggery and a blend of traditional spices. This rich, dark paste offers an explosion of flavors, from the initial sour kick of tamarind to the deep sweetness of jaggery, finished with a hint of spice and saltiness.Enjoy it as a standalone snack, use it as a dipping chutney for chaats and snacks, or add a spoonful to your recipes for an authentic tangy twist. Made with care and natural ingredients, Iyappaa Imli brings the vibrant taste of street food right to your home!",
   "Piece": 10,
@@ -870,7 +844,7 @@
   "Gram": "200g",
   "Category": "Sweets",
   "Sub-category": "Candy",
-  "Price": 0,
+  "Price": 0.99,
   "Ingredients": "Candy Sugar",
   "Description": "Discover the pure, unrefined sweetness of Iyappaa Crystal Sugar Candy—a timeless ingredient revered in Indian households and temples. Carefully crystallized from natural sugarcane, these delicate crystals offer a mild, clean sweetness that enhances both spiritual and culinary experiences.Perfect for use as prasadam in poojas and rituals, these sugar crystals carry a sense of purity and devotion. They also serve as a gentle sweetener in traditional drinks like sherbets and panakam, or in desserts where subtle sweetness is desired. Embrace the simplicity and tradition of Iyappaa Crystal Sugar Candy—a symbol of sweetness in every aspect of life.",
   "Piece": 10,
@@ -906,7 +880,7 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "himalaya_seasaltpowder.png"
+   "image": "himalayan_seasaltpowder.png"
 },
  {
   "Product_id": "iy56hsc001",
@@ -921,7 +895,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "himalaya_seasalt.png"
+  "image": "himalayan_seasalt.png"
 },
  {
   "Product_id": "iy57ud30",
@@ -930,7 +904,7 @@
   "Gram": "30kg",
   "Category": "Grocery",
   "Sub-category": "Dal",
-  "Price": 0,
+  "Price": 50.91,
   "Ingredients": "Urad Dal",
   "Description": "Iyappaa Urid Dal—the soul of South Indian comfort food! These whole black gram lentils are the secret behind creamy dals, fluffy idlis, and crispy dosas. Sourced for their premium quality and rich, earthy flavor, they’re a kitchen must-have for authentic homemade meals.Packed with protein and fiber, this dal is as nutritious as it is delicious. Whether you’re simmering it into a hearty dal makhani or grinding it for fermented favorites, Iyappaa Urid Dal delivers consistent results and traditional taste every time.",
   "Piece": 10,
@@ -1005,7 +979,7 @@
   "Gram": "25kg",
   "Category": "Grocery",
   "Sub-category": "Powdered Coconut",
-  "Price": 0,
+  "Price": 26.45,
   "Ingredients": "Coconut Powder",
   "Description": "Iyappaa Coconut Powder is made from finely ground, dried coconut meat, offering a rich, tropical flavor and creamy texture. This versatile powder is perfect for adding authentic coconut taste to both sweet and savory dishes. Easily reconstitute it with water to create coconut milk or cream, or use it directly in baking, smoothies, curries, and desserts.Ideal for those seeking dairy-free alternatives, it’s a kitchen staple for creating luscious sauces, decadent desserts, and flavorful beverages. Enjoy the convenience and natural goodness of coconut in every spoonful!",
   "Piece": 10,
@@ -1016,10 +990,10 @@
  {
   "Product_id": "iy63ra400",
   "Brand": "Iyappaa",
-  "Name": " Red Avul",
+  "Name": " Red Avul",  
   "Gram": "400g",
   "Category": "Grocery",
-  "Price": 0,
+  "Price": 2.87,
   "Ingredients": "Red Avul",
   "Description": "Iyappaa Red Avul (Aval) brings the wholesome goodness of traditional flattened rice to your kitchen! Made from parboiled rice that is pressed and flattened into thin, tender flakes, this versatile ingredient is a staple in South Indian households. Known for its quick cooking time and light texture, it’s perfect for creating both sweet and savory dishes in minutes.Rich in carbohydrates and easy to digest, Red Avul is ideal for breakfast, snacks, or even light meals. Whether you’re making classic poha, upma, or festive treats like aval laddu, Iyappaa Red Avul ensures authentic taste and quality in every bite.",
   "Piece": 10,
@@ -1093,7 +1067,7 @@
   "Gram": "300g",
   "Category": "Grocery",
   "Sub-category": "Fryums",
-  "Price": 0,
+  "Price": 2.0,
   "Ingredients": "Wheat Flour, Potato Starch, Rice Flour, All Purpose Flour, Corn Starch,Tapica Starch, Salt, Chilli, Sago, Onion, Garlic Powder, Herbs & Spices",
   "Description": "Savor the sharp, irresistible taste of onions in every crispy bite with Iyappaa Onion Fryums! These uniquely shaped extruded snacks are crafted with real onion powder and a blend of rice and urad dal flours, seasoned with a hint of spices for a savory, addictive flavor.Light, airy, and perfectly puffed when fried, these fryums are ideal for snacking, parties, or as a side dish. Their bold onion taste and satisfying crunch make them a standout choice for those who love robust flavors. Fry them up in minutes and enjoy the wholesome goodness of a homemade-style snack!",
   "Piece": 10,
@@ -1108,13 +1082,13 @@
   "Gram": "50g",
   "Category": "Grocery",
   "Sub-category": "Spiced",
-  "Price": 0,
+  "Price": 2.00,
   "Ingredients": "Chilli, Yougurt, Salt",
   "Description": "Iyappaa Curd Dried Chilli is a beloved South Indian delicacy that combines the fiery punch of whole red chilies with the tangy richness of curd. These chilies are carefully stuffed with spiced thick yogurt, then sun-dried to perfection to preserve their intense flavor and slightly chewy texture.A versatile ingredient, they can be quickly fried in oil for a crispy, flavorful side dish or tempered into curries and rice dishes for an extra layer of heat and tang. Perfect as a condiment with meals or as a standalone snack, these dried chilies bring the authentic taste of Tamil Nadu kitchens to your home.",
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "driedcurd_chilli.png"
+  "image": "dried_curdchilli.png"
 },
  {
   "Product_id": "iy70dbg100",
@@ -1123,7 +1097,7 @@
   "Gram": "100g",
   "Category": "Grocery",
   "Sub-category": "Savory Snacks",
-  "Price": 0,
+  "Price":2.69 ,
   "Ingredients": "Bitter Guard, Yougurt, Salt",
   "Description": "Iyappaa Dried Bitter Gourd brings the unique bitter-sweet flavor and health benefits of this beloved vegetable to your pantry year-round. Carefully sliced and sun-dried to preserve its nutrients and intensify its distinct taste, it’s a staple in traditional South Indian and Ayurvedic cooking.Rich in antioxidants and known for its blood sugar-regulating properties, dried bitter gourd is perfect for adding depth to curries, stir-fries, and fries. Just soak and cook to enjoy its signature flavor and crispy texture in dishes like poriyal, sambar, or thoran.",
   "Piece": 10,
@@ -1138,7 +1112,7 @@
   "Gram": "150g",
   "Category": "Grocery",
   "Sub-category": "Ayurvedic Foods",
-  "Price": 0,
+  "Price": 2.99,
   "Ingredients": "Turkey Berry, Yougurt, Salt",
   "Description": "Iyappaa Dried Turkey Berry is a crunchy South Indian snack made from sun-dried turkey berries, lightly seasoned for a savory and authentic taste. Perfect for tea-time, evening munching, or as a healthy snack, it combines crispiness with the natural flavor of the berries. Ideal for those seeking traditional homemade snacks with nutritional benefits, it retains the essence of South Indian flavors. Made with quality ingredients and free from preservatives, Iyappaa Dried Turkey Berry delivers a wholesome and tasty experience in every bite.",
   "Piece": 10,
@@ -1213,7 +1187,7 @@
   "Gram": "1kg",
   "Category": "Grocery",
   "Sub-category": "Millets & Grains",
-  "Price": 0,
+  "Price": 5.50,
   "Ingredients": "Kodo Millet",
   "Description": "Kodo Millet is a gluten-free, nutrient-rich grain loaded with protein, fiber, and essential minerals. It supports digestion, helps maintain healthy blood sugar levels, and promotes heart health. Kodo Millet can be used to prepare porridge, upma, pulao, and various healthy baked goods, offering a versatile and wholesome alternative to rice or wheat. Perfect for families, fitness enthusiasts, and anyone seeking natural, nutritious, and easily digestible grains.",
   "Piece": 10,
@@ -1228,13 +1202,13 @@
   "Gram": "1kg",
   "Category": "Grocery",
   "Sub-category": "Millets & Grains",
-  "Price": 0,
+  "Price": 5.00,
   "Ingredients": "Foxtail Millet",
   "Description": "Foxtail Millet is a nutritious, gluten-free grain rich in protein, fiber, and essential minerals like iron and magnesium. Known for its low glycemic index, it helps regulate blood sugar, supports digestion, and promotes heart health. Foxtail Millet can be used in porridge, upma, salads, pulao, and healthy baked goods, making it a versatile and wholesome addition to everyday meals. Ideal for health-conscious individuals and families seeking natural, nutrient-packed grains.",
   "Piece": 10,
   "Rating" : 4.8,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "foxtail_milet.png"
+  "image": "foxtail_millet.png"
 },
  {
   "Product_id": "iy78bm001",
@@ -1243,13 +1217,13 @@
   "Gram": "1kg",
   "Category": "Grocery",
   "Sub-category": "Millets & Grains",
-  "Price": 0,
+  "Price": 5.75,
   "Ingredients": "Barnyard Millet",
   "Description": "Barnyard Millet is a gluten-free, nutrient-rich grain high in fiber, protein, and essential minerals. It aids digestion, helps maintain healthy blood sugar levels, and supports weight management, making it ideal for a balanced diet. Barnyard Millet can be used in porridge, upma, khichdi, and baked goods, offering a versatile and wholesome alternative to rice or wheat. Perfect for health-conscious individuals and families looking for natural, easily digestible, and nutrient-packed grains.",
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "barnyard_milet.png"
+  "image": "barnyarn_millet.png"
 },
  {
   "Product_id": "iy79wc908",
@@ -1258,13 +1232,13 @@
   "Gram": "908g",
   "Category": "Grocery",
   "Sub-category": "Grains",
-  "Price": 0,
+  "Price": 6.99,
   "Ingredients": "White Corn",
   "Description": "White Corn is a versatile, naturally sweet grain rich in carbohydrates, fiber, and essential nutrients like B vitamins and antioxidants. It supports digestion, provides sustained energy, and adds a naturally mild flavor to meals. White Corn can be used in porridges, salads, soups, polenta, and snacks, making it a wholesome addition to daily diets. Ideal for families and health-conscious individuals looking for nutritious and easily digestible grains.",
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "whitecorn.png"
+  "image": "white_corn.png"
 },
  {
   "Product_id": "iy80ps400",
@@ -1303,7 +1277,7 @@
   "Gram": "1.5kg",
   "Category": "Grocery",
   "Sub-category": "Sago / Tapioca Flour",
-  "Price": 0,
+  "Price": 5.99,
   "Ingredients": "Sago",
   "Description": "Sago Powder for Idly is a finely milled tapioca flour specially crafted to give soft, spongy, and fluffy idlies. It blends perfectly with rice and lentil batters, enhancing texture and fermentation for light and airy steamed cakes. Rich in easily digestible carbohydrates, it provides energy while maintaining a neutral taste that complements any savory or sweet accompaniment. Perfect for breakfast, snacks, and traditional South Indian dishes.",
   "Piece": 10,
@@ -1348,7 +1322,7 @@
   "Gram": "1kg",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 4.99,
   "Ingredients": "Unrefiend Cane Sugar",
   "Description": "Jaggery Achu Bottle contains traditional unrefined jaggery made from pure sugarcane juice, shaped into convenient small discs and packed in a hygienic, reusable bottle. Rich in natural minerals like iron and calcium, it offers a healthier alternative to refined sugar. Its natural caramel-like sweetness enhances desserts, beverages, and traditional recipes, making it easy to use and store. Perfect for daily use and festive cooking, combining convenience with wholesome nutrition.",
   "Piece": 10,
@@ -1363,7 +1337,7 @@
   "Gram": "1kg",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 2.99,
   "Ingredients": "Unrefiend Cane Sugar",
   "Description": "Jaggery Achu Yellow is traditional, unrefined jaggery made from pure sugarcane juice, shaped into small discs with a natural golden-yellow hue. Rich in iron and essential minerals, it provides a healthier alternative to refined sugar. Its mild caramel-like flavor enhances sweets, beverages, and festive recipes. Convenient and wholesome, Jaggery Achu Yellow is perfect for everyday cooking, traditional dishes, and natural sweetening.",
   "Piece": 10,
@@ -1378,7 +1352,7 @@
   "Gram": "1kg",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 3.50,
   "Ingredients": "Unrefiend Cane Sugar",
   "Description": "Jaggery Achu Black is traditional, unrefined jaggery made from pure sugarcane juice, shaped into small discs with a rich dark-brown color. Naturally packed with iron and minerals, it serves as a healthier alternative to refined sugar. Its deep caramel-like flavor enhances sweets, beverages, and festive recipes, while adding an authentic taste to traditional dishes. Convenient, wholesome, and naturally sweet, Jaggery Achu Black is ideal for daily use and special culinary preparations.",
   "Piece": 10,
@@ -1393,7 +1367,7 @@
   "Gram": "0.908g",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 4.00,
   "Ingredients": "Unrefiend Cane Sugar",
   "Description": "Jaggery Achu Small Yellow is traditional unrefined jaggery made from pure sugarcane juice, molded into small, easy-to-use discs with a natural golden-yellow color. Rich in iron and essential minerals, it is a healthier alternative to refined sugar. Its mild, caramel-like sweetness enhances desserts, beverages, and traditional recipes, making it convenient for daily cooking and festive treats. Perfect for families seeking natural, wholesome, and easy-to-use jaggery.",
   "Piece": 10,
@@ -1408,7 +1382,7 @@
   "Gram": "400g",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 2.99,
   "Ingredients": "Unrefiend Cane Sugar",
   "Description": "Jaggery Round is a traditional, unrefined sweetener made from pure sugarcane juice. Naturally rich in iron and minerals, it offers a healthier alternative to refined sugar while imparting a rich, caramel-like flavor to dishes. Ideal for making desserts, sweets, beverages, and traditional recipes, it melts easily and enhances the natural taste of your preparations. Perfect for families and health-conscious individuals looking for natural, wholesome sweetness.",
   "Piece": 10,
@@ -1424,7 +1398,7 @@
   "Gram": "400g",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 7.99,
   "Ingredients": "Unrefiend Cane Sugar",
   "Description": "Jaggery Achu is traditional unrefined jaggery made from pure sugarcane juice, molded into small, convenient discs. Naturally rich in iron and minerals, it’s a healthier alternative to refined sugar. Its sweet, caramel-like flavor enhances desserts, beverages, and festive recipes, while being easy to use in daily cooking. Ideal for families and those seeking natural, wholesome sweetness.",
   "Piece": 10,
@@ -1529,7 +1503,7 @@
   "Gram": "350g",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 3.99,
   "Ingredients": "Dry Ginger, Palm Salp, Jaggery",
   "Description": "Sukku Jaggery Powder is a natural sweetener infused with the goodness of dry ginger (sukku). It combines the rich caramel-like taste of jaggery with the digestive and immunity-boosting benefits of sukku. Naturally packed with iron and minerals, this herbal blend helps improve digestion, relieve cold-related discomfort, and energize the body. Perfect for tea, herbal drinks, traditional recipes, or as a healthy alternative to refined sugar, Sukku Jaggery Powder is both delicious and nourishing.",
   "Piece": 10,
@@ -1544,7 +1518,7 @@
   "Gram": "350g",
   "Category": "Grocery",
   "Sub-category": "Jaggery",
-  "Price": 0,
+  "Price": 2.99,
   "Ingredients": "Coconut Salp, Jaggery",
   "Description": "Coconut Jaggery Powder is a natural, unrefined sweetener made from the sap of coconut palm trees, finely ground for easy use. Rich in iron, calcium, and essential minerals, it is a healthier alternative to refined sugar. With its unique earthy-sweet flavor and quick-dissolving texture, it blends perfectly in tea, coffee, milk, sweets, and traditional recipes. Convenient, nutritious, and delicious, Coconut Jaggery Powder is the perfect choice for families seeking natural and wholesome sweetness.",
   "Piece": 10,
@@ -1573,7 +1547,7 @@
   "Gram": "5L",
   "Category": "Grocery",
   "Sub-category": "Oils",
-  "Price": 0,
+  "Price": 38.09,
   "Ingredients": "Peanut",
   "Description": "Mantra Peanut Oil is a premium-quality, cold-pressed oil extracted from the finest peanuts to retain its natural aroma, flavor, and nutrients. Rich in healthy fats, antioxidants, and Vitamin E, it supports heart health, boosts immunity, and enhances overall wellness. With its high smoking point, it is perfect for frying, sautéing, and traditional Indian cooking, bringing a delicious nutty flavor to your dishes. Free from chemicals and preservatives, Mantra Peanut Oil is a wholesome, natural choice for everyday cooking.",
   "Piece": 10,
@@ -1587,7 +1561,7 @@
   "Gram": "100ml",
   "Category": "Grocery",
   "Sub-category": "Oils",
-  "Price": 0,
+  "Price": 3.49,
   "Ingredients": "Neem Seed",
   "Description": "Neem Oil is a natural, medicinal oil extracted from the seeds of the neem tree, widely valued for its antibacterial, antifungal, and anti-inflammatory properties. Traditionally used in Ayurveda, it helps treat skin conditions, promotes healthy hair, and acts as a natural insect repellent. Neem Oil is also effective in gardening as a natural pesticide. Free from chemicals and additives, it is a versatile and eco-friendly solution for skin care, hair care, and home gardening needs.",
   "Piece": 10,
@@ -1602,7 +1576,7 @@
   "Gram": "200ml",
   "Category": "Grocery",
   "Sub-category": "Oils",
-  "Price": 0,
+  "Price": 5.00,
   "Ingredients": "Neem Seed",
   "Description": "Neem Oil is a natural, medicinal oil extracted from the seeds of the neem tree, widely valued for its antibacterial, antifungal, and anti-inflammatory properties. Traditionally used in Ayurveda, it helps treat skin conditions, promotes healthy hair, and acts as a natural insect repellent. Neem Oil is also effective in gardening as a natural pesticide. Free from chemicals and additives, it is a versatile and eco-friendly solution for skin care, hair care, and home gardening needs.",
   "Piece": 10,
@@ -1638,7 +1612,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "barnyard_milet.png"
+   "image": "black_kavunirice.png"
 },
  {
   "Product_id": "iy105br908",
@@ -1647,7 +1621,7 @@
   "Gram": "908g",
   "Category": "Grocery",
   "Sub-category": "Rice",
-  "Price": 0,
+  "Price": 4.75,
   "Ingredients": "Bride Groom Rice",
   "Description": "Bridegroom Rice, traditionally known as Mapillai Samba Rice, is a heritage rice variety from Tamil Nadu, celebrated for its strength-boosting properties. Rich in iron, fiber, and antioxidants, it is believed to improve stamina, immunity, and overall vitality. With its earthy flavor and firm texture, Bridegroom Rice is ideal for preparing steamed rice, idlis, dosas, kanji (porridge), and traditional festive dishes. Once served to newlywed grooms to enhance energy and strength, this rice remains a symbol of natural health and wellness.",
   "Piece": 10,
@@ -1662,7 +1636,7 @@
   "Gram": "908g",
   "Category": "Grocery",
   "Sub-category": "Grains & Flours",
-  "Price": 0,
+  "Price": 5.04,
   "Ingredients": "Rice Flour",
   "Description": "Rice Flour is a fine, gluten-free flour made from high-quality rice grains. Naturally light and easy to digest, it is rich in carbohydrates and ideal for preparing traditional dishes like idiyappam, puttu, dosa, appam, and snacks. Its smooth texture also makes it a perfect ingredient for baking, thickening sauces, and gluten-free recipes. Free from chemicals and preservatives, Rice Flour is a versatile kitchen essential for everyday cooking and healthy diets.",
   "Piece": 10,
@@ -1677,7 +1651,7 @@
   "Gram": "908g",
   "Category": "Grocery",
   "Sub-category": "Grains & Flours",
-  "Price": 0,
+  "Price": 4.49,
   "Ingredients": "Gram Flour",
   "Description": "Gram Flour, also known as Besan, is a nutritious flour made from roasted or raw Bengal gram (chana dal). Rich in protein, fiber, and essential minerals, it is a healthy alternative to wheat flour. With its nutty flavor and smooth texture, Gram Flour is widely used in Indian cooking for preparing pakoras, cheelas, sweets like ladoos, and as a natural thickener in curries. Naturally gluten-free and versatile, it is an essential ingredient for both traditional and modern recipes.",
   "Piece": 10,
@@ -1698,8 +1672,9 @@
   "Description": "Biriyani Essence is a concentrated aromatic blend specially crafted to enhance the rich flavor and irresistible aroma of traditional biriyanis. Just a few drops add depth, fragrance, and an authentic restaurant-style taste to your rice dishes. Made from natural extracts and spice oils, it blends seamlessly with rice, meat, or vegetable preparations. Perfect for biriyani, pulao, and other festive dishes, Biriyani Essence makes cooking flavorful and effortless.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "briyani_essence.png"
+},
  {
   "Product_id": "iy109pe20",
   "Brand": "Iyappaa",
@@ -1707,13 +1682,14 @@
   "Gram": "20ml",
   "Category": "Grocery",
   "Sub-category": "Food Essences",
-  "Price": 0,
+  "Price": 1.99,
   "Ingredients": "PROPYLENE GLYCOL, NATURAL FLAVOURING SUBSATNCES, NATURE IDENTICAL FLAVOURING SUBSTANCE, ARTIFICIAL FLAVOURING SUBSTANCE, NO ADDED SPIRIT0.",
   "Description": "Pineapple Essence is a concentrated flavoring agent that brings the refreshing tropical sweetness of pineapple to your recipes. Just a few drops add a fruity aroma and vibrant taste to cakes, pastries, sweets, desserts, ice creams, and beverages. Easy to use and long-lasting, it enhances both baked and cold preparations with a delightful pineapple flavor. Perfect for home baking, confectionery, and professional kitchens.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "pineapple_essence.png"
+},
  {
   "Product_id": "iy110ve20",
   "Brand": "Iyappaa",
@@ -1721,13 +1697,14 @@
   "Gram": "20ml",
   "Category": "Grocery",
   "Sub-category": "Food Essences",
-  "Price": 0,
+  "Price": 1.99,
   "Ingredients": "PROPYLENE GLYCOL, WATER, CARAMEL COLOUR, NATURAL FLAVOURING SUBSATNCES, NATURE IDENTICAL FLAVOURING SUBSTANCE, ARTIFICIAL FLAVOURING SUBSTANCE, NO ADDED SPIRIT0.",
   "Description": "Vanilla Black Essence is a premium flavoring extract that adds a rich, sweet aroma and deep vanilla taste to your recipes. Its strong and long-lasting flavor enhances cakes, cookies, ice creams, puddings, chocolates, and beverages. A few drops are enough to bring out a bakery-style taste in homemade and professional dishes. Convenient, versatile, and aromatic, Vanilla Black Essence is a must-have for every kitchen.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "vanilla_essence_black.png"
+},
  {
   "Product_id": "iy111vw20",
   "Brand": "Iyappaa",
@@ -1735,13 +1712,14 @@
   "Gram": "20ml",
   "Category": "Grocery",
   "Sub-category": "Food Essences",
-  "Price": 0,
+  "Price": 1.99,
   "Ingredients": "PROPYLENE GLYCOL, WATER, NATURAL FLAVOURING SUBSATNCES,NATURE IDENTICAL  FLAVOURING SUBSTANCE, ARTIFICIAL FLAVOURING SUBSTANCE, NO ADDED SPIRIT.",
   "Description": "Vanilla White Essence is a premium flavoring extract that delivers a smooth, sweet aroma and delicate vanilla taste to your recipes. Perfect for light-colored dishes, it blends beautifully without altering the appearance of cakes, pastries, ice creams, puddings, beverages, and desserts. Just a few drops add a bakery-style flavor, making it a versatile and essential ingredient for both home and professional kitchens.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "vennila_essence.png"
+},
  {
   "Product_id": "iy112be20",
   "Brand": "Iyappaa",
@@ -1749,13 +1727,14 @@
   "Gram": "20ml",
   "Category": "Grocery",
   "Sub-category": "Food Essences",
-  "Price": 0,
+  "Price": 8.15,
   "Ingredients": "TRIACETIN, NATURE IDENTICAL FLAVOURING SUBSTANCES, CONDIMENTS, A NATURAL BIRIYANI FLAVOURING SUBSTANCES. NO ADDED SPRIT. ",
   "Description": "Basmati Essence is a concentrated aromatic flavoring designed to give your rice dishes the authentic, long-grain Basmati fragrance. Just a few drops bring out the signature aroma and taste of premium Basmati rice, making every meal feel special. Perfect for biriyani, pulao, fried rice, and other festive dishes, it enhances flavor while being easy and convenient to use. Ideal for both home kitchens and professional cooking.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "basmatirice_essence.png"
+},
  {
   "Product_id": "iy113re20",
   "Brand": "Iyappaa",
@@ -1763,13 +1742,14 @@
   "Gram": "20ml",
   "Category": "Grocery",
   "Sub-category": "Food Essences",
-  "Price": 0,
+  "Price": 3.49,
   "Ingredients": "PROPYLENE GLYCOL, WATER, NATURAL FLAVOURING SUBSATNCES,NATURE IDENTICAL  FLAVOURING SUBSTANCE, ARTIFICIAL FLAVOURING SUBSTANCE, NO ADDED SPIRIT.",
   "Description": "Rose White Essence is a premium flavoring extract that adds the delicate fragrance and sweet floral taste of fresh roses to your recipes. Specially made for light-colored dishes, it enhances sweets, desserts, beverages, milkshakes, puddings, and baked goods without changing their appearance. Just a few drops bring a refreshing floral aroma, making it a versatile and essential ingredient for both home cooking and professional kitchens.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "rose_essence.png"
+},
  {
   "Product_id": "iy114lg100",
   "Brand": "Iyappaa",
@@ -1777,7 +1757,7 @@
   "Gram": "100g",
   "Category": "Grocery",
   "Sub-category": "HING",
-  "Price": 0,
+  "Price": 4.99,
   "Description": "LG Stone Hing is a premium-quality asafoetida known for its strong aroma and authentic taste. A small pinch adds a rich, savory flavor and acts as a natural enhancer in dals, curries, sambars, pickles, and vegetarian dishes. Traditionally valued for aiding digestion and improving appetite, Hing is an essential spice in Indian cooking. LG Stone Hing ensures purity, potency, and the perfect balance of flavor for your everyday recipes.",
   "Piece": 10,
   "Rating" : 4.3,
@@ -1790,7 +1770,7 @@
   "Gram": "100g",
   "Category": "Grocery",
   "Sub-category": "HING",
-  "Price": 0,
+  "Price": 4.99,
   "Description": "Asafoetida Cake is a solid block of pure hing, known for its intense aroma and strong flavor. Just a tiny piece adds rich taste and authentic fragrance to dals, curries, sambars, rasam, and other vegetarian dishes. Traditionally prized in Indian cooking, it also aids digestion and enhances appetite. Free from artificial additives, Asafoetida Cake is a natural, potent, and long-lasting spice essential for every kitchen.",
   "Piece": 10,
   "Rating" : 4.5,
@@ -1909,7 +1889,7 @@
   "Gram": "10kg",
   "Category": "Grocery",
   "Sub-category": "Rice & Grains",
-  "Price": 0,
+  "Price": 18,
   "Ingredients": "Basmati Rice",
   "Description": "Amirth Basmati Rice is a premium long-grain rice prized for its rich aroma, slender grains, and fluffy texture. Naturally aged for enhanced flavor, it cooks to perfection with each grain separate and non-sticky. Ideal for biryani, pulao, and festive dishes, it brings authentic taste and elegance to every meal.",
   "Piece": 10,
@@ -1940,13 +1920,14 @@
   "Gram": "750ml",
   "Category": "Grocery",
   "Sub-category": "Oil",
-  "Price": 0,
+  "Price": 7.25,
   "Ingredients": "Sesame Seed, Jaggery",
   "Description": "Our pure Sesame Oil is extracted from high-quality sesame seeds using traditional cold-pressing methods. Full of natural nutrients and antioxidants, it adds a rich, nutty flavor to your meals. Perfect for cooking, seasoning, or drizzling, it’s a healthy and essential addition to any kitchen.",
   "Piece": 10,
   "Rating" : 4.3,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "sesame_oil1l.png"
+},
  {
   "Product_id": "ve02so001",
   "Brand": "Venba",
@@ -1959,8 +1940,9 @@
   "Description": "Our pure Sesame Oil is extracted from high-quality sesame seeds using traditional cold-pressing methods. Full of natural nutrients and antioxidants, it adds a rich, nutty flavor to your meals. Perfect for cooking, seasoning, or drizzling, it’s a healthy and essential addition to any kitchen.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+   "image": "sesame_oil1l.png"
+},
  {
   "Product_id": "ve03so002",
   "Brand": "Venba",
@@ -1968,13 +1950,14 @@
   "Gram": "2L",
   "Category": "Grocery",
   "Sub-category": "Oil",
-  "Price": 0,
+  "Price": 16.5,
   "Ingredients": "Sesame Seed, Jaggery",
   "Description": "Our pure Sesame Oil is extracted from high-quality sesame seeds using traditional cold-pressing methods. Full of natural nutrients and antioxidants, it adds a rich, nutty flavor to your meals. Perfect for cooking, seasoning, or drizzling, it’s a healthy and essential addition to any kitchen.",
   "Piece": 10,
   "Rating" : 4.5,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "sesame_oil1l.png"
+},
  {
   "Product_id": "ve04go001",
   "Brand": "Venba",
@@ -1987,8 +1970,9 @@
   "Description": "Venba Groundnut Oil is a natural, cold-pressed oil extracted from premium peanuts. Its light texture and rich flavor make it perfect for frying, sautéing, and seasoning, while retaining essential nutrients for a healthy and flavorful cooking experience.",
   "Piece": 10,
   "Rating" : 4.8,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+ "image": "groundnut_oil.png"
+},
  {
   "Product_id": "ve05go002",
   "Brand": "Venba",
@@ -1996,13 +1980,14 @@
   "Gram": "2L",
   "Category": "Grocery",
   "Sub-category": "Oil",
-  "Price": 0,
+  "Price": 13,
   "Ingredients": "Groundnut, Jaggery",
   "Description": "Venba Groundnut Oil is a natural, cold-pressed oil extracted from premium peanuts. Its light texture and rich flavor make it perfect for frying, sautéing, and seasoning, while retaining essential nutrients for a healthy and flavorful cooking experience.",
   "Piece": 10,
   "Rating" : 4.7,
-  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight."
- },
+  "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
+  "image": "groundnut_oil.png"
+},
  {
   "Product_id": "ve06co001",
   "Brand": "Venba",
@@ -2024,7 +2009,7 @@
   "Gram": "100ml",
   "Category": "Grocery",
   "Sub-category": "Oil",
-  "Price": 0,
+  "Price": 3.49,
   "Ingredients": "Neem Seed",
   "Description": "Our pure Neem Oil is cold-pressed from high-quality neem seeds to preserve its natural potency. Known for its antibacterial, antifungal, and skin-soothing properties, it’s perfect for hair care, skincare, and natural remedies. Chemical-free and versatile, Neem Oil is an essential herbal solution for a healthier lifestyle.",
   "Piece": 10,
@@ -2039,7 +2024,7 @@
   "Gram": "200ml",
   "Category": "Grocery",
   "Sub-category": "Oil",
-  "Price": 0,
+  "Price": 6.98,
   "Ingredients": "Neem Seed",
   "Description": "Our pure Neem Oil is cold-pressed from high-quality neem seeds to preserve its natural potency. Known for its antibacterial, antifungal, and skin-soothing properties, it’s perfect for hair care, skincare, and natural remedies. Chemical-free and versatile, Neem Oil is an essential herbal solution for a healthier lifestyle.",
   "Piece": 10,
@@ -2109,9 +2094,10 @@
   "Product_id": "ve12pv",
   "Brand": "Venba",
   "Name": "Payasam Vermicelli",
+  "Gram": "300g",
   "Category": "Grocery",
   "Sub-category": "Sweets",
-  "Price": 0,
+  "Price": 2.99,
   "Description": "Venba Payasam Vermicelli is a high-quality vermicelli designed for making soft and creamy South Indian payasam. Its fine strands cook quickly and evenly, blending perfectly with milk, jaggery, or sugar. Perfect for festivals, celebrations, or everyday desserts, it delivers traditional flavor and authentic texture in every bite.",
   "Piece": 10,
   "Rating" : 4.5,
