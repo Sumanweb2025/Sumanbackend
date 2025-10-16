@@ -9,7 +9,7 @@ const paymentSchema = new mongoose.Schema({
   userId: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
-    required: false, // Changed: Allow null for guest orders
+    required: false,
     sparse: true
   },
   sessionId: {
@@ -37,7 +37,7 @@ const paymentSchema = new mongoose.Schema({
   },
   paymentStatus: {
     type: String,
-    enum: ['pending', 'paid', 'failed', 'refunded'],
+    enum: ['pending', 'paid', 'failed', 'refunded', 'cancelled'],
     default: 'pending'
   },
   amount: {
@@ -102,9 +102,9 @@ const paymentSchema = new mongoose.Schema({
       type: Number,
       default: 0
     },
-    firstOrderDiscount: {  
-    type: Number,
-    default: 0
+    firstOrderDiscount: {
+      type: Number,
+      default: 0
     },
     total: Number
   },
@@ -183,17 +183,17 @@ paymentSchema.index({ paymentStatus: 1 });
 paymentSchema.index({ createdAt: -1 });
 
 paymentSchema.index(
-  { stripePaymentId: 1 }, 
-  { 
-    unique: true, 
+  { stripePaymentId: 1 },
+  {
+    unique: true,
     partialFilterExpression: { stripePaymentId: { $ne: null, $exists: true } }
   }
 );
 
-paymentSchema.statics.generatePaymentId = function(paymentMethod) {
+paymentSchema.statics.generatePaymentId = function (paymentMethod) {
   const timestamp = Date.now();
   const random = Math.random().toString(36).substr(2, 9);
-  
+
   if (paymentMethod === 'cod') {
     return `COD_${timestamp}_${random}`;
   } else {
@@ -201,29 +201,29 @@ paymentSchema.statics.generatePaymentId = function(paymentMethod) {
   }
 };
 
-paymentSchema.pre('save', function(next) {
+paymentSchema.pre('save', function (next) {
   if (!this.paymentId) {
     this.paymentId = this.constructor.generatePaymentId(this.paymentMethod);
   }
   next();
 });
 
-paymentSchema.methods.storePDF = function(pdfType, filename, buffer) {
+paymentSchema.methods.storePDF = function (pdfType, filename, buffer) {
   if (!this.pdfs) {
     this.pdfs = {};
   }
-  
+
   this.pdfs[pdfType] = {
     filename: filename,
     data: buffer,
     contentType: 'application/pdf',
     createdAt: new Date()
   };
-  
+
   return this.save();
 };
 
-paymentSchema.methods.getPDF = function(pdfType) {
+paymentSchema.methods.getPDF = function (pdfType) {
   if (this.pdfs && this.pdfs[pdfType]) {
     return {
       filename: this.pdfs[pdfType].filename,
@@ -234,7 +234,7 @@ paymentSchema.methods.getPDF = function(pdfType) {
   return null;
 };
 
-paymentSchema.methods.addPaymentLog = function(action, status, message, metadata = {}) {
+paymentSchema.methods.addPaymentLog = function (action, status, message, metadata = {}) {
   this.paymentLogs.push({
     action,
     status,
@@ -245,21 +245,21 @@ paymentSchema.methods.addPaymentLog = function(action, status, message, metadata
   return this.save();
 };
 
-paymentSchema.methods.updateEmailStatus = function(emailType, sent, error = null) {
+paymentSchema.methods.updateEmailStatus = function (emailType, sent, error = null) {
   if (!this.emailStatus) {
     this.emailStatus = {};
   }
-  
+
   this.emailStatus[emailType] = sent;
   this.emailStatus.lastEmailAttempt = new Date();
-  
+
   if (error) {
     if (!this.emailStatus.emailErrors) {
       this.emailStatus.emailErrors = [];
     }
     this.emailStatus.emailErrors.push(error);
   }
-  
+
   return this.save();
 };
 

@@ -7,7 +7,7 @@ const Order = require('../Models/order.model'); // Your existing Order model
 router.get('/download-invoice/:orderId', async (req, res) => {
   try {
     const { orderId } = req.params;
-    
+
     // Get order from your existing Order model
     const order = await Order.findById(orderId);
 

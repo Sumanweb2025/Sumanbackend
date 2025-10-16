@@ -7,7 +7,7 @@ const multer = require('multer');
 const addImageUrls = (product, req) => {
   const baseUrl = `${req.protocol}://${req.get('host')}/images/Products/`;
   const images = product.image || [];
-  
+
   return {
     ...product.toObject(),
     // Main image URL (first image in array)
@@ -41,7 +41,7 @@ const fileFilter = (req, file, cb) => {
   const filetypes = /jpeg|jpg|png|gif/;
   const extname = filetypes.test(path.extname(file.originalname).toLowerCase());
   const mimetype = filetypes.test(file.mimetype);
-  
+
   if (mimetype && extname) {
     return cb(null, true);
   } else {
@@ -59,10 +59,10 @@ exports.upload = multer({
 const getAllProducts = async (req, res) => {
   try {
     const products = await Product.find();
-    
+
     // Add full image URLs to each product using helper function
     const productsWithImageUrl = products.map(product => addImageUrls(product, req));
-    
+
     res.status(200).json({
       success: true,
       count: productsWithImageUrl.length,
@@ -81,17 +81,17 @@ const getAllProducts = async (req, res) => {
 const getProductById = async (req, res) => {
   try {
     const product = await Product.findOne({ product_id: req.params.id });
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
-    
+
     // Add full image URLs using helper function
     const productWithImageUrl = addImageUrls(product, req);
-    
+
     res.status(200).json({
       success: true,
       data: productWithImageUrl
@@ -109,21 +109,21 @@ const getProductById = async (req, res) => {
 const createProduct = async (req, res) => {
   try {
     const productData = req.body;
-    
+
     // If image was uploaded
     if (req.file) {
       productData.image = req.file.filename;
     }
-    
+
     const product = new Product(productData);
     await product.save();
-    
+
     // Add full image URL to response
     const productWithImageUrl = {
       ...product.toObject(),
       imageUrl: product.image ? `${req.protocol}://${req.get('host')}/images/Products/${product.image}` : null
     };
-    
+
     res.status(201).json({
       success: true,
       message: 'Product created successfully',
@@ -134,7 +134,7 @@ const createProduct = async (req, res) => {
     if (req.file) {
       fs.unlinkSync(path.join(__dirname, '../Iyappaa/Products', req.file.filename));
     }
-    
+
     res.status(400).json({
       success: false,
       message: 'Error creating product',
@@ -147,16 +147,16 @@ const createProduct = async (req, res) => {
 const updateProduct = async (req, res) => {
   try {
     const product = await Product.findOne({ product_id: req.params.id });
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
-    
+
     const updateData = req.body;
-    
+
     // Handle image update if new file was uploaded
     if (req.file) {
       // Delete old image if it exists
@@ -168,19 +168,19 @@ const updateProduct = async (req, res) => {
       }
       updateData.image = req.file.filename;
     }
-    
+
     const updatedProduct = await Product.findOneAndUpdate(
       { product_id: req.params.id },
       updateData,
       { new: true, runValidators: true }
     );
-    
+
     // Add full image URL to response
     const productWithImageUrl = {
       ...updatedProduct.toObject(),
       imageUrl: updatedProduct.image ? `${req.protocol}://${req.get('host')}/images/Products/${updatedProduct.image}` : null
     };
-    
+
     res.status(200).json({
       success: true,
       message: 'Product updated successfully',
@@ -191,7 +191,7 @@ const updateProduct = async (req, res) => {
     if (req.file) {
       fs.unlinkSync(path.join(__dirname, '../Iyappaa/Products', req.file.filename));
     }
-    
+
     res.status(400).json({
       success: false,
       message: 'Error updating product',
@@ -204,14 +204,14 @@ const updateProduct = async (req, res) => {
 const deleteProduct = async (req, res) => {
   try {
     const product = await Product.findOneAndDelete({ product_id: req.params.id });
-    
+
     if (!product) {
       return res.status(404).json({
         success: false,
         message: 'Product not found'
       });
     }
-    
+
     // Delete associated image if it exists
     if (product.image) {
       const imagePath = path.join(__dirname, '../Iyappaa/Products', product.image);
@@ -219,7 +219,7 @@ const deleteProduct = async (req, res) => {
         fs.unlinkSync(imagePath);
       }
     }
-    
+
     res.status(200).json({
       success: true,
       message: 'Product deleted successfully'
@@ -238,33 +238,33 @@ const searchProducts = async (req, res) => {
   try {
     const { q, category, brand, minPrice, maxPrice } = req.query;
     let filter = {};
-    
+
     if (q) {
       filter.$or = [
         { name: { $regex: q, $options: 'i' } },
         { description: { $regex: q, $options: 'i' } }
       ];
     }
-    
+
     if (category) {
       filter.category = { $regex: category, $options: 'i' };
     }
-    
+
     if (brand) {
       filter.brand = { $regex: brand, $options: 'i' };
     }
-    
+
     if (minPrice || maxPrice) {
       filter.price = {};
       if (minPrice) filter.price.$gte = parseFloat(minPrice);
       if (maxPrice) filter.price.$lte = parseFloat(maxPrice);
     }
-    
+
     const products = await Product.find(filter);
-    
+
     // Add full image URLs to each product using helper function
     const productsWithImageUrl = products.map(product => addImageUrls(product, req));
-    
+
     res.status(200).json({
       success: true,
       count: productsWithImageUrl.length,
@@ -283,8 +283,8 @@ const searchProducts = async (req, res) => {
 const getAvailableFilters = async (req, res) => {
   try {
     const [categories, brands] = await Promise.all([
-      Product.distinct('category').collation({locale: 'en', strength: 2}).sort(),
-      Product.distinct('brand').collation({locale: 'en', strength: 2}).sort()
+      Product.distinct('category').collation({ locale: 'en', strength: 2 }).sort(),
+      Product.distinct('brand').collation({ locale: 'en', strength: 2 }).sort()
     ]);
 
     if (categories.length === 0 && brands.length === 0) {
@@ -312,17 +312,17 @@ const getAvailableFilters = async (req, res) => {
 const getFeaturedProducts = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
-    
+
     const products = await Product.find()
-      .sort({ 
-        rating: -1,           
-        createdAt: -1         
+      .sort({
+        rating: -1,
+        createdAt: -1
       })
       .limit(limit);
-    
+
     // Add full image URLs to each product using helper function
     const productsWithImageUrl = products.map(product => addImageUrls(product, req));
-    
+
     res.status(200).json({
       success: true,
       count: productsWithImageUrl.length,

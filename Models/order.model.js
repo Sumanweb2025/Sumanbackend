@@ -115,9 +115,9 @@ const orderSchema = new mongoose.Schema({
       type: Number,
       default: 0
     },
-    firstOrderDiscount: {  
-    type: Number,
-    default: 0
+    firstOrderDiscount: {
+      type: Number,
+      default: 0
     },
     total: {
       type: Number,
@@ -138,7 +138,7 @@ const orderSchema = new mongoose.Schema({
   },
   paymentMethod: {
     type: String,
-    enum: ['card','cod'],
+    enum: ['card', 'cod'],
     default: 'cod'
   },
   stripePaymentId: {
@@ -193,7 +193,7 @@ const orderSchema = new mongoose.Schema({
 });
 
 // Generate order number before saving
-orderSchema.pre('save', async function(next) {
+orderSchema.pre('save', async function (next) {
   if (!this.orderNumber) {
     const timestamp = Date.now().toString();
     const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
@@ -203,7 +203,7 @@ orderSchema.pre('save', async function(next) {
 });
 
 // Method to check if order can be cancelled
-orderSchema.methods.canBeCancelled = function() {
+orderSchema.methods.canBeCancelled = function () {
   const cancellableStatuses = ['pending', 'confirmed', 'processing'];
   if (!cancellableStatuses.includes(this.status)) {
     return { canCancel: false, reason: 'Order status does not allow cancellation' };

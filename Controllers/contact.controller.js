@@ -35,7 +35,10 @@ const submitContactForm = async (req, res) => {
 
     // Send acknowledgment email to customer
     const customerMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: process.env.ADMIN_EMAIL,
       subject: 'Thank you for contacting us - We received your message',
       html: `
@@ -55,7 +58,10 @@ const submitContactForm = async (req, res) => {
 
     // Send notification to admin
     const adminMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: process.env.ADMIN_EMAIL,
       subject: `New Contact Form Submission - ${subject}`,
       html: `
@@ -86,7 +92,7 @@ const submitContactForm = async (req, res) => {
 
   } catch (error) {
     console.error('Contact form submission error:', error);
-    
+
     if (error.name === 'ValidationError') {
       const errors = Object.values(error.errors).map(err => err.message);
       return res.status(400).json({
@@ -107,14 +113,14 @@ const submitContactForm = async (req, res) => {
 const getAllContacts = async (req, res) => {
   try {
     const { status, page = 1, limit = 10, search } = req.query;
-    
+
     let query = {};
-    
+
     // Filter by status if provided
     if (status && ['pending', 'read', 'replied'].includes(status)) {
       query.status = status;
     }
-    
+
     // Search functionality
     if (search) {
       query.$or = [
@@ -156,7 +162,7 @@ const getAllContacts = async (req, res) => {
 const getContactById = async (req, res) => {
   try {
     const contact = await Contact.findById(req.params.id);
-    
+
     if (!contact) {
       return res.status(404).json({
         success: false,
@@ -216,7 +222,10 @@ const replyToContact = async (req, res) => {
 
     // Send reply email to customer
     const replyMailOptions = {
-      from: process.env.EMAIL_USER,
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
       to: contact.email,
       subject: `Re: ${contact.subject}`,
       html: `
@@ -267,11 +276,11 @@ const updateContactStatus = async (req, res) => {
     const { status, priority } = req.body;
 
     const updateData = {};
-    
+
     if (status && ['pending', 'read', 'replied'].includes(status)) {
       updateData.status = status;
     }
-    
+
     if (priority && ['low', 'medium', 'high'].includes(priority)) {
       updateData.priority = priority;
     }
@@ -308,7 +317,7 @@ const updateContactStatus = async (req, res) => {
 const deleteContact = async (req, res) => {
   try {
     const contact = await Contact.findByIdAndDelete(req.params.id);
-    
+
     if (!contact) {
       return res.status(404).json({
         success: false,
@@ -341,8 +350,8 @@ const getContactStats = async (req, res) => {
     // Get recent contacts (last 7 days)
     const weekAgo = new Date();
     weekAgo.setDate(weekAgo.getDate() - 7);
-    const recentContacts = await Contact.countDocuments({ 
-      createdAt: { $gte: weekAgo } 
+    const recentContacts = await Contact.countDocuments({
+      createdAt: { $gte: weekAgo }
     });
 
     res.status(200).json({

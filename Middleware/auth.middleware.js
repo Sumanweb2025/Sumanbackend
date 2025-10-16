@@ -5,7 +5,7 @@ const User = require('../Models/user.model');
 const authMiddleware = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
-    
+
     if (!token) {
       return res.status(401).json({
         success: false,
@@ -14,7 +14,7 @@ const authMiddleware = async (req, res, next) => {
     }
 
     const decoded = jwt.verify(token, process.env.JWT_SECRET || 'sumanfoods');
-    
+
     const user = await User.findById(decoded.userId);
     if (!user || !user.isActive) {
       return res.status(401).json({
@@ -32,7 +32,7 @@ const authMiddleware = async (req, res, next) => {
       isGuest: false, // Important: mark as registered user
       ...decoded
     };
-    
+
     next();
   } catch (error) {
     if (error.name === 'TokenExpiredError') {
@@ -41,7 +41,7 @@ const authMiddleware = async (req, res, next) => {
         message: 'Token has expired'
       });
     }
-    
+
     res.status(401).json({
       success: false,
       message: 'Invalid token'
@@ -54,12 +54,12 @@ const optionalAuthMiddleware = async (req, res, next) => {
   try {
     const token = req.header('Authorization')?.replace('Bearer ', '');
     const sessionId = req.header('X-Session-ID');
-    
+
     // Check for authenticated user first
     if (token) {
       try {
         const decoded = jwt.verify(token, process.env.JWT_SECRET || 'sumanfoods');
-        
+
         const user = await User.findById(decoded.userId);
         if (user && user.isActive) {
           req.user = {
@@ -69,7 +69,7 @@ const optionalAuthMiddleware = async (req, res, next) => {
             email: user.email,
             name: user.name,
             isGuest: false,
-            sessionId: null, // ✅ ADDED
+            sessionId: null, // ADDED
             ...decoded
           };
           return next();
@@ -95,7 +95,7 @@ const optionalAuthMiddleware = async (req, res, next) => {
       success: false,
       message: 'Authentication required. Please sign in or continue as guest.'
     });
-    
+
   } catch (error) {
     console.error('Optional auth middleware error:', error);
     return res.status(401).json({

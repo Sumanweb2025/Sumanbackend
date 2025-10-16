@@ -2,6 +2,7 @@ const Order = require('../Models/order.model');
 const Payment = require('../Models/payment.model');
 const Cart = require('../Models/cart.model');
 const Coupon = require('../Models/coupon.model');
+const Product = require('../Models/product.model');
 const stripe = require('stripe')(process.env.STRIPE_SECRET_KEY);
 const Refund = require('../Models/refund.model');
 
@@ -42,6 +43,87 @@ const safeParseFloat = (value) => {
 const safeParseInt = (value) => {
   const parsed = parseInt(value);
   return isNaN(parsed) ? 0 : parsed;
+};
+
+// Helper function to validate stock availability
+const validateStockAvailability = async (cartItems) => {
+  const stockErrors = [];
+  
+  for (const item of cartItems) {
+    const product = await Product.findById(item.productId._id);
+    
+    if (!product) {
+      stockErrors.push({
+        productName: item.productId.name,
+        message: 'Product not found'
+      });
+      continue;
+    }
+    
+    if (product.piece < item.quantity) {
+      stockErrors.push({
+        productName: product.name,
+        requestedQuantity: item.quantity,
+        availableStock: product.piece,
+        message: `Only ${product.piece} units available`
+      });
+    }
+  }
+  
+  return stockErrors;
+};
+
+// Helper function to reduce inventory stock
+const reduceInventoryStock = async (orderItems) => {
+  const stockReductions = [];
+  
+  try {
+    for (const item of orderItems) {
+      const product = await Product.findById(item.productId);
+      
+      if (!product) {
+        throw new Error(`Product ${item.name} not found in inventory`);
+      }
+      
+      if (product.piece < item.quantity) {
+        throw new Error(`Insufficient stock for ${product.name}. Available: ${product.piece}, Requested: ${item.quantity}`);
+      }
+      
+      // Reduce stock
+      const oldStock = product.piece;
+      product.piece -= item.quantity;
+      await product.save();
+      
+      stockReductions.push({
+        productId: product._id,
+        productName: product.name,
+        oldStock,
+        newStock: product.piece,
+        reducedBy: item.quantity
+      });
+      
+      //console.log(`Stock reduced for ${product.name}: ${oldStock} → ${product.piece} (Sold: ${item.quantity})`);
+    }
+    
+    return { success: true, reductions: stockReductions };
+    
+  } catch (error) {
+    // Rollback all stock changes if any error occurs
+    console.error('Error reducing inventory, rolling back:', error);
+    
+    for (const reduction of stockReductions) {
+      try {
+        await Product.findByIdAndUpdate(
+          reduction.productId,
+          { $inc: { piece: reduction.reducedBy } }
+        );
+      } catch (rollbackError) {
+        console.error('Error rolling back stock for', reduction.productName, rollbackError);
+      }
+    }
+    
+    throw error;
+  }
 };
 
 // Helper function to generate PDF in memory
@@ -211,7 +293,7 @@ const createPaymentIntent = async (req, res) => {
     }, 0);
 
     const tax = subtotal * 0.13;
-    const shipping = subtotal > 100 ? 0 : 15;
+    const shipping = subtotal >= 75 ? 0 : 9.99;
 
     let discount = 0;
     let firstOrderDiscount = 0;
@@ -341,6 +423,16 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
       });
     }
 
+    // Validate stock availability before processing
+    const stockErrors = await validateStockAvailability(cart.items);
+    if (stockErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Some items are out of stock or have insufficient quantity',
+        stockErrors: stockErrors
+      });
+    }
+
     const metadata = paymentIntent.metadata;
     const subtotal = parseFloat(metadata.subtotal);
     const tax = parseFloat(metadata.tax);
@@ -415,6 +507,20 @@ const confirmPaymentAndCreateOrder = async (req, res) => {
     });
 
     await order.save();
+
+
+    // Reduce inventory stock for ordered items
+    try {
+      const stockReduction = await reduceInventoryStock(orderItems);
+      //console.log(`Inventory reduced successfully for order ${orderNumber}:`, stockReduction.reductions.length, 'products updated');
+    } catch (stockError) {
+      console.error('Error reducing inventory:', stockError);
+      // Order is already created, log the error but don't fail the request
+      // Admin should manually adjust inventory
+      await order.updateOne({ 
+        notes: `WARNING: Inventory reduction failed. Please manually adjust stock. Error: ${stockError.message}` 
+      });
+    }
 
     // Create Payment Record
     const payment = new Payment({
@@ -545,6 +651,16 @@ const createCODOrder = async (req, res) => {
       });
     }
 
+     // Validate stock availability before processing COD order
+    const stockErrors = await validateStockAvailability(cart.items);
+    if (stockErrors.length > 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'Some items are out of stock or have insufficient quantity',
+        stockErrors: stockErrors
+      });
+    }
+
     const subtotal = cart.items.reduce((total, item) => {
       const price = safeParseFloat(item.productId.price);
       const quantity = safeParseInt(item.quantity);
@@ -552,7 +668,7 @@ const createCODOrder = async (req, res) => {
     }, 0);
 
     const tax = subtotal * 0.13;
-    const shipping = subtotal > 100 ? 0 : 15;
+    const shipping = subtotal >= 75 ? 0 : 9.99;
 
     let discount = 0;
     let firstOrderDiscount = 0;
@@ -654,11 +770,25 @@ const createCODOrder = async (req, res) => {
         tax,
         shipping,
         discount,
+        firstOrderDiscount,
         total
       }
     });
 
     await order.save();
+
+    // Reduce inventory stock for COD ordered items
+    try {
+      const stockReduction = await reduceInventoryStock(orderItems);
+      //console.log(`Inventory reduced successfully for COD order ${orderNumber}:`, stockReduction.reductions.length, 'products updated');
+    } catch (stockError) {
+      console.error('Error reducing inventory for COD order:', stockError);
+      // Order is already created, log the error but don't fail the request
+      // Admin should manually adjust inventory
+      await order.updateOne({ 
+        notes: `WARNING: Inventory reduction failed. Please manually adjust stock. Error: ${stockError.message}` 
+      });
+    }
 
     // Create Payment Record
     const payment = new Payment({
@@ -677,6 +807,7 @@ const createCODOrder = async (req, res) => {
         tax,
         shipping,
         discount,
+        firstOrderDiscount,
         total
       },
       customerInfo: {

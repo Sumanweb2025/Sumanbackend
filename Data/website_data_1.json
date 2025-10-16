@@ -610,7 +610,7 @@
   "Piece": 10,
   "Rating" : 4.5,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-  "image": "peanut_halwa.png"
+  "image": ["peanut_halwa.png" , "peanut_halwa_200g_front.jpg"]
 },
  {
   "Product_id": "iy38phs600",
@@ -625,7 +625,7 @@
   "Piece": 10,
   "Rating" : 4.7,
   "Storage Condition": "Made with imported & Domestric Ingrredients.Keep cool & dry place.Storage control 11 °C – 22 °C. Keep away from Direct Sunlight.",
-   "image": "peanut_halwa.png"
+   "image": ["peanut_halwa.png", "peanut_halwa_600g_front.jpg"]
 },
  {
   "Product_id": "iy39kt100",

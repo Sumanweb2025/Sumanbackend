@@ -95,33 +95,33 @@ const userSchema = new mongoose.Schema({
     select: false // Don't include by default (large field)
   },
   profileImageType: {
-    type: String, 
+    type: String,
     enum: ['image/jpeg', 'image/jpg', 'image/png', 'image/gif', 'image/webp']
   },
   profileImageSize: {
-    type: Number, 
+    type: Number,
     max: [5 * 1024 * 1024, 'Image size cannot exceed 5MB']
   },
   profileImageUploadDate: {
-    type: Date, 
+    type: Date,
     default: Date.now
   },
   profileImage: {
-    type: String, 
+    type: String,
     trim: true
   },
   picture: {
-    type: String, 
+    type: String,
     trim: true
   },
   googleProfileImage: {
-    type: String, 
+    type: String,
     trim: true
   },
   emailVerified: {
     type: Boolean,
     default: function () {
-      return this.authProvider === 'google'; 
+      return this.authProvider === 'google';
     }
   },
   emailVerificationToken: {
@@ -150,7 +150,7 @@ const userSchema = new mongoose.Schema({
 userSchema.virtual('displayImage').get(function () {
   // Priority: Database stored image > Google current picture > Google backup image > Legacy profileImage
   if (this.profileImageBase64) {
-    return this.profileImageBase64; 
+    return this.profileImageBase64;
   }
   return this.picture || this.googleProfileImage || this.profileImage || null;
 });
@@ -180,7 +180,7 @@ userSchema.index({ email: 1 });
 userSchema.index({ googleId: 1 });
 userSchema.index({ authProvider: 1 });
 userSchema.index({ isActive: 1 });
-userSchema.index({ profileImageUploadDate: -1 }); 
+userSchema.index({ profileImageUploadDate: -1 });
 
 // Hash password before saving (only for local auth)
 userSchema.pre('save', async function (next) {
@@ -196,7 +196,7 @@ userSchema.pre('save', async function (next) {
 });
 
 // Add a pre-save hook to construct fullPhoneNumber
-userSchema.pre('save', function(next) {
+userSchema.pre('save', function (next) {
   if (this.isModified('phone') || this.isModified('countryCode')) {
     if (this.phone && this.countryCode) {
       this.fullPhoneNumber = `${this.countryCode}${this.phone}`;
@@ -225,12 +225,12 @@ userSchema.methods.getSafeUserData = function () {
     isActive: this.isActive,
     lastLogin: this.lastLogin,
     authProvider: this.authProvider,
-    profileImage: this.displayImage, 
+    profileImage: this.displayImage,
     picture: this.picture,
     googleProfileImage: this.googleProfileImage,
     displayImage: this.displayImage,
     fullProfileImageUrl: this.fullProfileImageUrl,
-    profileImageInfo: this.profileImageInfo, 
+    profileImageInfo: this.profileImageInfo,
     emailVerified: this.emailVerified,
     createdAt: this.createdAt,
     updatedAt: this.updatedAt,
@@ -244,15 +244,15 @@ userSchema.methods.updateGoogleInfo = function (googleData) {
   const { sub: googleId, name, email, picture } = googleData;
 
   if (googleId) this.googleId = googleId;
-  if (name && !this.name) this.name = name; 
-  if (email && !this.email) this.email = email; 
+  if (name && !this.name) this.name = name;
+  if (email && !this.email) this.email = email;
   if (picture) {
     this.picture = picture;
-    this.googleProfileImage = picture; 
+    this.googleProfileImage = picture;
   }
 
   this.lastLogin = new Date();
-  this.emailVerified = true; 
+  this.emailVerified = true;
 };
 
 // Method to update profile image in database

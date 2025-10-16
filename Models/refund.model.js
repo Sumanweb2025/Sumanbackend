@@ -109,14 +109,14 @@ refundSchema.index({ paymentId: 1 });
 refundSchema.index({ userId: 1 });
 refundSchema.index({ orderNumber: 1 });
 refundSchema.index({ refundStatus: 1 });
-refundSchema.index({ stripeRefundId: 1 },{ 
-    unique: true, 
-    sparse: true // This allows multiple null values
-  });
+refundSchema.index({ stripeRefundId: 1 }, {
+  unique: true,
+  sparse: true // This allows multiple null values
+});
 refundSchema.index({ createdAt: -1 });
 
 // Method to add refund log
-refundSchema.methods.addRefundLog = function(action, status, message, metadata = {}) {
+refundSchema.methods.addRefundLog = function (action, status, message, metadata = {}) {
   this.refundLogs.push({
     action,
     status,
@@ -128,7 +128,7 @@ refundSchema.methods.addRefundLog = function(action, status, message, metadata =
 };
 
 // Method to update email status
-refundSchema.methods.updateEmailStatus = function(emailType, sent) {
+refundSchema.methods.updateEmailStatus = function (emailType, sent) {
   if (!this.emailStatus) {
     this.emailStatus = {};
   }

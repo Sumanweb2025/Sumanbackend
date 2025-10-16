@@ -1,4 +1,4 @@
-// UPDATED Review Controller (Review.controller.js)
+
 const Review = require('../Models/Review.model');
 const Product = require('../Models/product.model');
 
@@ -68,7 +68,7 @@ const createReview = async (req, res) => {
     const userId = req.user.id;
     const userName = req.user.name || req.user.email || 'Anonymous User';
 
-    console.log('Creating review with:', { productId, userId, userName, rating });
+    //console.log('Creating review with:', { productId, userId, userName, rating });
 
     // Check if user has already reviewed this product
     const existingReview = await Review.findOne({
@@ -95,7 +95,7 @@ const createReview = async (req, res) => {
       });
     }
 
-    console.log('Product found:', product.name);
+    //console.log('Product found:', product.name);
 
     // Create review
     const review = new Review({
@@ -107,7 +107,7 @@ const createReview = async (req, res) => {
     });
 
     const savedReview = await review.save();
-    console.log('Review saved successfully:', savedReview._id);
+    //console.log('Review saved successfully:', savedReview._id);
 
     // Update product's average rating
     await updateProductRating(productId);
@@ -176,7 +176,7 @@ const updateProductRating = async (productId) => {
     const avgRating = result[0]?.avgRating || 0;
     const totalReviews = result[0]?.totalReviews || 0;
     
-    console.log(`Updating product ${productId} rating: ${avgRating}, reviews: ${totalReviews}`);
+    //console.log(`Updating product ${productId} rating: ${avgRating}, reviews: ${totalReviews}`);
     
     // FIXED: Only use product_id field, not _id
     const updateResult = await Product.findOneAndUpdate(

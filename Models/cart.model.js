@@ -39,21 +39,21 @@ const cartSchema = new mongoose.Schema({
   },
   expiresAt: {
     type: Date,
-    default: () => new Date(+new Date() + 7*24*60*60*1000) // 7 days expiry for guest carts
+    default: () => new Date(+new Date() + 7 * 24 * 60 * 60 * 1000) // 7 days expiry for guest carts
   }
 }, {
   timestamps: true
 });
 
 // Calculate total amount before saving
-cartSchema.pre('save', async function(next) {
+cartSchema.pre('save', async function (next) {
   if (this.isModified('items')) {
     try {
       if (this.items.length > 0) {
         await this.populate('items.productId', 'price');
-        
+
         this.items = this.items.filter(item => item.productId !== null);
-        
+
         this.totalAmount = this.items.reduce((total, item) => {
           const price = parseFloat(item.productId?.price) || 0;
           const quantity = parseInt(item.quantity) || 0;

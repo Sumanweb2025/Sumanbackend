@@ -129,21 +129,21 @@ subscriptionSchema.index({ subscribedAt: -1 });
 subscriptionSchema.index({ email: 1, status: 1 });
 
 // Compound index to ensure unique email per subscription type
-subscriptionSchema.index({ 
-  email: 1, 
-  subscriptionType: 1 
-}, { 
+subscriptionSchema.index({
+  email: 1,
+  subscriptionType: 1
+}, {
   unique: true,
   partialFilterExpression: { status: { $ne: 'unsubscribed' } }
 });
 
 // Virtual to check if subscription is active
-subscriptionSchema.virtual('isActive').get(function() {
+subscriptionSchema.virtual('isActive').get(function () {
   return this.status === 'active';
 });
 
 // Virtual to get subscription duration
-subscriptionSchema.virtual('subscriptionDuration').get(function() {
+subscriptionSchema.virtual('subscriptionDuration').get(function () {
   if (this.unsubscribedAt) {
     return this.unsubscribedAt - this.subscribedAt;
   }
@@ -151,19 +151,19 @@ subscriptionSchema.virtual('subscriptionDuration').get(function() {
 });
 
 // Pre-save middleware
-subscriptionSchema.pre('save', async function(next) {
+subscriptionSchema.pre('save', async function (next) {
   if (this.isNew) {
     // Generate verification token for new subscriptions
     if (!this.verificationToken) {
       this.verificationToken = require('crypto').randomBytes(32).toString('hex');
       this.verificationTokenExpires = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
     }
-    
+
     // Generate unsubscribe token
     if (!this.unsubscribeToken) {
       this.unsubscribeToken = require('crypto').randomBytes(32).toString('hex');
     }
-    
+
     // Set user type based on userId
     if (this.userId) {
       this.userType = 'registered';
@@ -171,66 +171,66 @@ subscriptionSchema.pre('save', async function(next) {
       this.userType = 'guest';
     }
   }
-  
+
   next();
 });
 
 // Static methods
-subscriptionSchema.statics.findActiveSubscriptions = function() {
+subscriptionSchema.statics.findActiveSubscriptions = function () {
   return this.find({ status: 'active' });
 };
 
-subscriptionSchema.statics.findByEmail = function(email) {
-  return this.findOne({ 
+subscriptionSchema.statics.findByEmail = function (email) {
+  return this.findOne({
     email: email.toLowerCase(),
     status: { $ne: 'unsubscribed' }
   });
 };
 
-subscriptionSchema.statics.findRegisteredUserSubscriptions = function() {
-  return this.find({ 
+subscriptionSchema.statics.findRegisteredUserSubscriptions = function () {
+  return this.find({
     userType: 'registered',
     status: 'active'
   }).populate('userId', 'name email');
 };
 
-subscriptionSchema.statics.findGuestSubscriptions = function() {
-  return this.find({ 
+subscriptionSchema.statics.findGuestSubscriptions = function () {
+  return this.find({
     userType: 'guest',
     status: 'active'
   });
 };
 
-subscriptionSchema.statics.getSubscriptionStats = async function() {
+subscriptionSchema.statics.getSubscriptionStats = async function () {
   const stats = await this.aggregate([
     {
       $group: {
         _id: null,
         total: { $sum: 1 },
-        active: { 
-          $sum: { 
-            $cond: [{ $eq: ['$status', 'active'] }, 1, 0] 
-          } 
+        active: {
+          $sum: {
+            $cond: [{ $eq: ['$status', 'active'] }, 1, 0]
+          }
         },
-        registered: { 
-          $sum: { 
-            $cond: [{ $eq: ['$userType', 'registered'] }, 1, 0] 
-          } 
+        registered: {
+          $sum: {
+            $cond: [{ $eq: ['$userType', 'registered'] }, 1, 0]
+          }
         },
-        guests: { 
-          $sum: { 
-            $cond: [{ $eq: ['$userType', 'guest'] }, 1, 0] 
-          } 
+        guests: {
+          $sum: {
+            $cond: [{ $eq: ['$userType', 'guest'] }, 1, 0]
+          }
         },
-        verified: { 
-          $sum: { 
-            $cond: ['$isVerified', 1, 0] 
-          } 
+        verified: {
+          $sum: {
+            $cond: ['$isVerified', 1, 0]
+          }
         }
       }
     }
   ]);
-  
+
   return stats[0] || {
     total: 0,
     active: 0,
@@ -241,31 +241,31 @@ subscriptionSchema.statics.getSubscriptionStats = async function() {
 };
 
 // Instance methods
-subscriptionSchema.methods.unsubscribe = function() {
+subscriptionSchema.methods.unsubscribe = function () {
   this.status = 'unsubscribed';
   this.unsubscribedAt = new Date();
   return this.save();
 };
 
-subscriptionSchema.methods.resubscribe = function() {
+subscriptionSchema.methods.resubscribe = function () {
   this.status = 'active';
   this.unsubscribedAt = null;
   return this.save();
 };
 
-subscriptionSchema.methods.verify = function() {
+subscriptionSchema.methods.verify = function () {
   this.isVerified = true;
   this.verificationToken = null;
   this.verificationTokenExpires = null;
   return this.save();
 };
 
-subscriptionSchema.methods.updatePreferences = function(preferences) {
+subscriptionSchema.methods.updatePreferences = function (preferences) {
   this.preferences = { ...this.preferences, ...preferences };
   return this.save();
 };
 
-subscriptionSchema.methods.incrementEmailCount = function() {
+subscriptionSchema.methods.incrementEmailCount = function () {
   this.emailsSentCount += 1;
   this.lastEmailSent = new Date();
   return this.save();

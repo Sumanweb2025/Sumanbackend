@@ -14,7 +14,7 @@ exports.adminLogin = async (req, res) => {
   try {
     const { email, password } = req.body;
 
-    console.log('Admin login attempt for:', email);
+    //console.log('Admin login attempt for:', email);
 
     // Input validation
     if (!email || !password) {
@@ -1038,7 +1038,7 @@ exports.updateAdminProfile = async (req, res) => {
 
     await admin.save();
 
-    console.log('Admin profile updated successfully');
+    //console.log('Admin profile updated successfully');
 
     // Return full user data with profile image
     const updatedAdmin = {

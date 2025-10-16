@@ -22,7 +22,7 @@ const { optionalAuth } = require('../Middleware/auth.middleware'); // IMPORT THI
 const adminMiddleware = require('../Middleware/admin.middleware');
 
 // WEBHOOK ROUTES
-router.post('/webhook/stripe', express.raw({type: 'application/json'}), handleStripeWebhook);
+router.post('/webhook/stripe', express.raw({ type: 'application/json' }), handleStripeWebhook);
 
 // STRIPE PAYMENT ROUTES - USE optionalAuth for guest support
 router.post('/create-intent', optionalAuth, createPaymentIntent);

@@ -9,14 +9,14 @@ const User = require('../Models/user.model');
 const migrateGuestDataToUser = async (userId, sessionId) => {
   try {
     if (!sessionId) {
-      console.log('No session ID provided, skipping migration');
+      //console.log('No session ID provided, skipping migration');
       return {
         success: true,
         message: 'No guest data to migrate'
       };
     }
 
-    console.log(`Starting migration for sessionId: ${sessionId} to userId: ${userId}`);
+    //console.log(`Starting migration for sessionId: ${sessionId} to userId: ${userId}`);
 
     // Migrate Cart
     const guestCart = await Cart.findOne({ sessionId, isGuest: true });
@@ -29,7 +29,7 @@ const migrateGuestDataToUser = async (userId, sessionId) => {
         guestCart.sessionId = undefined;
         guestCart.isGuest = false;
         await guestCart.save();
-        
+
         // Update user document cart array
         const user = await User.findById(userId);
         user.cart = guestCart.items.map(item => ({
@@ -37,8 +37,8 @@ const migrateGuestDataToUser = async (userId, sessionId) => {
           quantity: item.quantity
         }));
         await user.save();
-        
-        console.log('Guest cart converted to user cart');
+
+        //console.log('Guest cart converted to user cart');
       } else {
         // Merge guest cart items into existing user cart
         for (const guestItem of guestCart.items) {
@@ -63,7 +63,7 @@ const migrateGuestDataToUser = async (userId, sessionId) => {
           const existingCartItem = user.cart.find(
             cartItem => cartItem.product.toString() === item.productId.toString()
           );
-          
+
           if (existingCartItem) {
             existingCartItem.quantity = item.quantity;
           } else {
@@ -77,7 +77,7 @@ const migrateGuestDataToUser = async (userId, sessionId) => {
 
         // Delete guest cart
         await Cart.deleteOne({ sessionId, isGuest: true });
-        console.log('Guest cart merged with user cart');
+        //console.log('Guest cart merged with user cart');
       }
     }
 
@@ -98,7 +98,7 @@ const migrateGuestDataToUser = async (userId, sessionId) => {
         user.wishlist = guestWishlist.products.map(item => item.productId);
         await user.save();
 
-        console.log('Guest wishlist converted to user wishlist');
+        //console.log('Guest wishlist converted to user wishlist');
       } else {
         // Merge guest wishlist into existing user wishlist
         for (const guestProduct of guestWishlist.products) {
@@ -124,7 +124,7 @@ const migrateGuestDataToUser = async (userId, sessionId) => {
 
         // Delete guest wishlist
         await Wishlist.deleteOne({ sessionId, isGuest: true });
-        console.log('Guest wishlist merged with user wishlist');
+        //console.log('Guest wishlist merged with user wishlist');
       }
     }
 
@@ -166,7 +166,7 @@ const cleanupExpiredGuestData = async () => {
       updatedAt: { $lt: expiryDate }
     });
 
-    console.log(`Cleanup completed: ${cartResult.deletedCount} carts, ${wishlistResult.deletedCount} wishlists deleted`);
+    //console.log(`Cleanup completed: ${cartResult.deletedCount} carts, ${wishlistResult.deletedCount} wishlists deleted`);
 
     return {
       success: true,

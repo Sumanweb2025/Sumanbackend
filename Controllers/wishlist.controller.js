@@ -19,9 +19,28 @@ const addImageUrlToProduct = (product, req) => {
   if (!product) return product;
 
   const productObj = product.toObject ? product.toObject() : product;
+
+  let imageUrl = null;
+  let imageUrls = [];
+
+  if (productObj.image) {
+    if (Array.isArray(productObj.image)) {
+      // Handle array of images
+      imageUrls = productObj.image.map(img =>
+        `${req.protocol}://${req.get('host')}/images/Products/${img}`
+      );
+      imageUrl = imageUrls[0]; // First image as primary
+    } else {
+      // Handle single image string
+      imageUrl = `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}`;
+      imageUrls = [imageUrl];
+    }
+  }
+
   return {
     ...productObj,
-    imageUrl: productObj.image ? `${req.protocol}://${req.get('host')}/images/Products/${productObj.image}` : null
+    imageUrl,
+    imageUrls
   };
 };
 
@@ -37,7 +56,7 @@ const getWishlist = async (req, res) => {
       wishlist = await Wishlist.findOne({ sessionId, isGuest: true })
         .populate({
           path: 'products.productId',
-          select: 'name price image description category brand rating product_id piece'
+          select: 'name price image description category brand rating product_id piece gram Gram'
         });
 
       if (wishlist) {
@@ -48,14 +67,14 @@ const getWishlist = async (req, res) => {
       wishlist = await Wishlist.findOne({ userId })
         .populate({
           path: 'products.productId',
-          select: 'name price image description category brand rating product_id piece'
+          select: 'name price image description category brand rating product_id piece gram Gram'
         });
     }
 
     if (!wishlist) {
       return res.status(200).json({
         success: true,
-        data: { 
+        data: {
           products: [],
           sessionId: isGuest ? getSessionId(req) : null
         },
@@ -123,7 +142,7 @@ const addToWishlist = async (req, res) => {
     if (isGuest) {
       // Guest user logic
       const sessionId = getSessionId(req);
-      
+
       wishlist = await Wishlist.findOne({ sessionId, isGuest: true });
 
       if (!wishlist) {
@@ -187,7 +206,7 @@ const addToWishlist = async (req, res) => {
 
     await wishlist.populate({
       path: 'products.productId',
-      select: 'name price image description category brand rating product_id piece'
+      select: 'name price image description category brand rating product_id piece gram Gram'
     });
 
     const wishlistWithImageUrls = {
@@ -223,7 +242,7 @@ const removeFromWishlist = async (req, res) => {
     const { productId } = req.params;
 
     let wishlist;
-    
+
     if (isGuest) {
       const sessionId = getSessionId(req);
       wishlist = await Wishlist.findOne({ sessionId, isGuest: true });
