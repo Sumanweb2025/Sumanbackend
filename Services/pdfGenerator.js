@@ -34,7 +34,7 @@ class PDFGeneratorService {
 
    // Generate QR Code for invoice download URL in black and white
    static async generateDownloadQRCode(order) {
-      const downloadUrl = `http://localhost:8000/api/invoices/download-invoice/${order.orderNumber}`;
+      const downloadUrl = `https://api.iyappaa.com/api/invoices/download-invoice/${order.orderNumber}`;
       return await QRCode.toBuffer(downloadUrl, {
          width: 100,
          margin: 1,
