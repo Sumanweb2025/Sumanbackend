@@ -1212,6 +1212,217 @@ class EmailService {
       throw error;
     }
   }
+  // Send Order Status Update Email (Shipped/Delivered)
+async sendOrderStatusUpdateEmail(order, items, newStatus) {
+  try {
+    const statusConfig = {
+      processing: {
+        icon: '⚙️',
+        title: 'Order is Being Processed',
+        message: 'Your order is being prepared for shipment.',
+        color: '#2196F3'
+      },
+      shipped: {
+        icon: '🚚',
+        title: 'Order Shipped',
+        message: 'Your order has been shipped and is on its way!',
+        color: '#FF9800'
+      },
+      delivered: {
+        icon: '✅',
+        title: 'Order Delivered',
+        message: 'Your order has been successfully delivered!',
+        color: '#4CAF50'
+      }
+    };
+
+    const config = statusConfig[newStatus] || statusConfig.processing;
+    
+    const emailHTML = `
+      <!DOCTYPE html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>Order Status Update</title>
+      </head>
+      <body style="font-family: Arial, sans-serif; line-height: 1.6; margin: 0; padding: 20px; background-color: #f5f5f5;">
+        <div style="max-width: 600px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); overflow: hidden;">
+          
+          <!-- Header -->
+          <div style="background: linear-gradient(135deg, ${config.color} 0%, ${config.color}dd 100%); padding: 30px 20px; text-align: center;">
+            <div style="font-size: 60px; margin-bottom: 10px;">${config.icon}</div>
+            <h1 style="color: white; margin: 0; font-size: 28px; font-weight: 600;">${config.title}</h1>
+            <p style="color: rgba(255,255,255,0.9); margin: 10px 0 0 0; font-size: 16px;">${config.message}</p>
+          </div>
+
+          <!-- Content -->
+          <div style="padding: 40px 30px;">
+            <p style="font-size: 16px; color: #333; margin-bottom: 20px;">
+              Dear ${order.billingAddress.firstName},
+            </p>
+
+            <!-- Order Status Box -->
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 25px; border-radius: 12px; margin: 25px 0; border-left: 4px solid ${config.color};">
+              <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                <div>
+                  <p style="margin: 0; color: #666; font-size: 13px; text-transform: uppercase; letter-spacing: 1px;">Order Number</p>
+                  <p style="margin: 5px 0 0 0; color: #333; font-size: 20px; font-weight: 700;">${order.orderNumber}</p>
+                </div>
+                <div style="background: ${config.color}; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 600; text-transform: uppercase;">
+                  ${newStatus}
+                </div>
+              </div>
+              
+              ${order.trackingNumber ? `
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+                  <p style="margin: 0; color: #666; font-size: 13px;">Tracking Number</p>
+                  <p style="margin: 5px 0 0 0; color: #333; font-size: 16px; font-weight: 600; font-family: monospace;">${order.trackingNumber}</p>
+                </div>
+              ` : ''}
+              
+              ${order.estimatedDeliveryDate ? `
+                <div style="margin-top: 15px; padding-top: 15px; border-top: 1px solid #dee2e6;">
+                  <p style="margin: 0; color: #666; font-size: 13px;">Estimated Delivery</p>
+                  <p style="margin: 5px 0 0 0; color: #333; font-size: 16px; font-weight: 600;">${new Date(order.estimatedDeliveryDate).toLocaleDateString('en-IN', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                </div>
+              ` : ''}
+            </div>
+
+            <!-- Order Items -->
+            <div style="margin: 30px 0;">
+              <h3 style="color: #333; font-size: 18px; margin-bottom: 20px; border-bottom: 2px solid #f0f0f0; padding-bottom: 10px;">
+                📦 Order Items
+              </h3>
+              ${items.map(item => `
+                <div style="display: flex; padding: 15px; margin-bottom: 10px; background: #f8f9fa; border-radius: 8px; align-items: center;">
+                  <div style="flex: 1;">
+                    <p style="margin: 0; color: #333; font-size: 15px; font-weight: 600;">${item.name}</p>
+                    <p style="margin: 5px 0 0 0; color: #666; font-size: 13px;">Quantity: ${item.quantity} × $${item.price.toFixed(2)}</p>
+                  </div>
+                  <div style="text-align: right;">
+                    <p style="margin: 0; color: #333; font-size: 16px; font-weight: 700;">$${(item.quantity * item.price).toFixed(2)}</p>
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+
+            <!-- Delivery Address -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin: 25px 0;">
+              <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">
+                📍 Delivery Address
+              </h4>
+              <p style="margin: 0; color: #666; font-size: 14px; line-height: 1.8;">
+                ${order.billingAddress.firstName} ${order.billingAddress.lastName}<br>
+                ${order.billingAddress.address}${order.billingAddress.apartment ? ', ' + order.billingAddress.apartment : ''}<br>
+                ${order.billingAddress.city}, ${order.billingAddress.province} ${order.billingAddress.postalCode}<br>
+                ${order.billingAddress.country}
+                ${order.billingAddress.phone ? `<br>Phone: ${order.billingAddress.phone}` : ''}
+              </p>
+            </div>
+
+            <!-- Order Summary -->
+            <div style="background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 20px; border-radius: 8px; margin: 25px 0;">
+              <h4 style="margin: 0 0 15px 0; color: #333; font-size: 16px; font-weight: 600;">
+                💰 Order Summary
+              </h4>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #666; font-size: 14px;">Subtotal:</span>
+                <span style="color: #333; font-size: 14px; font-weight: 600;">$${order.orderSummary.subtotal.toFixed(2)}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #666; font-size: 14px;">Tax (13%):</span>
+                <span style="color: #333; font-size: 14px; font-weight: 600;">$${order.orderSummary.tax.toFixed(2)}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                <span style="color: #666; font-size: 14px;">Shipping:</span>
+                <span style="color: #333; font-size: 14px; font-weight: 600;">$${order.orderSummary.shipping.toFixed(2)}</span>
+              </div>
+              ${order.orderSummary.discount > 0 ? `
+                <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                  <span style="color: #4CAF50; font-size: 14px;">Discount:</span>
+                  <span style="color: #4CAF50; font-size: 14px; font-weight: 600;">-$${order.orderSummary.discount.toFixed(2)}</span>
+                </div>
+              ` : ''}
+              <div style="border-top: 2px solid #dee2e6; margin: 15px 0; padding-top: 15px; display: flex; justify-content: space-between;">
+                <span style="color: #333; font-size: 16px; font-weight: 700;">Total:</span>
+                <span style="color: ${config.color}; font-size: 20px; font-weight: 700;">$${order.orderSummary.total.toFixed(2)}</span>
+              </div>
+              <div style="text-align: center; margin-top: 10px;">
+                <span style="background: #fff; color: #666; padding: 6px 12px; border-radius: 15px; font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px;">
+                  ${order.paymentMethod === 'cod' ? '💵 Cash on Delivery' : '💳 Paid Online'}
+                </span>
+              </div>
+            </div>
+
+            ${newStatus === 'delivered' ? `
+              <!-- Thank You Message -->
+              <div style="background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%); padding: 25px; border-radius: 12px; text-align: center; margin: 30px 0;">
+                <p style="margin: 0; color: white; font-size: 18px; font-weight: 600;">
+                  🎉 Thank you for shopping with us!
+                </p>
+                <p style="margin: 10px 0 0 0; color: rgba(255,255,255,0.9); font-size: 14px;">
+                  We hope you enjoy your order. Your satisfaction is our priority!
+                </p>
+              </div>
+            ` : ''}
+
+            <!-- Track Order Button -->
+            <div style="text-align: center; margin: 30px 0;">
+              <a href="${process.env.FRONTEND_URL || 'http://localhost:5173'}/track-order" 
+                 style="display: inline-block; padding: 14px 40px; background: linear-gradient(135deg, ${config.color} 0%, ${config.color}dd 100%); 
+                        color: white; text-decoration: none; border-radius: 8px; font-size: 16px; font-weight: 600; 
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);">
+                Track Your Order
+              </a>
+            </div>
+
+            <!-- Support Info -->
+            <div style="background: #f0f9ff; padding: 20px; border-radius: 8px; margin-top: 30px; text-align: center;">
+              <p style="margin: 0 0 10px 0; color: #333; font-size: 14px;">
+                Need help? Contact our support team
+              </p>
+              <p style="margin: 0; color: #666; font-size: 13px;">
+                📧 ${process.env.EMAIL_USER || 'support@iyappaa.com'}<br>
+                📞 +1 416 562 6363
+              </p>
+            </div>
+          </div>
+
+          <!-- Footer -->
+          <div style="background-color: #f8f9fa; padding: 25px 30px; text-align: center; border-top: 1px solid #e1e5e9;">
+            <p style="margin: 0 0 10px 0; color: #333; font-size: 15px; font-weight: 600;">
+              Iyappaa Sweets & Snacks
+            </p>
+            <p style="margin: 0; color: #999; font-size: 12px; line-height: 1.5;">
+              Traditional Indian Snacks & Sweets<br>
+              This is an automated email. Please do not reply to this message.
+            </p>
+            <p style="margin: 15px 0 0 0; color: #ccc; font-size: 11px;">
+              © ${new Date().getFullYear()} Iyappaa Sweets & Snacks. All rights reserved.
+            </p>
+          </div>
+        </div>
+      </body>
+      </html>
+    `;
+
+    const mailOptions = {
+      from: {
+        name: 'Iyappaa Sweets & Snacks',
+        address: process.env.EMAIL_USER
+      },
+      to: order.contactInfo.email,
+      subject: `Order ${newStatus.charAt(0).toUpperCase() + newStatus.slice(1)} - ${order.orderNumber}`,
+      html: emailHTML
+    };
+
+    await this.transporter.sendMail(mailOptions);
+    console.log(`Order status update email sent to ${order.contactInfo.email} - Status: ${newStatus}`);
+  } catch (error) {
+    console.error('Error sending order status update email:', error);
+    throw error;
+  }
+}
 }
 
 module.exports = EmailService;

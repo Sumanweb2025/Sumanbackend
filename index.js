@@ -2,6 +2,7 @@ const express = require('express')
 const cors = require('cors')
 require('dotenv').config();
 const bodyparser = require('body-parser')
+const compression = require('compression')
 const connectDatabase = require('./DB_Connection/db_connection');
 const PORT = process.env.PORT;
 const Approuter = require('./Routers/router')
@@ -12,6 +13,18 @@ const cron = require('node-cron');
 
 //Initialize the app
 const app = express()
+
+// Enable compression for all responses
+app.use(compression({
+  level: 6, // Compression level (0-9)
+  threshold: 1024, // Only compress responses larger than 1KB
+  filter: (req, res) => {
+    if (req.headers['x-no-compression']) {
+      return false;
+    }
+    return compression.filter(req, res);
+  }
+}));
 
 // CORS should be first
 app.use(cors());
@@ -39,8 +52,16 @@ cron.schedule('0 2 * * *', async () => {
 app.get('/', (req, res) => {
   res.send("Welcome to Iyappaa Sweets & Snacks!")
 })
-// Change to EXACTLY this:
-app.use('/images/Products', express.static(path.join(__dirname, 'Iyappaa/Product1')));
+// Serve static files with caching headers for better performance
+app.use('/images/Products', express.static(path.join(__dirname, 'Iyappaa/Product1'), {
+  maxAge: '7d', // Cache images for 7 days
+  etag: true,
+  lastModified: true,
+  setHeaders: (res, path) => {
+    // Set cache control headers
+    res.setHeader('Cache-Control', 'public, max-age=604800, immutable');
+  }
+}));
 // app.use('/uploads', express.static('uploads'))
 
 app.use(Approuter);

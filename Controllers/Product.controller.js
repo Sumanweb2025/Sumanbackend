@@ -58,10 +58,27 @@ exports.upload = multer({
 // Get all products
 const getAllProducts = async (req, res) => {
   try {
-    const products = await Product.find();
+    // Use lean() for better performance - returns plain JS objects instead of Mongoose documents
+    const products = await Product.find()
+      .select('-__v -createdAt -updatedAt') // Exclude unnecessary fields
+      .lean()
+      .exec();
 
-    // Add full image URLs to each product using helper function
-    const productsWithImageUrl = products.map(product => addImageUrls(product, req));
+    // Add full image URLs to each product
+    const productsWithImageUrl = products.map(product => {
+      const baseUrl = `${req.protocol}://${req.get('host')}/images/Products/`;
+      const images = product.image || [];
+      
+      return {
+        ...product,
+        imageUrl: images.length > 0 ? baseUrl + images[0] : null,
+        secondaryImageUrl: images.length > 1 ? baseUrl + images[1] : null,
+        imageUrls: images.map(img => baseUrl + img)
+      };
+    });
+    
+    // Set cache headers for this response
+    res.set('Cache-Control', 'public, max-age=300');
 
     res.status(200).json({
       success: true,
@@ -313,15 +330,33 @@ const getFeaturedProducts = async (req, res) => {
   try {
     const limit = parseInt(req.query.limit) || 10;
 
+    // Use lean() and select only needed fields for better performance
+
     const products = await Product.find()
+    .select('product_id name brand category price rating image description piece gram')
       .sort({
         rating: -1,
         createdAt: -1
       })
-      .limit(limit);
+      .limit(limit)
+      .lean()
+      .exec();
 
-    // Add full image URLs to each product using helper function
-    const productsWithImageUrl = products.map(product => addImageUrls(product, req));
+     // Add full image URLs to each product
+    const productsWithImageUrl = products.map(product => {
+      const baseUrl = `${req.protocol}://${req.get('host')}/images/Products/`;
+      const images = product.image || [];
+      
+      return {
+        ...product,
+        imageUrl: images.length > 0 ? baseUrl + images[0] : null,
+        secondaryImageUrl: images.length > 1 ? baseUrl + images[1] : null,
+        imageUrls: images.map(img => baseUrl + img)
+      };
+    });
+    
+    // Set cache headers - cache featured products for 10 minutes
+    res.set('Cache-Control', 'public, max-age=600');
 
     res.status(200).json({
       success: true,

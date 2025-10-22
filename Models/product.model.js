@@ -63,5 +63,14 @@ const productSchema = new mongoose.Schema({
   timestamps: true
 });
 
+// Add indexes for better query performance
+productSchema.index({ product_id: 1 });
+productSchema.index({ category: 1 });
+productSchema.index({ brand: 1 });
+productSchema.index({ price: 1 });
+productSchema.index({ rating: -1 });
+productSchema.index({ category: 1, brand: 1 });
+productSchema.index({ name: 'text', description: 'text' });
+
 // Check if model already exists before creating
 module.exports = mongoose.models.Product || mongoose.model('Product', productSchema);

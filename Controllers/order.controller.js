@@ -455,7 +455,7 @@ const getOrderById = async (req, res) => {
     console.error('Error getting order:', error);
     res.status(500).json({
       success: false,
-      message: 'Server error'
+      message: 'Error getting order'
     });
   }
 };
@@ -464,7 +464,7 @@ const getOrderById = async (req, res) => {
 const updateOrderStatus = async (req, res) => {
   try {
     const { orderId } = req.params;
-    const { status } = req.body;
+    const { status, trackingNumber, estimatedDeliveryDate } = req.body;
 
     const order = await Order.findById(orderId).populate({
       path: 'items.productId',
@@ -478,8 +478,46 @@ const updateOrderStatus = async (req, res) => {
       });
     }
 
+    const oldStatus = order.status;
+
+    // Update order fields
+
     if (status) order.status = status;
+     if (trackingNumber) order.trackingNumber = trackingNumber;
+    if (estimatedDeliveryDate) order.estimatedDeliveryDate = estimatedDeliveryDate;
     await order.save();
+
+    // Send email notification to customer if status changed
+    if (status && status !== oldStatus) {
+      try {
+        // Prepare items for email
+        const items = order.items.map(item => ({
+          name: item.name,
+          quantity: item.quantity,
+          price: item.price,
+          image: item.image
+        }));
+
+        // Send email notification for specific status changes
+        if (status === 'processing' || status === 'shipped' || status === 'delivered') {
+          await emailService.sendOrderStatusUpdateEmail(order, items, status);
+          console.log(`✅ Status update email sent to customer for order ${order.orderNumber} - Status: ${status}`);
+        }
+
+        // Notify admin when an order is delivered (and optionally when shipped)
+        if (status === 'delivered') {
+          try {
+            await emailService.sendAdminNotificationEmail(order, items);
+            console.log(`📧 Admin notified: Order ${order.orderNumber} marked as DELIVERED`);
+          } catch (adminNotifyErr) {
+            console.error('⚠️ Failed to notify admin about delivery:', adminNotifyErr);
+          }
+        }
+      } catch (emailError) {
+        console.error('❌ Error sending status update email:', emailError);
+        // Don't fail the request if email fails
+      }
+    }
 
     res.status(200).json({
       success: true,
