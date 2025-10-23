@@ -27,7 +27,10 @@ app.use(compression({
 }));
 
 // CORS should be first
-app.use(cors());
+app.use(cors({
+  origin: ["https://iyappaa.com", "https://www.iyappaa.com"],
+  credentials: true
+}));
 
 // This handles JSON payloads (like your bulk import)
 app.use(bodyparser.json({ limit: '50mb' }));
