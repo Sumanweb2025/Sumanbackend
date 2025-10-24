@@ -36,8 +36,13 @@ const wishlistSchema = new mongoose.Schema({
 });
 
 // Compound indexes
-wishlistSchema.index({ userId: 1, 'products.productId': 1 });
-wishlistSchema.index({ sessionId: 1, isGuest: 1 });
+// Sparse unique indexes to prevent duplicate key errors
+wishlistSchema.index({ userId: 1 }, { unique: true, sparse: true });
+wishlistSchema.index({ sessionId: 1 }, { unique: true, sparse: true });
+
+// Additional indexes for performance
+wishlistSchema.index({ 'products.productId': 1 });
 wishlistSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
+wishlistSchema.index({ isGuest: 1, expiresAt: 1 });
 
 module.exports = mongoose.model('Wishlist', wishlistSchema);

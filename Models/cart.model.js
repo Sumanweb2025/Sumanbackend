@@ -71,9 +71,15 @@ cartSchema.pre('save', async function (next) {
 });
 
 // Compound index for guest carts
-cartSchema.index({ sessionId: 1, isGuest: 1 });
-cartSchema.index({ userId: 1 });
+// Compound index for guest carts - sessionId must be unique for guest users
+cartSchema.index({ sessionId: 1 }, { unique: true, sparse: true });
+
+// userId index - sparse allows multiple null values, unique ensures one cart per logged-in user
+cartSchema.index({ userId: 1 }, { unique: true, sparse: true });
+
+// Additional indexes for performance
 cartSchema.index({ 'items.productId': 1 });
 cartSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 }); // Auto-delete expired carts
+cartSchema.index({ isGuest: 1, expiresAt: 1 }); // For guest cart cleanup
 
 module.exports = mongoose.model('Cart', cartSchema);
